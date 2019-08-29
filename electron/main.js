@@ -1,4 +1,4 @@
-require("@babel/register");
+//require("@babel/register");
 const path = require("path");
 const { app, BrowserWindow } = require("electron");
 let win;
@@ -7,8 +7,8 @@ function createWindow() {
     width: 1800,
     height: 1000,
     webPreferences: {
-      nodeIntegration: true,
-      preload: path.join(__dirname, "./render.js")
+      nodeIntegration: false,
+      preload: path.join(__dirname, "render.js")
     }
   });
   win.loadURL("http://localhost:3000");

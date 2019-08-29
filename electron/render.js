@@ -1,2 +1,2 @@
 const { ipcRenderer } = require("electron");
-windwow.ipcRenderer = ipcRenderer;
+window.ipcRenderer = ipcRenderer;
