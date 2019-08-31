@@ -1,6 +1,12 @@
 const { ipcRenderer } = require("electron");
 window.ipc = ipcRenderer;
-// setInterval(() => {
-//   const t = document.body.clientHeight;
-//   window.scrollTo({ top: t, left: 0, behavior: "smooth" });
-// }, 3000);
+window.preloadUtils = {
+  formatStyle: style => {
+    const result = Object.entries(style).reduce((sum, item) => {
+      const [key, value] = item;
+      sum.push(`${key}:${value}`);
+      return sum;
+    }, []);
+    return result.join(";");
+  }
+};

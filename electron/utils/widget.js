@@ -15,6 +15,7 @@ export const createWindow = options => {
     width,
     height,
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js")
     }
