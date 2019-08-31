@@ -1,26 +1,21 @@
 require("@babel/register");
-const path = require("path");
-const { app, BrowserWindow } = require("electron");
+const { app } = require("electron");
+const { createWindow } = require("./utils");
+
 let win;
-function createWindow() {
-  win = new BrowserWindow({
+function createMainWindow() {
+  win = createWindow({
+    url: "http://localhost:3000",
     width: 1000,
     height: 1000,
-    webPreferences: {
-      nodeIntegration: false,
-      preload: path.join(__dirname, "render.js")
+    openDevTools: true,
+    onOpenCallback: () => {
+      require("./tasks");
     }
-  });
-  win.loadURL("http://localhost:3000");
-  win.webContents.openDevTools();
-  require("./tasks");
-
-  win.on("closed", () => {
-    win = null;
   });
 }
 
-app.on("ready", createWindow);
+app.on("ready", createMainWindow);
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -30,6 +25,6 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
   if (win === null) {
-    createWindow();
+    createMainWindow();
   }
 });
