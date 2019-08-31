@@ -17,7 +17,9 @@ window.ipc.on("createUtils", () => {
     buttonStyle
   )}  id="start" >开始</button><button id="end" style=${formatStyle(
     buttonStyle
-  )}>结束</button></div>`;
+  )}>结束</button><button id="seeUrl" style=${formatStyle(
+    buttonStyle
+  )}>查看url</button></div>`;
   div.innerHTML = `${content}`;
   document.body.appendChild(div);
   document.getElementById("start").onclick = () => {
@@ -29,5 +31,8 @@ window.ipc.on("createUtils", () => {
   };
   document.getElementById("end").onclick = () => {
     clearInterval(window.interval);
+  };
+  document.getElementById("seeUrl").onclick = () => {
+    alert(document.location.href);
   };
 });

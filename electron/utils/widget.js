@@ -8,6 +8,7 @@ export const createWindow = options => {
     openDevTools,
     onOpenCallback,
     onCloseCallback,
+    onLoadHref,
     width = 1000,
     height = 1000
   } = options;
@@ -21,9 +22,9 @@ export const createWindow = options => {
     }
   });
   win.loadURL(url);
-  win.webContents.on("new-window", (event, url) => {
+  win.webContents.on("new-window", (event, href) => {
     event.preventDefault();
-    win.loadURL(url);
+    win.loadURL(_.isFunction(onLoadHref) ? onLoadHref(href) : href);
   });
   openDevTools && win.webContents.openDevTools();
   _.isFunction(onOpenCallback) && onOpenCallback(win);

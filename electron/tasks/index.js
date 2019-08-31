@@ -11,6 +11,7 @@ ipcMain.on("create-zhihu-scrapy", (event, args) => {
     onOpenCallback: window => {
       require("./zhihu-scrapy")(window, args, app);
     },
-    onCloseCallback: () => (app.wins.zhihuScrapy = null)
+    onCloseCallback: () => (app.wins.zhihuScrapy = null),
+    onLoadHref: href => href.replace(/answer\/.*$/, "")
   });
 });
