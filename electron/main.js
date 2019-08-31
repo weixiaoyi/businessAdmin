@@ -1,10 +1,10 @@
-//require("@babel/register");
+require("@babel/register");
 const path = require("path");
 const { app, BrowserWindow } = require("electron");
 let win;
 function createWindow() {
   win = new BrowserWindow({
-    width: 1800,
+    width: 1000,
     height: 1000,
     webPreferences: {
       nodeIntegration: false,
@@ -13,6 +13,7 @@ function createWindow() {
   });
   win.loadURL("http://localhost:3000");
   win.webContents.openDevTools();
+  require("./tasks");
 
   win.on("closed", () => {
     win = null;
