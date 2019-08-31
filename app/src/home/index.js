@@ -10,7 +10,7 @@ class Home extends Component {
           type="primary"
           onClick={() => {
             window.ipc &&
-              window.ipc.send("createBrowser", {
+              window.ipc.send("create-zhihu-scrapy", {
                 url: "http://zhihu.com"
               });
           }}

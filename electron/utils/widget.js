@@ -7,6 +7,7 @@ export const createWindow = options => {
     url,
     openDevTools,
     onOpenCallback,
+    onCloseCallback,
     width = 1000,
     height = 1000
   } = options;
@@ -19,12 +20,15 @@ export const createWindow = options => {
     }
   });
   win.loadURL(url);
+  win.webContents.on("new-window", (event, url) => {
+    event.preventDefault();
+    win.loadURL(url);
+  });
   openDevTools && win.webContents.openDevTools();
-  _.isFunction(onOpenCallback) && onOpenCallback();
-
+  _.isFunction(onOpenCallback) && onOpenCallback(win);
   win.on("closed", () => {
     win = null;
+    _.isFunction(onCloseCallback) && onCloseCallback(win);
   });
-
   return win;
 };
