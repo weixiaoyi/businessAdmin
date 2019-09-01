@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card } from "antd";
 import claesNames from "classnames";
-import { PATH } from "../constants";
+import { PATH } from "../../constants";
 import * as styles from "./index.module.scss";
 
 class Home extends Component {

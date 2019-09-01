@@ -1,6 +1,6 @@
 import Home from "../home";
 import Scrapy from "../scrapy";
-import { PATH } from "../constants";
+import { PATH } from "../../constants";
 
 export default [
   {

@@ -6,7 +6,7 @@ import {
   Redirect
 } from "react-router-dom";
 import routers from "../app-router-config/routers";
-import { PATH } from "../constants";
+import { PATH } from "../../constants";
 
 class App extends Component {
   render() {

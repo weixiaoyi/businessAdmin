@@ -11,7 +11,7 @@ import { default as store } from "./store";
 configure({ enforceActions: "always" });
 
 ReactDOM.render(
-  <Provider>
+  <Provider {...store}>
     <App />
   </Provider>,
   document.getElementById("root")
