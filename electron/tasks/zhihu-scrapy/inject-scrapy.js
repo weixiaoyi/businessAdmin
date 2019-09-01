@@ -16,16 +16,19 @@ const detailStyle = {
 window.ipc.on("createUtils", () => {
   const div = document.createElement("div");
   const content = `
-<div style=${formatStyle({
+<div id="electron-utils" style=${formatStyle({
     position: "fixed",
     top: "0",
     background: "rgba(0,0,0,.6)",
-    "z-index": "10000"
+    "z-index": "10000",
+    "min-height": "50px",
+    color: "white"
   })}>
 <button style=${formatStyle(buttonStyle)}  id="start" >开始滚动</button>
 <button id="end" style=${formatStyle(buttonStyle)}>结束滚动</button>
 <button id="seeUrl" style=${formatStyle(buttonStyle)}>查看url</button>
 <button id="seeAnswers" style=${formatStyle(buttonStyle)}>查看答案列表</button>
+<button id="relyAnswers" style=${formatStyle(buttonStyle)}>发送答案列表</button>
 <div>
 <div id="totalAnswers" style=${formatStyle(detailStyle)}></div>
 <div id="haveGetAnswers" style=${formatStyle(detailStyle)}></div>
@@ -42,14 +45,14 @@ window.ipc.on("createUtils", () => {
     const seeAnswers = document.getElementById("seeAnswers");
     const total = document.getElementById("totalAnswers");
     const haveGet = document.getElementById("haveGetAnswers");
+    const relyAnswers = document.getElementById("relyAnswers");
     const listItemClass = ".Card.AnswersNavWrapper .List-item";
     const listHeaderText = document.getElementsByClassName(
       "List-headerText"
     )[0];
-    if (!total || !haveGet || !listHeaderText) {
-      return alert(
-        "元素不存在，看看是不是进错页面了，必须要进入一个具体的问题的页面才对"
-      );
+    if (!listHeaderText || !document.querySelector(listItemClass)) {
+      return (document.getElementById("electron-utils").innerHTML =
+        "必要的元素不存在，看看是不是进错页面了，必须要进入一个具体的问题的页面才对");
     }
 
     function parseHtml(list) {
@@ -91,9 +94,9 @@ window.ipc.on("createUtils", () => {
       window.interval = setInterval(() => {
         const t = document.body.clientHeight;
         const lists = document.querySelectorAll(listItemClass);
-        window.scrollTo({ top: t, left: 0, behavior: "smooth" });
         const len = lists.length;
         haveGet.innerHTML = `已经获取${len}个答案`;
+        window.scrollTo({ top: t, left: 0, behavior: "smooth" });
       }, 3000);
     };
     end.onclick = () => {
@@ -103,8 +106,18 @@ window.ipc.on("createUtils", () => {
       alert(document.location.href);
     };
     seeAnswers.onclick = () => {
-      const len = document.querySelectorAll(listItemClass).length;
-      alert(len);
+      const answers = parseHtml(document.querySelectorAll(listItemClass));
+      alert(JSON.stringify(answers));
+    };
+    relyAnswers.onclick = () => {
+      window.ipc.send("relyMessage", {
+        from: "app.wins.zhihuScrapy",
+        to: "app.wins.main",
+        data: {
+          type: "answers",
+          message: parseHtml(document.querySelectorAll(listItemClass))
+        }
+      });
     };
   } catch (err) {
     console.log(err);

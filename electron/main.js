@@ -9,8 +9,9 @@ function createMainWindow() {
     width: 1000,
     height: 1000,
     openDevTools: true,
-    onOpenCallback: () => {
+    onOpenCallback: window => {
       require("./tasks");
+      require("./tasks/main").default(window, undefined, app);
     },
     onCloseCallback: () => (app.wins.main = null)
   });

@@ -9,9 +9,18 @@ ipcMain.on("create-zhihu-scrapy", (event, args) => {
     height: 800,
     url,
     onOpenCallback: window => {
-      require("./zhihu-scrapy")(window, args, app);
+      require("./zhihu-scrapy").default(window, args, app);
     },
     onCloseCallback: () => (app.wins.zhihuScrapy = null),
     onLoadHref: href => href.replace(/answer\/.*$/, "")
   });
+});
+
+ipcMain.on("relyMessage", (event, args) => {
+  const { from, to } = args;
+  if (from === "app.wins.zhihuScrapy") {
+    if (to === "app.wins.main") {
+      require("./main").messageTasks(args);
+    }
+  }
 });
