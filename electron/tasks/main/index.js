@@ -4,7 +4,7 @@ import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 
 const adapter = new FileSync(
-  path.join(__dirname, "../../assets/zhihu-scrapy/db.json"),
+  path.join(__dirname, "../../assets/scrapy/db.json"),
   {
     defaultValue: { answers: [] },
     serialize: array => JSON.stringify(array),
@@ -24,7 +24,7 @@ const init = args => {};
 
 export const messageTasks = async args => {
   const { from, data } = args;
-  if (from === "app.wins.zhihuScrapy") {
+  if (from === "app.wins.scrapy") {
     const { type } = data;
     if (type === "push-answers") {
       const messages = JSON.parse(data.message);
@@ -49,5 +49,11 @@ export const messageTasks = async args => {
         }
       });
     }
+  }
+
+  if (from === "app.wins.main") {
+    console.log(args, "----");
+    const { type } = data;
+    console.log(data, "------");
   }
 };
