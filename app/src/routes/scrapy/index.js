@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Button } from "antd";
 import * as styles from "./index.module.scss";
 
-class Home extends Component {
+class Scrapy extends Component {
   render() {
     return (
-      <div className={styles.home}>
+      <div className={styles.Scrapy}>
         <Button
           type="primary"
           onClick={() => {
@@ -22,4 +22,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Scrapy;

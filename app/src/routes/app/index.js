@@ -5,8 +5,8 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
-import routers from "../app-config/routers";
-import { PATH } from "../app-constants";
+import routers from "../app-router-config/routers";
+import { PATH } from "../constants";
 
 class App extends Component {
   render() {
