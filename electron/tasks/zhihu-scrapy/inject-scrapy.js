@@ -59,10 +59,13 @@ window.ipc.on("createUtils", () => {
 
     function parseHtml(lists) {
       return Array.prototype.map.call(lists, item => {
-        let shortInfo = item
-          .querySelector("div.ContentItem.AnswerItem[data-zop]")
-          .getAttribute("data-zop");
+        const short = item.querySelector(
+          "div.ContentItem.AnswerItem[data-zop]"
+        );
+        let shortInfo = short.getAttribute("data-zop");
+        let extraInfo = short.getAttribute("data-za-extra-module");
         if (!shortInfo) return alert("shortInfo格式错误");
+        if (!extraInfo) return alert("extraInfo格式错误");
         const richText = item.querySelector(
           "div.ContentItem.AnswerItem .RichContent-inner .RichText.ztext"
         );
@@ -73,17 +76,25 @@ window.ipc.on("createUtils", () => {
         if (!vote) return alert("赞同按钮不存在");
 
         shortInfo = JSON.parse(shortInfo);
-        const author = shortInfo.authorName;
-        const id = shortInfo.itemId;
+        extraInfo = JSON.parse(extraInfo);
+
+        const authorName = shortInfo.authorName;
+        const answerId = shortInfo.itemId;
         const title = shortInfo.title;
         const type = shortInfo.type;
+        const questionId = extraInfo.card.content.parent_token;
+        const authorId = extraInfo.card.content.author_member_hash_id;
+        const upVoteNum = extraInfo.card.content.upvote_num;
+
         return {
-          id,
-          author,
+          questionId,
+          answerId,
+          authorName,
+          authorId,
           title,
           type,
           content: richText.innerHTML,
-          vote: vote.innerText.replace(/\n赞同 /, "")
+          upVoteNum
         };
       });
     }
@@ -111,21 +122,39 @@ window.ipc.on("createUtils", () => {
       alert(
         JSON.stringify(
           answers.map(item => ({
-            id: item.id,
-            author: item.author
+            answerId: item.answerId,
+            authorName: item.authorName
           }))
         )
       );
     };
     relyAnswers.onclick = () => {
-      window.ipc.send("relyMessage", {
-        from: "app.wins.zhihuScrapy",
-        to: "app.wins.main",
-        data: {
-          type: "answers",
-          message: parseHtml(getList())
-        }
-      });
+      const answers = parseHtml(getList());
+      if (!(answers && answers.length)) {
+        return alert("数据长度为0");
+      }
+      const checkData = answers.every(
+        item =>
+          item.questionId &&
+          item.answerId &&
+          item.authorName &&
+          item.authorId &&
+          item.title &&
+          item.content &&
+          item.upVoteNum
+      );
+      if (!checkData) {
+        return alert("数据格式错误");
+      } else {
+        window.ipc.send("relyMessage", {
+          from: "app.wins.zhihuScrapy",
+          to: "app.wins.main",
+          data: {
+            type: "push-answers",
+            message: JSON.stringify(answers)
+          }
+        });
+      }
     };
   } catch (err) {
     console.log(err);

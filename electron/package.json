@@ -6,7 +6,7 @@
   "homepage": ".",
   "scripts": {
     "start": "electron . --debug",
-    "start:watch": "nodemon --watch ./**/* --exec electron . --debug"
+    "start:watch": "nodemon --ignore ./assets  --watch ./**/* --exec  electron . --debug"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
@@ -16,7 +16,8 @@
     "@babel/register": "^7.5.5",
     "babel-plugin-add-module-exports": "^1.0.2",
     "cross-env": "^5.2.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "lowdb": "^1.0.0"
   },
   "devDependencies": {
     "electron": "^6.0.5",
