@@ -7,11 +7,10 @@ const buttonStyle = {
 };
 
 const detailStyle = {
-  background: "green",
+  background: "blue",
   padding: "5px",
   color: "white"
 };
-
 window.ipc.on("createUtils", () => {
   const div = document.createElement("div");
   const content = `
@@ -31,32 +30,49 @@ window.ipc.on("createUtils", () => {
 </div>
 </div>
 `;
-  div.innerHTML = `${content}`;
-  document.body.appendChild(div);
-  document.getElementById("start").onclick = () => {
-    const ansers = document.getElementsByClassName("List-headerText")[0]
-      .innerHTML;
+  try {
+    div.innerHTML = `${content}`;
+    document.body.appendChild(div);
+
+    const start = document.getElementById("start");
+    const end = document.getElementById("end");
+    const seeUrl = document.getElementById("seeUrl");
+    const seeAnswers = document.getElementById("seeAnswers");
     const total = document.getElementById("totalAnswers");
     const haveGet = document.getElementById("haveGetAnswers");
-    total.innerHTML = `总共：${ansers}`;
-    clearInterval(window.interval);
-    window.interval = setInterval(() => {
-      const t = document.body.clientHeight;
-      window.scrollTo({ top: t, left: 0, behavior: "smooth" });
-      const len = document
-        .getElementsByClassName("Card AnswersNavWrapper")[0]
-        .getElementsByClassName("List-item").length;
-      haveGet.innerHTML = `已经获取${len}个答案`;
-    }, 3000);
-  };
-  document.getElementById("end").onclick = () => {
-    clearInterval(window.interval);
-  };
-  document.getElementById("seeUrl").onclick = () => {
-    alert(document.location.href);
-  };
-  document.getElementById("seeAnswers").onclick = () => {
-    const len = document.getElementsByClassName("List-item").length;
-    alert(len);
-  };
+    const listItemClass = ".Card.AnswersNavWrapper .List-item";
+    const listHeaderText = document.getElementsByClassName(
+      "List-headerText"
+    )[0];
+    if (!total || !haveGet || !listHeaderText) {
+      alert(
+        "元素不存在，看看是不是进错页面了，必须要进入一个具体的问题的页面才对"
+      );
+    }
+
+    start.onclick = () => {
+      const answers = listHeaderText.innerHTML;
+      total.innerHTML = `总共：${answers}`;
+      clearInterval(window.interval);
+      window.interval = setInterval(() => {
+        const t = document.body.clientHeight;
+        window.scrollTo({ top: t, left: 0, behavior: "smooth" });
+        const len = document.querySelectorAll(listItemClass).length;
+        haveGet.innerHTML = `已经获取${len}个答案`;
+      }, 3000);
+    };
+    end.onclick = () => {
+      clearInterval(window.interval);
+    };
+    seeUrl.onclick = () => {
+      alert(document.location.href);
+    };
+    seeAnswers.onclick = () => {
+      const len = document.querySelectorAll(listItemClass).length;
+      alert(len);
+    };
+  } catch (err) {
+    console.log(err);
+    alert("报错了！");
+  }
 });
