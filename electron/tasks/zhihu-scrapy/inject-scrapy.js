@@ -55,8 +55,9 @@ window.ipc.on("createUtils", () => {
         "必要的元素不存在，看看是不是进错页面了，必须要进入一个具体的问题的页面才对");
     }
 
-    function parseHtml(list) {
-      const lists = list || document.querySelectorAll(listItemClass);
+    const getList = () => document.querySelectorAll(listItemClass);
+
+    function parseHtml(lists) {
       return Array.prototype.map.call(lists, item => {
         let shortInfo = item
           .querySelector("div.ContentItem.AnswerItem[data-zop]")
@@ -93,7 +94,7 @@ window.ipc.on("createUtils", () => {
       clearInterval(window.interval);
       window.interval = setInterval(() => {
         const t = document.body.clientHeight;
-        const lists = document.querySelectorAll(listItemClass);
+        const lists = getList();
         const len = lists.length;
         haveGet.innerHTML = `已经获取${len}个答案`;
         window.scrollTo({ top: t, left: 0, behavior: "smooth" });
@@ -106,8 +107,15 @@ window.ipc.on("createUtils", () => {
       alert(document.location.href);
     };
     seeAnswers.onclick = () => {
-      const answers = parseHtml(document.querySelectorAll(listItemClass));
-      alert(JSON.stringify(answers));
+      const answers = parseHtml(getList());
+      alert(
+        JSON.stringify(
+          answers.map(item => ({
+            id: item.id,
+            author: item.author
+          }))
+        )
+      );
     };
     relyAnswers.onclick = () => {
       window.ipc.send("relyMessage", {
@@ -115,7 +123,7 @@ window.ipc.on("createUtils", () => {
         to: "app.wins.main",
         data: {
           type: "answers",
-          message: parseHtml(document.querySelectorAll(listItemClass))
+          message: parseHtml(getList())
         }
       });
     };

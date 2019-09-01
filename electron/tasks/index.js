@@ -17,10 +17,8 @@ ipcMain.on("create-zhihu-scrapy", (event, args) => {
 });
 
 ipcMain.on("relyMessage", (event, args) => {
-  const { from, to } = args;
-  if (from === "app.wins.zhihuScrapy") {
-    if (to === "app.wins.main") {
-      require("./main").messageTasks(args);
-    }
+  const { to } = args;
+  if (to === "app.wins.main") {
+    require("./main").messageTasks(args);
   }
 });

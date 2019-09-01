@@ -9,5 +9,12 @@ export default (window, args) => {
 const init = args => {};
 
 export const messageTasks = args => {
-  console.log(args, "----args");
+  const { from, data } = args;
+  if (from === "app.wins.zhihuScrapy") {
+    const { type } = data;
+    if (type === "answers") {
+      const message = data.message;
+      console.log(message);
+    }
+  }
 };
