@@ -1,7 +1,7 @@
 import { autorun, computed, observable } from "mobx";
-import ModelExtend from "./modelExtend";
+import MdelExtend from "./modelExtend";
 
-export default class GlobalStore extends ModelExtend {
+export default class GlobalStore extends MdelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;
