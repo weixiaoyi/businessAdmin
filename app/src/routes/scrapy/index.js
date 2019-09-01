@@ -17,6 +17,7 @@ class Scrapy extends Component {
         >
           创建BrowserWindow
         </Button>
+        <div></div>
       </div>
     );
   }
