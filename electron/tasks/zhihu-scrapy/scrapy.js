@@ -1,4 +1,5 @@
 const formatStyle = window.preloadUtils.formatStyle;
+
 const buttonStyle = {
   background: "red",
   margin: "10px",
@@ -11,6 +12,7 @@ const detailStyle = {
   padding: "5px",
   color: "white"
 };
+
 window.ipc.on("createUtils", () => {
   const div = document.createElement("div");
   const content = `
@@ -45,9 +47,41 @@ window.ipc.on("createUtils", () => {
       "List-headerText"
     )[0];
     if (!total || !haveGet || !listHeaderText) {
-      alert(
+      return alert(
         "元素不存在，看看是不是进错页面了，必须要进入一个具体的问题的页面才对"
       );
+    }
+
+    function parseHtml(list) {
+      const lists = list || document.querySelectorAll(listItemClass);
+      return Array.prototype.map.call(lists, item => {
+        let shortInfo = item
+          .querySelector("div.ContentItem.AnswerItem[data-zop]")
+          .getAttribute("data-zop");
+        if (!shortInfo) return alert("shortInfo格式错误");
+        const richText = item.querySelector(
+          "div.ContentItem.AnswerItem .RichContent-inner .RichText.ztext"
+        );
+        if (!richText) return alert("richText格式错误");
+        const vote = item.querySelector(
+          "div.ContentItem.AnswerItem .ContentItem-actions .VoteButton--up"
+        );
+        if (!vote) return alert("赞同按钮不存在");
+
+        shortInfo = JSON.parse(shortInfo);
+        const author = shortInfo.authorName;
+        const id = shortInfo.itemId;
+        const title = shortInfo.title;
+        const type = shortInfo.type;
+        return {
+          id,
+          author,
+          title,
+          type,
+          content: richText.innerHTML,
+          vote: vote.innerText.replace(/\n赞同 /, "")
+        };
+      });
     }
 
     start.onclick = () => {
@@ -56,8 +90,9 @@ window.ipc.on("createUtils", () => {
       clearInterval(window.interval);
       window.interval = setInterval(() => {
         const t = document.body.clientHeight;
+        const lists = document.querySelectorAll(listItemClass);
         window.scrollTo({ top: t, left: 0, behavior: "smooth" });
-        const len = document.querySelectorAll(listItemClass).length;
+        const len = lists.length;
         haveGet.innerHTML = `已经获取${len}个答案`;
       }, 3000);
     };
