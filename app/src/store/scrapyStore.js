@@ -9,11 +9,12 @@ export default class ScrapyStore extends ModelExtend {
   }
 
   @observable name = "scrapyStore";
+  @observable answers = [];
 
   listenIpc = () => {
     window.ipc &&
       window.ipc.on("get-scrapy-answers", (e, args) => {
-        console.log(args, "-----args");
+        this.commit("answers", args);
       });
   };
 

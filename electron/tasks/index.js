@@ -7,6 +7,7 @@ ipcMain.on("ipc", (event, args) => {
     data,
     data: { type }
   } = args;
+  if (!from || !data || !type) return console.log("来自渲染进程的ipc参数错误");
   if (from === "app.wins.main.render") {
     if (type === "create-scrapy") {
       if (app.wins.scrapy) return;

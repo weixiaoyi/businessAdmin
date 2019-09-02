@@ -1,3 +1,6 @@
-.home{
-  background: red;
+@import "src/styles/index.scss";
+.Scrapy{
+  .answerContent{
+    @include ellipse()
+  }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "antd";
+import { Table, Button } from "antd";
 import { Inject } from "../../utils";
 import * as styles from "./index.module.scss";
 
@@ -16,10 +16,45 @@ class Scrapy extends Component {
       type: "ipc-get-scrapy-answers"
     });
   }
+
   render() {
     const {
-      model: { dispatch }
+      model: { dispatch, answers = [] }
     } = this.props;
+
+    const columns = [
+      {
+        title: "answerId",
+        dataIndex: "answerId",
+        key: "answerId"
+      },
+      {
+        title: "内容",
+        dataIndex: "content",
+        key: "content",
+        width: 800,
+        render: v => (
+          <div style={{ width: 800 }} className={styles.answerContent}>
+            {v}
+          </div>
+        )
+      },
+      {
+        title: "赞同票数",
+        dataIndex: "upVoteNum",
+        key: "upVoteNum"
+      },
+      {
+        title: "标题",
+        dataIndex: "title",
+        key: "title"
+      },
+      {
+        title: "作者",
+        dataIndex: "authorName",
+        key: "authorName"
+      }
+    ];
     return (
       <div className={styles.Scrapy}>
         <Button
@@ -32,7 +67,9 @@ class Scrapy extends Component {
         >
           创建BrowserWindow
         </Button>
-        <div></div>
+        <div>
+          <Table rowKey={"answerId"} columns={columns} dataSource={answers} />
+        </div>
       </div>
     );
   }
