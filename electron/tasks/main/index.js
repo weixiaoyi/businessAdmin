@@ -4,7 +4,7 @@ import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 
 const adapter = new FileSync(
-  path.join(__dirname, "../../assets/scrapy/db.json"),
+  path.join(__dirname, "../../assets/scrapy-db.json"),
   {
     defaultValue: { answers: [] },
     serialize: array => JSON.stringify(array),
@@ -54,6 +54,7 @@ export const messageTasks = async args => {
   if (from === "app.wins.main") {
     console.log(args, "----");
     const { type } = data;
-    console.log(data, "------");
+    if (type === "get-answers") {
+    }
   }
 };
