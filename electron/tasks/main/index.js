@@ -1,17 +1,4 @@
-import path from "path";
 import { app, ipcMain, BrowserWindow } from "electron";
-import low from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
-
-const adapter = new FileSync(
-  path.join(__dirname, "../../assets/scrapy-db.json"),
-  {
-    defaultValue: { answers: [] },
-    serialize: array => JSON.stringify(array),
-    deserialize: string => JSON.parse(string)
-  }
-);
-const db = low(adapter);
 
 let win;
 
@@ -23,38 +10,16 @@ export default (window, args) => {
 const init = args => {};
 
 export const messageTasks = async args => {
-  const { from, data } = args;
-  if (from === "app.wins.scrapy") {
-    const { type } = data;
-    if (type === "push-answers") {
-      const messages = JSON.parse(data.message);
-      messages.map(item => {
-        const findOne = db
-          .get("answers")
-          .find({ answerId: item.answerId })
-          .value();
-        if (!findOne) {
-          db.get("answers")
-            .push({
-              answerId: item.answerId,
-              title: item.title,
-              questionId: item.questionId,
-              authorName: item.authorName,
-              authorId: item.authorId,
-              content: item.content,
-              upVoteNum: item.upVoteNum,
-              createTime: Date.now()
-            })
-            .write();
-        }
-      });
-    }
-  }
-
-  if (from === "app.wins.main") {
-    console.log(args, "----");
-    const { type } = data;
-    if (type === "get-answers") {
-    }
+  const {
+    data: { type },
+    data
+  } = args;
+  if (type === "get-answers") {
+    const { pageNum, pageSize } = data;
+    // const list = db
+    //   .get("answers")
+    //   .slice((pageNum - 1) * pageSize, pageNum * pageSize)
+    //   .value();
+    //win.webContents.send("createUtils", list);
   }
 };

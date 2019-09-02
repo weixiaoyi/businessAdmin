@@ -146,9 +146,8 @@ window.ipc.on("createUtils", () => {
       if (!checkData) {
         return alert("数据格式错误");
       } else {
-        window.ipc.send("ipc_render_message", {
-          from: "app.wins.scrapy",
-          to: "app.wins.main",
+        window.ipc.send("ipc", {
+          from: "app.wins.scrapy.render",
           data: {
             type: "push-answers",
             message: JSON.stringify(answers)

@@ -13,7 +13,7 @@ class Scrapy extends Component {
     } = this.props;
 
     dispatch({
-      type: "ipc-get-scrapy-data"
+      type: "ipc-get-answers"
     });
   }
   render() {
