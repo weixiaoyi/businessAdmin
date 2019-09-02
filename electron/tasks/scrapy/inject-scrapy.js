@@ -141,16 +141,17 @@ window.ipc.on("createUtils", () => {
           item.authorId &&
           item.title &&
           item.content &&
-          item.upVoteNum
+          typeof item.upVoteNum !== undefined
       );
       if (!checkData) {
+        console.log(answers, "-----数据格式错误--------");
         return alert("数据格式错误");
       } else {
         window.ipc.send("ipc", {
           from: "app.wins.scrapy.render",
           data: {
             type: "push-answers",
-            message: JSON.stringify(answers)
+            message: answers
           }
         });
       }

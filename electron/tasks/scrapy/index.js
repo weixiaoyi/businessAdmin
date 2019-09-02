@@ -1,18 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { app, ipcMain, BrowserWindow } from "electron";
-import low from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
+import { getScrapyDb } from "../../utils";
 
-const adapter = new FileSync(
-  path.join(__dirname, "../../assets/scrapy-db.json"),
-  {
-    defaultValue: { answers: [] },
-    serialize: array => JSON.stringify(array),
-    deserialize: string => JSON.parse(string)
-  }
-);
-const db = low(adapter);
+const db = getScrapyDb();
 
 let win;
 export default (window, args) => {
@@ -37,7 +28,7 @@ export const messageTasks = async args => {
     data: { type }
   } = args;
   if (type === "push-answers") {
-    const messages = JSON.parse(data.message);
+    const messages = data.message;
     messages.map(item => {
       const findOne = db
         .get("answers")

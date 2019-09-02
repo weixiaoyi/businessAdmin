@@ -5,9 +5,17 @@ export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;
+    this.listenIpc();
   }
 
   @observable name = "scrapyStore";
+
+  listenIpc = () => {
+    window.ipc &&
+      window.ipc.on("get-scrapy-answers", (e, args) => {
+        console.log(args, "-----args");
+      });
+  };
 
   "ipc-create-scrapy" = () => {
     window.ipc &&
@@ -20,12 +28,12 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  "ipc-get-answers" = () => {
+  "ipc-get-scrapy-answers" = () => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "get-answers",
+          type: "get-scrapy-answers",
           pageSize: 10,
           pageNum: 1
         }
