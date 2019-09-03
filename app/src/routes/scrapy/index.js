@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { Table, Button } from "antd";
+import { Table, Button, Card } from "antd";
+
+import classNames from "classnames";
+import { Editor } from "../../components";
 import { Inject } from "../../utils";
 import * as styles from "./index.module.scss";
 
@@ -7,6 +10,10 @@ import * as styles from "./index.module.scss";
   model
 }))
 class Scrapy extends Component {
+  state = {
+    selectOne: {}
+  };
+
   componentDidMount() {
     const {
       model: { dispatch }
@@ -18,6 +25,7 @@ class Scrapy extends Component {
   }
 
   render() {
+    const { selectOne } = this.state;
     const {
       model: { dispatch, answers = [] }
     } = this.props;
@@ -32,9 +40,9 @@ class Scrapy extends Component {
         title: "内容",
         dataIndex: "content",
         key: "content",
-        width: 800,
+        width: 200,
         render: v => (
-          <div style={{ width: 800 }} className={styles.answerContent}>
+          <div style={{ width: 200 }} className={styles.answerContent}>
             {v}
           </div>
         )
@@ -55,20 +63,37 @@ class Scrapy extends Component {
         key: "authorName"
       }
     ];
+
     return (
-      <div className={styles.Scrapy}>
-        <Button
-          type="primary"
-          onClick={() => {
-            dispatch({
-              type: "ipc-create-scrapy"
-            });
-          }}
-        >
-          创建BrowserWindow
-        </Button>
-        <div>
-          <Table rowKey={"answerId"} columns={columns} dataSource={answers} />
+      <div className={classNames(styles.Scrapy, "page")}>
+        <div className={styles.list}>
+          <Button
+            type="primary"
+            onClick={() => {
+              dispatch({
+                type: "ipc-create-scrapy"
+              });
+            }}
+          >
+            创建BrowserWindow
+          </Button>
+          <Table
+            rowKey={"answerId"}
+            columns={columns}
+            dataSource={answers}
+            onRow={record => {
+              return {
+                onClick: () => {
+                  this.setState({
+                    selectOne: record
+                  });
+                } // 点击行
+              };
+            }}
+          />
+        </div>
+        <div className={styles.editor}>
+          <Editor content={selectOne.content} />
         </div>
       </div>
     );

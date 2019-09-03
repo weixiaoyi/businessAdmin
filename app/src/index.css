@@ -5,13 +5,18 @@ body {
   background: rgb(236, 236, 236);
 }
 
-html,
 body,
 #root,
 .App {
-  height: 100%;
-}
-.page {
   display: flex;
   flex-direction: column;
+}
+#root {
+  flex-grow: 1;
+}
+.App {
+  flex-grow: 1;
+}
+.page {
+  flex-grow: 1;
 }

@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card } from "antd";
-import claesNames from "classnames";
+import classNames from "classnames";
 import { PATH } from "../../constants";
 import * as styles from "./index.module.scss";
 
 class Home extends Component {
   render() {
     return (
-      <div className={claesNames(styles.home, "page")}>
+      <div className={classNames(styles.home, "page")}>
         <Card
           size="small"
           title="知乎爬虫"

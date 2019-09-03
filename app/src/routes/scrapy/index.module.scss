@@ -1,6 +1,21 @@
 @import "src/styles/index.scss";
-.Scrapy{
-  .answerContent{
-    @include ellipse()
+.Scrapy {
+  padding: 10px;
+  display: flex;
+  .answerContent {
+    @include ellipse();
+  }
+  > div + div {
+    margin-left: 10px;
+  }
+  > div {
+    flex-grow: 1;
+    background: white;
+    padding: 20px;
+    &.list {
+    }
+    &.editor {
+      width: 50%;
+    }
   }
 }
