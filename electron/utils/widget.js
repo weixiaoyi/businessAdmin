@@ -10,7 +10,8 @@ export const createWindow = options => {
     onCloseCallback,
     onLoadHref,
     width = 1000,
-    height = 1000
+    height = 1000,
+    webPreferences = {}
   } = options;
   let win = new BrowserWindow({
     width,
@@ -18,7 +19,8 @@ export const createWindow = options => {
     webPreferences: {
       webSecurity: false,
       nodeIntegration: false,
-      preload: path.join(__dirname, "preload.js")
+      preload: path.join(__dirname, "preload.js"),
+      ...webPreferences
     }
   });
   win.loadURL(url);

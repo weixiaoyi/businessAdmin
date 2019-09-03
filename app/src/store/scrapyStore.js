@@ -18,6 +18,17 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
+  "ipc-create-answer-preview" = payload => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "create-answer-preview",
+          url: payload.href
+        }
+      });
+  };
+
   "ipc-create-scrapy" = () => {
     window.ipc &&
       window.ipc.send("ipc", {

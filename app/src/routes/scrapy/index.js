@@ -34,7 +34,21 @@ class Scrapy extends Component {
       {
         title: "answerId",
         dataIndex: "answerId",
-        key: "answerId"
+        key: "answerId",
+        render: (v, record) => (
+          <a
+            onClick={() => {
+              dispatch({
+                type: "ipc-create-answer-preview",
+                payload: {
+                  href: `https://www.zhihu.com/question/${record.questionId}/answer/${record.answerId}`
+                }
+              });
+            }}
+          >
+            {v}
+          </a>
+        )
       },
       {
         title: "内容",
@@ -67,30 +81,38 @@ class Scrapy extends Component {
     return (
       <div className={classNames(styles.Scrapy, "page")}>
         <div className={styles.list}>
-          <Button
-            type="primary"
-            onClick={() => {
-              dispatch({
-                type: "ipc-create-scrapy"
-              });
-            }}
-          >
-            创建BrowserWindow
-          </Button>
-          <Table
-            rowKey={"answerId"}
-            columns={columns}
-            dataSource={answers}
-            onRow={record => {
-              return {
-                onClick: () => {
-                  this.setState({
-                    selectOne: record
-                  });
-                } // 点击行
-              };
-            }}
-          />
+          <div>
+            <Button
+              type="primary"
+              onClick={() => {
+                dispatch({
+                  type: "ipc-create-scrapy"
+                });
+              }}
+            >
+              创建BrowserWindow
+            </Button>
+          </div>
+          <div className={styles.leftContent}>
+            <Table
+              rowKey={"answerId"}
+              columns={columns}
+              dataSource={answers}
+              onRow={record => {
+                return {
+                  onClick: () => {
+                    this.setState({
+                      selectOne: record
+                    });
+                  } // 点击行
+                };
+              }}
+            />
+            <webview
+              className={styles.webview}
+              src={`https://www.zhihu.com/question/${selectOne.questionId}/answer/${selectOne.answerId}`}
+            />
+          </div>
         </div>
         <div className={styles.editor}>
           <Editor content={selectOne.content} />

@@ -22,6 +22,13 @@ ipcMain.on("ipc", (event, args) => {
         onCloseCallback: () => (app.wins.scrapy = null),
         onLoadHref: href => href.replace(/answer\/.*$/, "")
       });
+    } else if (type === "create-answer-preview") {
+      const { url } = data;
+      createWindow({
+        width: 800,
+        height: 800,
+        url
+      });
     } else {
       require("./main").messageTasks(args);
     }

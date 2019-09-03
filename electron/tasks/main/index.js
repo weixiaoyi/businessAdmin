@@ -20,7 +20,6 @@ export const messageTasks = async args => {
       .get("answers")
       .slice((pageNum - 1) * pageSize, pageNum * pageSize)
       .value();
-    console.log(list, "--list");
     win.webContents.send("get-scrapy-answers", list);
   }
 };
