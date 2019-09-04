@@ -13,6 +13,9 @@
     background: white;
     padding: 20px;
     &.list {
+      .utils {
+        margin-bottom: 10px;
+      }
       display: flex;
       flex-direction: column;
       .leftContent {
@@ -26,6 +29,26 @@
     }
     &.editor {
       width: 50%;
+      .contentHeader {
+        .title {
+          font-size: 16px;
+          font-weight: bold;
+        }
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        .info {
+          span + span {
+            margin-left: 10px;
+          }
+          .author {
+            font-weight: bold;
+          }
+        }
+      }
+      .preview {
+        margin-top: 10px;
+      }
     }
   }
 }

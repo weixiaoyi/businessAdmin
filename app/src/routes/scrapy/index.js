@@ -3,7 +3,8 @@ import { Table, Button, Card } from "antd";
 
 import classNames from "classnames";
 import { Editor } from "../../components";
-import { Inject } from "../../utils";
+import { Inject, formatTime } from "../../utils";
+import Preview from "./preview";
 import * as styles from "./index.module.scss";
 
 @Inject(({ scrapyStore: model }) => ({
@@ -65,23 +66,13 @@ class Scrapy extends Component {
         title: "赞同票数",
         dataIndex: "upVoteNum",
         key: "upVoteNum"
-      },
-      {
-        title: "标题",
-        dataIndex: "title",
-        key: "title"
-      },
-      {
-        title: "作者",
-        dataIndex: "authorName",
-        key: "authorName"
       }
     ];
 
     return (
       <div className={classNames(styles.Scrapy, "page")}>
         <div className={styles.list}>
-          <div>
+          <div className={styles.utils}>
             <Button
               type="primary"
               onClick={() => {
@@ -104,18 +95,37 @@ class Scrapy extends Component {
                     this.setState({
                       selectOne: record
                     });
-                  } // 点击行
+                  }
                 };
               }}
             />
             <webview
               className={styles.webview}
-              src={`https://www.zhihu.com/question/${selectOne.questionId}/answer/${selectOne.answerId}`}
+              src={
+                selectOne.questionId
+                  ? `https://www.zhihu.com/question/${selectOne.questionId}/answer/${selectOne.answerId}`
+                  : "https://www.zhihu.com/"
+              }
             />
           </div>
         </div>
         <div className={styles.editor}>
+          {selectOne.title && (
+            <div className={styles.contentHeader}>
+              <span className={styles.title}>{selectOne.title}</span>
+              <div className={styles.info}>
+                <span className={styles.author}>({selectOne.authorName})</span>
+                {selectOne.createTime && (
+                  <span>{formatTime(selectOne.createTime)}</span>
+                )}
+              </div>
+            </div>
+          )}
+
           <Editor content={selectOne.content} />
+          <div className={styles.preview}>
+            <Preview content={selectOne.content} />
+          </div>
         </div>
       </div>
     );
