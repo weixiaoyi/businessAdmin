@@ -1,5 +1,6 @@
 import { autorun, computed, observable } from "mobx";
 import ModelExtend from "./modelExtend";
+import { message } from "antd";
 
 export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
@@ -14,6 +15,14 @@ export default class ScrapyStore extends ModelExtend {
   listenIpc = () => {
     window.ipc &&
       window.ipc.on("get-scrapy-answers", (e, args) => {
+        const newAmounts = args.reduce((sum, item) => {
+          if (!this.answers.find(one => one.answerId === item.answerId)) {
+            sum++;
+          }
+          return sum;
+        }, 0);
+        if (newAmounts > 0 && this.answers.length)
+          message.success(`新增了${newAmounts}条数据！`);
         this.commit("answers", args);
       });
   };

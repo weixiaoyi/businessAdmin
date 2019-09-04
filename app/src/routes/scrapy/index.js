@@ -16,6 +16,10 @@ class Scrapy extends Component {
   };
 
   componentDidMount() {
+    this.getAnswers();
+  }
+
+  getAnswers = () => {
     const {
       model: { dispatch }
     } = this.props;
@@ -23,7 +27,7 @@ class Scrapy extends Component {
     dispatch({
       type: "ipc-get-scrapy-answers"
     });
-  }
+  };
 
   render() {
     const { selectOne } = this.state;
@@ -34,6 +38,7 @@ class Scrapy extends Component {
     const columns = [
       {
         title: "answerId",
+        width: 100,
         dataIndex: "answerId",
         key: "answerId",
         render: (v, record) => (
@@ -63,6 +68,23 @@ class Scrapy extends Component {
         )
       },
       {
+        title: "审批",
+        dataIndex: "approve",
+        key: "approve",
+        width: 100,
+        render: v => (
+          <div>
+            {!v ? (
+              <span className={styles.notApprove}>未审批</span>
+            ) : v === 1 ? (
+              <span className={styles.approve}>审批通过</span>
+            ) : (
+              <span className={styles.delayApprove}>延迟审批</span>
+            )}
+          </div>
+        )
+      },
+      {
         title: "赞同票数",
         dataIndex: "upVoteNum",
         key: "upVoteNum"
@@ -81,7 +103,10 @@ class Scrapy extends Component {
                 });
               }}
             >
-              创建BrowserWindow
+              创建爬虫
+            </Button>
+            <Button type="dashed" icon="reload" onClick={this.getAnswers}>
+              刷新数据
             </Button>
           </div>
           <div className={styles.leftContent}>

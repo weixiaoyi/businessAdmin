@@ -1,9 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { app, ipcMain, BrowserWindow } from "electron";
+import { app, ipcMain, BrowserWindow, Notification } from "electron";
 import { getScrapyDb } from "../../utils";
-
-const db = getScrapyDb();
 
 let win;
 export default (window, args) => {
@@ -23,11 +21,13 @@ const init = args => {
 };
 
 export const messageTasks = async args => {
+  const db = getScrapyDb();
   const {
     data,
     data: { type }
   } = args;
   if (type === "push-answers") {
+    let newMessageAmount = 0;
     const messages = data.message;
     messages.map(item => {
       const findOne = db
@@ -36,7 +36,7 @@ export const messageTasks = async args => {
         .value();
       if (!findOne) {
         db.get("answers")
-          .push({
+          .unshift({
             answerId: item.answerId,
             title: item.title,
             questionId: item.questionId,
@@ -47,7 +47,15 @@ export const messageTasks = async args => {
             createTime: Date.now()
           })
           .write();
+        newMessageAmount++;
       }
     });
+    if (newMessageAmount) {
+      const notice = new Notification({
+        body: `新采集到${newMessageAmount}条数据`,
+        silent: true
+      });
+      notice.show();
+    }
   }
 };

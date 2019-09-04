@@ -1,8 +1,6 @@
 import { app, ipcMain, BrowserWindow } from "electron";
 import { getScrapyDb } from "../../utils";
 
-const scrapyDb = getScrapyDb();
-
 let win;
 
 export default window => {
@@ -10,6 +8,7 @@ export default window => {
 };
 
 export const messageTasks = async args => {
+  const scrapyDb = getScrapyDb();
   const {
     data: { type },
     data
