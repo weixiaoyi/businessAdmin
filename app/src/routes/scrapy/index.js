@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Button, Card } from "antd";
+import { Table, Button, Card, Popconfirm } from "antd";
 
 import classNames from "classnames";
 import { Editor } from "../../components";
@@ -65,9 +65,17 @@ class Scrapy extends Component {
         title: "内容",
         dataIndex: "content",
         key: "content",
-        width: 200,
-        render: v => (
-          <div style={{ width: 200 }} className={styles.answerContent}>
+        width: 220,
+        render: (v, record) => (
+          <div
+            style={{ width: 200 }}
+            className={styles.answerContent}
+            onClick={() => {
+              this.setState({
+                selectOne: record
+              });
+            }}
+          >
             {v}
           </div>
         )
@@ -93,6 +101,28 @@ class Scrapy extends Component {
         title: "赞同票数",
         dataIndex: "upVoteNum",
         key: "upVoteNum"
+      },
+      {
+        title: "操作",
+        dataIndex: "operation",
+        key: "operation",
+        render: (v, record) => (
+          <span>
+            <Popconfirm
+              title="确认删除?"
+              onConfirm={() => {
+                dispatch({
+                  type: "ipc-delete-answer",
+                  payload: {
+                    answerId: record.answerId
+                  }
+                });
+              }}
+            >
+              <a>删除</a>
+            </Popconfirm>
+          </span>
+        )
       }
     ];
 
@@ -121,15 +151,6 @@ class Scrapy extends Component {
               columns={columns}
               dataSource={answers}
               onChange={this.getAnswers}
-              onRow={record => {
-                return {
-                  onClick: () => {
-                    this.setState({
-                      selectOne: record
-                    });
-                  }
-                };
-              }}
             />
             <webview
               className={styles.webview}

@@ -1,6 +1,6 @@
 import { autorun, computed, observable } from "mobx";
 import ModelExtend from "./modelExtend";
-import { message } from "antd";
+import { notification } from "antd";
 
 export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
@@ -18,7 +18,7 @@ export default class ScrapyStore extends ModelExtend {
       window.ipc.on("scrapy.get-answers", (e, args) => {
         const { data, total, pageSize, current } = args;
         const len = total - this.pagination.total;
-        if (len > 0) message.success(`新增了${len}条数据！`);
+        if (len > 0) notification.info(`新增了${len}条数据！`);
         this.commit({
           answers: data,
           pagination: {
@@ -28,6 +28,13 @@ export default class ScrapyStore extends ModelExtend {
           }
         });
       });
+    window.ipc.on("scrapy.delete-answers", (e, arg) => {
+      notification.success({
+        message: "answer删除",
+        description: `answerId:${arg}被删除`
+      });
+      this["ipc-get-scrapy-answers"]();
+    });
   };
 
   "ipc-create-answer-preview" = payload => {
@@ -52,7 +59,7 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  "ipc-get-scrapy-answers" = ({ current, pageSize }) => {
+  "ipc-get-scrapy-answers" = ({ current, pageSize } = {}) => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
@@ -64,5 +71,26 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  "ipc-update-answer" = () => {};
+  "ipc-update-answer" = ({ answerId, content }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "scrapy.update-answers",
+          answerId,
+          content
+        }
+      });
+  };
+
+  "ipc-delete-answer" = ({ answerId }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "scrapy.delete-answers",
+          answerId
+        }
+      });
+  };
 }

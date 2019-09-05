@@ -23,5 +23,14 @@ export const messageTasks = async args => {
       pageSize,
       current: pageNum
     });
+  } else if (type === "scrapy.delete-answers") {
+    const {
+      data: { answerId }
+    } = args;
+    scrapyDb
+      .get("answers")
+      .remove({ answerId })
+      .write();
+    win.webContents.send("scrapy.delete-answers", answerId);
   }
 };

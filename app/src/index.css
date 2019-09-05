@@ -20,3 +20,7 @@ body,
 .page {
   flex-grow: 1;
 }
+
+.ant-notification {
+  z-index: 10002;
+}

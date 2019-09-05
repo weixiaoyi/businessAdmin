@@ -4,6 +4,7 @@
   padding: 10px;
   display: flex;
   .answerContent {
+    cursor: pointer;
     @include ellipse();
   }
   .notApprove {
