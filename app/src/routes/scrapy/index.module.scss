@@ -33,6 +33,18 @@
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        :global {
+          tr {
+            height: 35px;
+            td,
+            th {
+              padding: 0 !important;
+            }
+          }
+          .ant-table-pagination.ant-pagination {
+            margin: 5px !important;
+          }
+        }
         .webview {
           flex-grow: 1;
         }

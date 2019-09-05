@@ -19,20 +19,24 @@ class Scrapy extends Component {
     this.getAnswers();
   }
 
-  getAnswers = () => {
+  getAnswers = ({ current, pageSize } = {}) => {
     const {
       model: { dispatch }
     } = this.props;
 
     dispatch({
-      type: "ipc-get-scrapy-answers"
+      type: "ipc-get-scrapy-answers",
+      payload: {
+        current,
+        pageSize
+      }
     });
   };
 
   render() {
     const { selectOne } = this.state;
     const {
-      model: { dispatch, answers = [] }
+      model: { dispatch, answers = [], pagination }
     } = this.props;
 
     const columns = [
@@ -43,7 +47,8 @@ class Scrapy extends Component {
         key: "answerId",
         render: (v, record) => (
           <a
-            onClick={() => {
+            onClick={e => {
+              e.stopPropagation();
               dispatch({
                 type: "ipc-create-answer-preview",
                 payload: {
@@ -111,9 +116,11 @@ class Scrapy extends Component {
           </div>
           <div className={styles.leftContent}>
             <Table
+              pagination={pagination}
               rowKey={"answerId"}
               columns={columns}
               dataSource={answers}
+              onChange={this.getAnswers}
               onRow={record => {
                 return {
                   onClick: () => {

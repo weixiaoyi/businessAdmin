@@ -15,10 +15,13 @@ export const messageTasks = async args => {
   } = args;
   if (type === "get-scrapy-answers") {
     const { pageNum, pageSize } = data;
-    const list = scrapyDb
-      .get("answers")
-      .slice((pageNum - 1) * pageSize, pageNum * pageSize)
-      .value();
-    win.webContents.send("get-scrapy-answers", list);
+    const answers = scrapyDb.get("answers").value();
+    const list = answers.slice((pageNum - 1) * pageSize, pageNum * pageSize);
+    win.webContents.send("get-scrapy-answers", {
+      data: list,
+      total: answers.length,
+      pageSize,
+      current: pageNum
+    });
   }
 };

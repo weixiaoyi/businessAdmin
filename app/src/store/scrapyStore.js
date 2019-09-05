@@ -11,19 +11,22 @@ export default class ScrapyStore extends ModelExtend {
 
   @observable name = "scrapyStore";
   @observable answers = [];
+  @observable pagination = {};
 
   listenIpc = () => {
     window.ipc &&
       window.ipc.on("get-scrapy-answers", (e, args) => {
-        const newAmounts = args.reduce((sum, item) => {
-          if (!this.answers.find(one => one.answerId === item.answerId)) {
-            sum++;
+        const { data, total, pageSize, current } = args;
+        const len = total - this.pagination.total;
+        if (len > 0) message.success(`新增了${len}条数据！`);
+        this.commit({
+          answers: data,
+          pagination: {
+            total,
+            pageSize,
+            current
           }
-          return sum;
-        }, 0);
-        if (newAmounts > 0 && this.answers.length)
-          message.success(`新增了${newAmounts}条数据！`);
-        this.commit("answers", args);
+        });
       });
   };
 
@@ -49,14 +52,14 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  "ipc-get-scrapy-answers" = () => {
+  "ipc-get-scrapy-answers" = ({ current, pageSize }) => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
           type: "get-scrapy-answers",
-          pageSize: 10,
-          pageNum: 1
+          pageSize: pageSize || this.pagination.pageSize || 10,
+          pageNum: current || this.pagination.current || 1
         }
       });
   };
