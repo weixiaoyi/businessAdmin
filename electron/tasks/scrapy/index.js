@@ -15,7 +15,7 @@ const init = args => {
     .toString();
   win.webContents.on("did-navigate", () => {
     win.webContents.executeJavaScript(js).then(() => {
-      win.webContents.send("createUtils", args);
+      win.webContents.send("scrapy.createUtils", args);
     });
   });
 };
@@ -26,7 +26,7 @@ export const messageTasks = async args => {
     data,
     data: { type }
   } = args;
-  if (type === "push-answers") {
+  if (type === "scrapy.push-answers") {
     let newMessageAmount = 0;
     const messages = data.message;
     messages.map(item => {

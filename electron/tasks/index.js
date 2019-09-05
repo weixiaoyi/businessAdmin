@@ -9,7 +9,7 @@ ipcMain.on("ipc", (event, args) => {
   } = args;
   if (!from || !data || !type) return console.log("来自渲染进程的ipc参数错误");
   if (from === "app.wins.main.render") {
-    if (type === "create-scrapy") {
+    if (type === "scrapy.create") {
       if (app.wins.scrapy) return;
       const { url } = data;
       app.wins.scrapy = createWindow({
@@ -22,7 +22,7 @@ ipcMain.on("ipc", (event, args) => {
         onCloseCallback: () => (app.wins.scrapy = null),
         onLoadHref: href => href.replace(/answer\/.*$/, "")
       });
-    } else if (type === "create-answer-preview") {
+    } else if (type === "scrapy.create-answer-preview") {
       const { url } = data;
       createWindow({
         width: 800,

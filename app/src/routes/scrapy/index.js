@@ -154,7 +154,19 @@ class Scrapy extends Component {
             </div>
           )}
 
-          <Editor content={selectOne.content} />
+          <Editor content={selectOne.content}>
+            {editor => (
+              <div>
+                <Button
+                  onClick={() => {
+                    console.log(editor.txt.html());
+                  }}
+                >
+                  保存
+                </Button>
+              </div>
+            )}
+          </Editor>
           <div className={styles.preview}>
             <Preview content={selectOne.content} />
           </div>

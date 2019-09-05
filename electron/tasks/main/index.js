@@ -13,11 +13,11 @@ export const messageTasks = async args => {
     data: { type },
     data
   } = args;
-  if (type === "get-scrapy-answers") {
+  if (type === "scrapy.get-answers") {
     const { pageNum, pageSize } = data;
     const answers = scrapyDb.get("answers").value();
     const list = answers.slice((pageNum - 1) * pageSize, pageNum * pageSize);
-    win.webContents.send("get-scrapy-answers", {
+    win.webContents.send("scrapy.get-answers", {
       data: list,
       total: answers.length,
       pageSize,

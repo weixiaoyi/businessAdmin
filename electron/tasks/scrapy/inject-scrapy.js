@@ -13,7 +13,7 @@ const detailStyle = {
   color: "white"
 };
 
-window.ipc.on("createUtils", () => {
+window.ipc.on("scrapy.createUtils", () => {
   const div = document.createElement("div");
   const content = `
 <div id="electron-utils" style=${formatStyle({
@@ -150,7 +150,7 @@ window.ipc.on("createUtils", () => {
         window.ipc.send("ipc", {
           from: "app.wins.scrapy.render",
           data: {
-            type: "push-answers",
+            type: "scrapy.push-answers",
             message: answers
           }
         });

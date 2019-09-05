@@ -15,7 +15,7 @@ export default class ScrapyStore extends ModelExtend {
 
   listenIpc = () => {
     window.ipc &&
-      window.ipc.on("get-scrapy-answers", (e, args) => {
+      window.ipc.on("scrapy.get-answers", (e, args) => {
         const { data, total, pageSize, current } = args;
         const len = total - this.pagination.total;
         if (len > 0) message.success(`新增了${len}条数据！`);
@@ -35,7 +35,7 @@ export default class ScrapyStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "create-answer-preview",
+          type: "scrapy.create-answer-preview",
           url: payload.href
         }
       });
@@ -46,7 +46,7 @@ export default class ScrapyStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "create-scrapy",
+          type: "scrapy.create",
           url: "http://zhihu.com"
         }
       });
@@ -57,10 +57,12 @@ export default class ScrapyStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "get-scrapy-answers",
+          type: "scrapy.get-answers",
           pageSize: pageSize || this.pagination.pageSize || 10,
           pageNum: current || this.pagination.current || 1
         }
       });
   };
+
+  "ipc-update-answer" = () => {};
 }

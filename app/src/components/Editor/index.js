@@ -30,6 +30,7 @@ class Editor extends Component {
     return (
       <div>
         <div ref="editorElem" style={{ textAlign: "left" }} />
+        {this.props.children(this.editor)}
       </div>
     );
   }
