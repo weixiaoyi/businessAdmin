@@ -1,9 +1,9 @@
 import path from "path";
 import low from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
+import FileAsync from "lowdb/adapters/FileAsync";
 
 export const getScrapyDb = () => {
-  const adapter = new FileSync(
+  const adapter = new FileAsync(
     path.join(__dirname, "../assets/scrapy-db.json"),
     {
       defaultValue: { answers: [] },

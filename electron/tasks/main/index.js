@@ -8,7 +8,7 @@ export default window => {
 };
 
 export const messageTasks = async args => {
-  const scrapyDb = getScrapyDb();
+  const scrapyDb = await getScrapyDb();
   const {
     data: { type },
     data
@@ -27,7 +27,7 @@ export const messageTasks = async args => {
     const {
       data: { answerId }
     } = args;
-    scrapyDb
+    await scrapyDb
       .get("answers")
       .remove({ answerId })
       .write();

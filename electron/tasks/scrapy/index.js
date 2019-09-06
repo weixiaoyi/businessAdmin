@@ -21,7 +21,7 @@ const init = args => {
 };
 
 export const messageTasks = async args => {
-  const db = getScrapyDb();
+  const db = await getScrapyDb();
   const {
     data,
     data: { type }
@@ -29,27 +29,30 @@ export const messageTasks = async args => {
   if (type === "scrapy.push-answers") {
     let newMessageAmount = 0;
     const messages = data.message;
-    messages.map(item => {
-      const findOne = db
-        .get("answers")
-        .find({ answerId: item.answerId })
-        .value();
-      if (!findOne) {
-        db.get("answers")
-          .unshift({
-            answerId: item.answerId,
-            title: item.title,
-            questionId: item.questionId,
-            authorName: item.authorName,
-            authorId: item.authorId,
-            content: item.content,
-            upVoteNum: item.upVoteNum,
-            createTime: Date.now()
-          })
-          .write();
-        newMessageAmount++;
-      }
-    });
+    await Promise.all(
+      messages.map(item => {
+        const findOne = db
+          .get("answers")
+          .find({ answerId: item.answerId })
+          .value();
+        if (!findOne) {
+          newMessageAmount++;
+          return db
+            .get("answers")
+            .unshift({
+              answerId: item.answerId,
+              title: item.title,
+              questionId: item.questionId,
+              authorName: item.authorName,
+              authorId: item.authorId,
+              content: item.content,
+              upVoteNum: item.upVoteNum,
+              createTime: Date.now()
+            })
+            .write();
+        }
+      })
+    );
     if (newMessageAmount) {
       const notice = new Notification({
         body: `新采集到${newMessageAmount}条数据`,

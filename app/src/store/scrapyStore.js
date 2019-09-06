@@ -18,7 +18,10 @@ export default class ScrapyStore extends ModelExtend {
       window.ipc.on("scrapy.get-answers", (e, args) => {
         const { data, total, pageSize, current } = args;
         const len = total - this.pagination.total;
-        if (len > 0) notification.info(`新增了${len}条数据！`);
+        if (len > 0)
+          notification.info({
+            message: `新增了${len}条数据！`
+          });
         this.commit({
           answers: data,
           pagination: {
