@@ -39,11 +39,18 @@ export default class ScrapyStore extends ModelExtend {
       this["ipc-get-scrapy-answers"]();
     });
     window.ipc.on("scrapy.update-answers", (e, arg) => {
-      notification.success({
-        message: "answer更新",
-        description: `answerId:${arg}更新成功`
-      });
-      this["ipc-get-scrapy-answers"]();
+      if (arg) {
+        notification.success({
+          message: "answer更新",
+          description: `answerId:${arg}更新成功`
+        });
+        this["ipc-get-scrapy-answers"]();
+      } else {
+        notification.error({
+          message: "answer未找到",
+          description: `answerId:${arg}已经被删除`
+        });
+      }
     });
   };
 

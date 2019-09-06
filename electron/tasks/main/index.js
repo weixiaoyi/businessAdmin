@@ -36,11 +36,15 @@ export const messageTasks = async args => {
     const {
       data: { answerId, content }
     } = args;
-    await scrapyDb
+    const findOne = await scrapyDb
       .get("answers")
       .find({ answerId })
       .set("content", content)
       .write();
-    win.webContents.send("scrapy.update-answers", answerId);
+    if (findOne) {
+      win.webContents.send("scrapy.update-answers", answerId);
+    } else {
+      win.webContents.send("scrapy.update-answers", null);
+    }
   }
 };
