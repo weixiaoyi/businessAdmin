@@ -34,6 +34,9 @@
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        .activeRow {
+          background: $yellow;
+        }
         :global {
           tr {
             height: 35px;
@@ -68,6 +71,9 @@
             font-weight: bold;
           }
         }
+      }
+      .utils {
+        margin-top: 10px;
       }
       .preview {
         margin-top: 10px;

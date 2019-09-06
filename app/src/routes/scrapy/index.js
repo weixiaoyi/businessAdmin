@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Table, Button, Card, Popconfirm } from "antd";
 
 import classNames from "classnames";
+import _ from "lodash";
 import { Editor } from "../../components";
 import { Inject, formatTime } from "../../utils";
 import Preview from "./preview";
@@ -17,6 +18,19 @@ class Scrapy extends Component {
 
   componentDidMount() {
     this.getAnswers();
+  }
+
+  componentDidUpdate() {
+    const { selectOne } = this.state;
+    const {
+      model: { answers }
+    } = this.props;
+    const findOne = answers.find(item => item.answerId === selectOne.answerId);
+    if (findOne && !_.isEqual(findOne, selectOne)) {
+      this.setState({
+        selectOne: findOne
+      });
+    }
   }
 
   getAnswers = ({ current, pageSize } = {}) => {
@@ -146,6 +160,9 @@ class Scrapy extends Component {
           </div>
           <div className={styles.leftContent}>
             <Table
+              rowClassName={record =>
+                selectOne.answerId === record.answerId ? styles.activeRow : null
+              }
               pagination={pagination}
               rowKey={"answerId"}
               columns={columns}
@@ -177,10 +194,17 @@ class Scrapy extends Component {
 
           <Editor content={selectOne.content}>
             {editor => (
-              <div>
+              <div className={styles.utils}>
                 <Button
+                  type="primary"
                   onClick={() => {
-                    console.log(editor.txt.html());
+                    dispatch({
+                      type: "ipc-update-answer",
+                      payload: {
+                        answerId: selectOne.answerId,
+                        content: editor.txt.html()
+                      }
+                    });
                   }}
                 >
                   保存

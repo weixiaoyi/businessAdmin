@@ -38,6 +38,13 @@ export default class ScrapyStore extends ModelExtend {
       });
       this["ipc-get-scrapy-answers"]();
     });
+    window.ipc.on("scrapy.update-answers", (e, arg) => {
+      notification.success({
+        message: "answer更新",
+        description: `answerId:${arg}更新成功`
+      });
+      this["ipc-get-scrapy-answers"]();
+    });
   };
 
   "ipc-create-answer-preview" = payload => {

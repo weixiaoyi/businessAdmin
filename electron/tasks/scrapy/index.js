@@ -14,9 +14,12 @@ const init = args => {
     .readFileSync(path.join(__dirname, "inject-scrapy.js"))
     .toString();
   win.webContents.on("did-navigate", () => {
-    win.webContents.executeJavaScript(js).then(() => {
-      win.webContents.send("scrapy.createUtils", args);
-    });
+    win.webContents
+      .executeJavaScript(js)
+      .then(() => {
+        win.webContents.send("scrapy.createUtils", args);
+      })
+      .catch(err => err);
   });
 };
 

@@ -32,5 +32,15 @@ export const messageTasks = async args => {
       .remove({ answerId })
       .write();
     win.webContents.send("scrapy.delete-answers", answerId);
+  } else if (type === "scrapy.update-answers") {
+    const {
+      data: { answerId, content }
+    } = args;
+    await scrapyDb
+      .get("answers")
+      .find({ answerId })
+      .set("content", content)
+      .write();
+    win.webContents.send("scrapy.update-answers", answerId);
   }
 };
