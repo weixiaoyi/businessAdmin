@@ -1,0 +1,42 @@
+.utils {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  input,
+  button {
+    background: #fdba3b;
+    outline: unset;
+    height: 30px;
+    border: unset;
+  }
+  input {
+    background: white;
+
+    padding: 0 10px;
+  }
+  button {
+    cursor: pointer;
+    width: 80px;
+    &.export {
+      border: unset;
+      border-radius: 20px;
+    }
+  }
+  .importUrl {
+    border: 1px solid #fdba3b;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-right: 10px;
+  }
+}
+:global {
+  .tui-image-editor-header-logo {
+    display: none;
+  }
+  .tui-image-editor-header {
+    display: none;
+  }
+  .tui-image-editor-container .tui-image-editor-main {
+    top: 0;
+  }
+}
