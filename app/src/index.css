@@ -24,3 +24,8 @@ body,
 .ant-notification {
   z-index: 10002;
 }
+
+div[contenteditable="false"] {
+  cursor: not-allowed;
+  background: #dfdfdf;
+}

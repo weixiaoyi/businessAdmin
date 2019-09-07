@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Table, Button, Card, Popconfirm, Divider } from "antd";
+import { Button, Card, Divider } from "antd";
 
 import classNames from "classnames";
 import _ from "lodash";
 import { Editor } from "../../components";
 import { Inject, formatTime } from "../../utils";
 import Preview from "./preview";
+import AnswerTable from "./answerTable";
 import * as styles from "./index.module.scss";
 
 @Inject(({ scrapyStore: model }) => ({
@@ -61,130 +62,19 @@ class Scrapy extends Component {
     });
   };
 
+  switchAnswer = ({ selectOne, editable }) => {
+    this.setState({
+      selectOne,
+      editable
+    });
+  };
+
   render() {
     const { selectOne, editable } = this.state;
     const {
       model: { dispatch, answers = [], pagination }
     } = this.props;
 
-    const columns = [
-      {
-        title: "answerId",
-        width: 100,
-        dataIndex: "answerId",
-        key: "answerId",
-        render: (v, record) => (
-          <a
-            onClick={e => {
-              e.stopPropagation();
-              dispatch({
-                type: "ipc-create-answer-preview",
-                payload: {
-                  href: `https://www.zhihu.com/question/${record.questionId}/answer/${record.answerId}`
-                }
-              });
-            }}
-          >
-            {v}
-          </a>
-        )
-      },
-      {
-        title: "内容",
-        dataIndex: "content",
-        key: "content",
-        width: 220,
-        render: (v, record) => (
-          <div
-            style={{ width: 200 }}
-            className={styles.answerContent}
-            onClick={() => {
-              this.setState({
-                selectOne: record,
-                editable: record.approve !== 1
-              });
-            }}
-          >
-            {v}
-          </div>
-        )
-      },
-      {
-        title: "状态",
-        dataIndex: "approve",
-        key: "approve",
-        width: 100,
-        render: v => (
-          <div>
-            {!v ? (
-              <span className={styles.notApprove}>未审批</span>
-            ) : v === 1 ? (
-              <span className={styles.approve}>审批通过</span>
-            ) : (
-              <span className={styles.delayApprove}>延迟审批</span>
-            )}
-          </div>
-        )
-      },
-      {
-        title: "赞同",
-        dataIndex: "upVoteNum",
-        key: "upVoteNum"
-      },
-      {
-        title: "操作",
-        dataIndex: "operation",
-        key: "operation",
-        render: (v, record) => (
-          <span>
-            <Popconfirm
-              title="确认删除?"
-              onConfirm={() => {
-                dispatch({
-                  type: "ipc-delete-answer",
-                  payload: {
-                    answerId: record.answerId
-                  }
-                });
-              }}
-            >
-              <a className={styles.delete}>删除</a>
-            </Popconfirm>
-            <Divider type="vertical" />
-            {record.approve !== 1 && (
-              <>
-                <a
-                  onClick={() => {
-                    this.updateAnswer({
-                      answerId: record.answerId,
-                      approve: 1
-                    });
-                  }}
-                >
-                  通过
-                </a>
-                <Divider type="vertical" />
-              </>
-            )}
-
-            {record.approve !== 2 && (
-              <>
-                <a
-                  onClick={() => {
-                    this.updateAnswer({
-                      answerId: record.answerId,
-                      approve: 2
-                    });
-                  }}
-                >
-                  延迟
-                </a>
-              </>
-            )}
-          </span>
-        )
-      }
-    ];
     return (
       <div className={classNames(styles.Scrapy, "page")}>
         <div className={styles.list}>
@@ -204,16 +94,16 @@ class Scrapy extends Component {
             </Button>
           </div>
           <div className={styles.leftContent}>
-            <Table
-              rowClassName={record =>
-                selectOne.answerId === record.answerId ? styles.activeRow : null
-              }
+            <AnswerTable
+              dispatch={dispatch}
+              answers={answers}
               pagination={pagination}
-              rowKey={"answerId"}
-              columns={columns}
-              dataSource={answers}
-              onChange={this.getAnswers}
+              selectOne={selectOne}
+              getAnswers={this.getAnswers}
+              switchAnswer={this.switchAnswer}
+              updateAnswer={this.updateAnswer}
             />
+
             <webview
               className={styles.webview}
               src={

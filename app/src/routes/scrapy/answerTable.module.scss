@@ -1,0 +1,33 @@
+@import "src/styles/index.scss";
+
+.answerContent {
+  cursor: pointer;
+  @include ellipse();
+}
+.notApprove,
+.delete {
+  color: $red;
+}
+.approve {
+  color: $green;
+}
+.delayApprove {
+  color: $yellow;
+}
+
+.activeRow {
+  background: #faed8b;
+}
+
+:global {
+  tr {
+    height: 35px;
+    td,
+    th {
+      padding: 0 !important;
+    }
+  }
+  .ant-table-pagination.ant-pagination {
+    margin: 5px !important;
+  }
+}
