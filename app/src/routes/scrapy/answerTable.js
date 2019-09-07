@@ -151,6 +151,7 @@ class AnswerTable extends Component {
     };
     return (
       <Table
+        scroll={{ x: 650 }}
         rowSelection={rowSelection}
         rowClassName={record =>
           selectOne.answerId === record.answerId ? styles.activeRow : null

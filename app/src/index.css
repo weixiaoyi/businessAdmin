@@ -29,6 +29,10 @@ body,
   word-break: break-all;
 }
 
+.ant-table-body {
+  overflow: auto;
+}
+
 div[contenteditable="false"] {
   cursor: not-allowed;
   background: #dfdfdf;

@@ -3,7 +3,7 @@ import { Button, Card, Divider } from "antd";
 
 import classNames from "classnames";
 import _ from "lodash";
-import { Editor } from "../../components";
+import { Editor, ImageEditor } from "../../components";
 import { Inject, formatTime } from "../../utils";
 import Preview from "./preview";
 import AnswerTable from "./answerTable";
@@ -121,6 +121,7 @@ class Scrapy extends Component {
               <Button type="dashed" icon="reload" onClick={this.getAnswers}>
                 刷新数据
               </Button>
+              <ImageEditor />
             </div>
             <div>
               <Button

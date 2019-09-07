@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Inject } from "../../utils";
-import * as styles from "./preview.scss";
+import * as styles from "./preview.module.scss";
 
 @Inject(({ scrapyStore: model }) => ({
   model
