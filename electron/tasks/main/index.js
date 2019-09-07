@@ -47,5 +47,14 @@ export const messageTasks = async args => {
     } else {
       win.webContents.send("scrapy.update-answers", null);
     }
+  } else if (type === "scrapy.mass-delete-answers") {
+    const {
+      data: { answerIds }
+    } = args;
+    await scrapyDb
+      .get("answers")
+      .remove(item => answerIds.find(one => one === item.answerId))
+      .write();
+    win.webContents.send("scrapy.mass-delete-answers", answerIds);
   }
 };

@@ -17,7 +17,8 @@ class AnswerTable extends Component {
       getAnswers,
       switchAnswer,
       updateAnswer,
-      selectOne
+      selectOne,
+      setSelectRows
     } = this.props;
 
     const columns = [
@@ -138,8 +139,19 @@ class AnswerTable extends Component {
         )
       }
     ];
+
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        const answerIds = selectedRows.map(item => item.answerId);
+        setSelectRows(answerIds);
+      },
+      getCheckboxProps: record => ({
+        disabled: record.approve === 1 || record.approve === 2
+      })
+    };
     return (
       <Table
+        rowSelection={rowSelection}
         rowClassName={record =>
           selectOne.answerId === record.answerId ? styles.activeRow : null
         }

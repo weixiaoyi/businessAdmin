@@ -31,6 +31,7 @@ export default class ScrapyStore extends ModelExtend {
           }
         });
       });
+
     window.ipc.on("scrapy.delete-answers", (e, arg) => {
       notification.success({
         message: "answer删除",
@@ -38,6 +39,15 @@ export default class ScrapyStore extends ModelExtend {
       });
       this["ipc-get-scrapy-answers"]();
     });
+
+    window.ipc.on("scrapy.mass-delete-answers", (e, arg) => {
+      notification.success({
+        message: "answer批量删除",
+        description: `answerId:${arg}被删除`
+      });
+      this["ipc-get-scrapy-answers"]();
+    });
+
     window.ipc.on("scrapy.update-answers", (e, arg) => {
       if (arg) {
         notification.success({
@@ -107,6 +117,17 @@ export default class ScrapyStore extends ModelExtend {
         data: {
           type: "scrapy.delete-answers",
           answerId
+        }
+      });
+  };
+
+  "ipc-mass-delete-answer" = ({ answerIds }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "scrapy.mass-delete-answers",
+          answerIds
         }
       });
   };

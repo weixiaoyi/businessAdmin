@@ -25,6 +25,10 @@ body,
   z-index: 10002;
 }
 
+.ant-notification-notice-description {
+  word-break: break-all;
+}
+
 div[contenteditable="false"] {
   cursor: not-allowed;
   background: #dfdfdf;

@@ -15,7 +15,8 @@ import * as styles from "./index.module.scss";
 class Scrapy extends Component {
   state = {
     selectOne: {},
-    editable: null
+    editable: null,
+    selectAnswerIds: []
   };
 
   componentDidMount() {
@@ -69,8 +70,27 @@ class Scrapy extends Component {
     });
   };
 
+  massDelete = () => {
+    const {
+      model: { dispatch }
+    } = this.props;
+    const { selectAnswerIds } = this.state;
+    dispatch({
+      type: "ipc-mass-delete-answer",
+      payload: {
+        answerIds: selectAnswerIds
+      }
+    });
+  };
+
+  setSelectRows = answerIds => {
+    this.setState({
+      selectAnswerIds: answerIds
+    });
+  };
+
   render() {
-    const { selectOne, editable } = this.state;
+    const { selectOne, editable, selectAnswerIds } = this.state;
     const {
       model: { dispatch, answers = [], pagination }
     } = this.props;
@@ -79,19 +99,30 @@ class Scrapy extends Component {
       <div className={classNames(styles.Scrapy, "page")}>
         <div className={styles.list}>
           <div className={styles.utils}>
-            <Button
-              type="primary"
-              onClick={() => {
-                dispatch({
-                  type: "ipc-create-scrapy"
-                });
-              }}
-            >
-              创建爬虫
-            </Button>
-            <Button type="dashed" icon="reload" onClick={this.getAnswers}>
-              刷新数据
-            </Button>
+            <div>
+              <Button
+                type="primary"
+                onClick={() => {
+                  dispatch({
+                    type: "ipc-create-scrapy"
+                  });
+                }}
+              >
+                创建爬虫
+              </Button>
+              <Button type="dashed" icon="reload" onClick={this.getAnswers}>
+                刷新数据
+              </Button>
+            </div>
+            <div>
+              <Button
+                disabled={!selectAnswerIds.length}
+                type="danger"
+                onClick={this.massDelete}
+              >
+                批量删除
+              </Button>
+            </div>
           </div>
           <div className={styles.leftContent}>
             <AnswerTable
@@ -102,6 +133,7 @@ class Scrapy extends Component {
               getAnswers={this.getAnswers}
               switchAnswer={this.switchAnswer}
               updateAnswer={this.updateAnswer}
+              setSelectRows={this.setSelectRows}
             />
 
             <webview
