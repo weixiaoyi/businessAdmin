@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import E from "wangeditor";
+import _ from "lodash";
 
 class Editor extends Component {
   constructor(props, context) {
@@ -9,6 +10,7 @@ class Editor extends Component {
   componentDidMount() {
     const elem = this.refs.editorElem;
     const editor = new E(elem);
+    editor.customConfig.uploadImgShowBase64 = true;
     editor.customConfig.onchange = html => {
       this.setState({
         editorContent: html
@@ -19,10 +21,13 @@ class Editor extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { content: contentPrev } = prevProps;
-    const { content } = this.props;
+    const { content: contentPrev, editable: editablePrev } = prevProps;
+    const { content, editable } = this.props;
     if (content !== contentPrev) {
       this.editor.txt.html(content);
+    }
+    if (!_.isUndefined(editable) && editable !== editablePrev) {
+      this.editor && this.editor.$textElem.attr("contenteditable", editable);
     }
   }
 

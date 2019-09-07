@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Button, Card, Popconfirm } from "antd";
+import { Table, Button, Card, Popconfirm, Divider } from "antd";
 
 import classNames from "classnames";
 import _ from "lodash";
@@ -13,7 +13,8 @@ import * as styles from "./index.module.scss";
 }))
 class Scrapy extends Component {
   state = {
-    selectOne: {}
+    selectOne: {},
+    editable: null
   };
 
   componentDidMount() {
@@ -47,8 +48,21 @@ class Scrapy extends Component {
     });
   };
 
+  updateAnswer = ({ answerId, ...rest }) => {
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-update-answer",
+      payload: {
+        answerId,
+        ...rest
+      }
+    });
+  };
+
   render() {
-    const { selectOne } = this.state;
+    const { selectOne, editable } = this.state;
     const {
       model: { dispatch, answers = [], pagination }
     } = this.props;
@@ -86,7 +100,8 @@ class Scrapy extends Component {
             className={styles.answerContent}
             onClick={() => {
               this.setState({
-                selectOne: record
+                selectOne: record,
+                editable: record.approve !== 1
               });
             }}
           >
@@ -95,7 +110,7 @@ class Scrapy extends Component {
         )
       },
       {
-        title: "审批",
+        title: "状态",
         dataIndex: "approve",
         key: "approve",
         width: 100,
@@ -112,7 +127,7 @@ class Scrapy extends Component {
         )
       },
       {
-        title: "赞同票数",
+        title: "赞同",
         dataIndex: "upVoteNum",
         key: "upVoteNum"
       },
@@ -133,13 +148,43 @@ class Scrapy extends Component {
                 });
               }}
             >
-              <a>删除</a>
+              <a className={styles.delete}>删除</a>
             </Popconfirm>
+            <Divider type="vertical" />
+            {record.approve !== 1 && (
+              <>
+                <a
+                  onClick={() => {
+                    this.updateAnswer({
+                      answerId: record.answerId,
+                      approve: 1
+                    });
+                  }}
+                >
+                  通过
+                </a>
+                <Divider type="vertical" />
+              </>
+            )}
+
+            {record.approve !== 2 && (
+              <>
+                <a
+                  onClick={() => {
+                    this.updateAnswer({
+                      answerId: record.answerId,
+                      approve: 2
+                    });
+                  }}
+                >
+                  延迟
+                </a>
+              </>
+            )}
           </span>
         )
       }
     ];
-
     return (
       <div className={classNames(styles.Scrapy, "page")}>
         <div className={styles.list}>
@@ -192,22 +237,32 @@ class Scrapy extends Component {
             </div>
           )}
 
-          <Editor content={selectOne.content}>
+          <Editor content={selectOne.content} editable={editable}>
             {editor => (
               <div className={styles.utils}>
                 <Button
+                  disabled={!editable}
                   type="primary"
                   onClick={() => {
-                    dispatch({
-                      type: "ipc-update-answer",
-                      payload: {
-                        answerId: selectOne.answerId,
-                        content: editor.txt.html()
-                      }
+                    this.updateAnswer({
+                      answerId: selectOne.answerId,
+                      content: editor.txt.html()
                     });
                   }}
                 >
                   保存
+                </Button>
+                <Divider type="vertical" />
+                <Button
+                  disabled={editable}
+                  type="primary"
+                  onClick={() => {
+                    this.setState({
+                      editable: true
+                    });
+                  }}
+                >
+                  编辑
                 </Button>
               </div>
             )}

@@ -1,2 +1,7 @@
 .preview {
 }
+
+div[contenteditable="false"] {
+  cursor: not-allowed;
+  background: #dfdfdf;
+}

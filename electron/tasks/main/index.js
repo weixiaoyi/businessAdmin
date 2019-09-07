@@ -34,13 +34,14 @@ export const messageTasks = async args => {
     win.webContents.send("scrapy.delete-answers", answerId);
   } else if (type === "scrapy.update-answers") {
     const {
-      data: { answerId, content }
+      data: { answerId, ...rest }
     } = args;
     const findOne = await scrapyDb
       .get("answers")
       .find({ answerId })
-      .set("content", content)
-      .write();
+      .assign({ ...rest })
+      .write()
+      .catch(() => null);
     if (findOne) {
       win.webContents.send("scrapy.update-answers", answerId);
     } else {

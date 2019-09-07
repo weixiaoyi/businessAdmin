@@ -88,14 +88,14 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  "ipc-update-answer" = ({ answerId, content }) => {
+  "ipc-update-answer" = ({ answerId, ...rest }) => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
           type: "scrapy.update-answers",
           answerId,
-          content
+          ...rest
         }
       });
   };
