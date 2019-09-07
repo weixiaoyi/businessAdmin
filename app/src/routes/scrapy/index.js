@@ -3,7 +3,7 @@ import { Button, Card, Divider } from "antd";
 
 import classNames from "classnames";
 import _ from "lodash";
-import { Editor, ImageEditor } from "../../components";
+import { Editor } from "../../components";
 import { Inject, formatTime } from "../../utils";
 import Preview from "./preview";
 import AnswerTable from "./answerTable";
@@ -121,28 +121,6 @@ class Scrapy extends Component {
               <Button type="dashed" icon="reload" onClick={this.getAnswers}>
                 刷新数据
               </Button>
-              <button
-                onClick={() => {
-                  window.imageEditor &&
-                    window.imageEditor.loadImageFromUrl(
-                      "http://47.104.71.141/pic.yijianxiazai.com.thumb/高清风景壁纸358P/118204.jpg"
-                    );
-                }}
-              >
-                点击
-              </button>
-              <button
-                onClick={() => {
-                  window.imageEditor &&
-                    window.imageEditor.exportImageFromUrl(
-                      "http://47.104.71.141/pic.yijianxiazai.com.thumb/高清风景壁纸358P/118204.jpg"
-                    );
-                }}
-              >
-                导出
-              </button>
-
-              <ImageEditor />
             </div>
             <div>
               <Button

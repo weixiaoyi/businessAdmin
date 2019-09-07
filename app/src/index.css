@@ -21,6 +21,14 @@ body,
   flex-grow: 1;
 }
 
+.w-e-text-container {
+  z-index: 0 !important;
+}
+
+.w-e-menu {
+  z-index: 1 !important;
+}
+
 .ant-notification {
   z-index: 10002;
 }
@@ -30,7 +38,8 @@ body,
 }
 
 .ant-table-body {
-  overflow: auto;
+  overflow-x: auto !important;
+  overflow-y: auto !important;
 }
 
 div[contenteditable="false"] {

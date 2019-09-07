@@ -6,7 +6,8 @@ import * as styles from "./index.module.scss";
 
 class ImageEditor extends Component {
   state = {
-    url: ""
+    url:
+      "http://47.91.249.41/pic.yijianxiazai.com/%E9%AB%98%E6%B8%85%E9%A3%8E%E6%99%AF%E5%A3%81%E7%BA%B8358P/118204.jpg"
   };
 
   componentDidMount() {
@@ -25,7 +26,7 @@ class ImageEditor extends Component {
         initMenu: "filter",
         theme: { ...blackTheme, ...commonTheme },
         uiSize: {
-          width: "900px",
+          minWidth: "900px",
           height: "700px"
         },
         menuBarPosition: "bottom"
