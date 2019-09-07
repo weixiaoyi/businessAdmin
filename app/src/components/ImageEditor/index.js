@@ -42,14 +42,15 @@ class ImageEditor extends Component {
     if (window && !window.imageEditor) {
       window.imageEditor = {
         loadImageFromUrl: this.loadImageFromUrl,
-        exportImage: this.exportImage
+        exportImage: this.exportImage,
+        exportImageFromUrl: this.exportImageFromUrl
       };
     }
   }
 
   loadImageFromUrl = (url, name = Date.now()) => {
     if (!url) return;
-    this.imageEditor
+    return this.imageEditor
       .loadImageFromURL(url, name)
       .then(size => {
         this.imageEditor.ui.activeMenuEvent();
@@ -60,8 +61,14 @@ class ImageEditor extends Component {
       });
   };
 
-  exportImage = () => {
-    return this.imageEditor.toDataURL();
+  exportImage = () => this.imageEditor.toDataURL();
+
+  exportImageFromUrl = (url, name = Date.now()) => {
+    this.loadImageFromUrl(url, name)
+      .then(() => this.exportImage())
+      .catch(err => {
+        console.log(err, "---imageEditor加载图片url失败");
+      });
   };
 
   render() {
