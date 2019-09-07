@@ -24,7 +24,7 @@ class Scrapy extends Component {
   }
 
   componentDidUpdate() {
-    const { selectOne } = this.state;
+    const { selectOne, selectAnswerIds } = this.state;
     const {
       model: { answers }
     } = this.props;
@@ -32,6 +32,14 @@ class Scrapy extends Component {
     if (findOne && !_.isEqual(findOne, selectOne)) {
       this.setState({
         selectOne: findOne
+      });
+    }
+    if (
+      selectAnswerIds.length > 0 &&
+      !selectAnswerIds.some(item => answers.find(one => one.answerId === item))
+    ) {
+      this.setState({
+        selectAnswerIds: []
       });
     }
   }
