@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { message } from "antd";
 import ClipboardJS from "clipboard";
 import _ from "lodash";
 import classNames from "classnames";
@@ -14,18 +15,23 @@ class Clipboard extends Component {
 
   componentDidMount() {
     const { id } = this.state;
-    new ClipboardJS(`#${id}`);
+    const clipboard = new ClipboardJS(`#${id}`);
+    clipboard.on("success", () => message.success("复制成功"));
+    clipboard.on("error", () => message.error("复制失败"));
   }
 
   render() {
     const { id } = this.state;
-    const { text, className } = this.props;
+    const { text, className, width = 100 } = this.props;
     return (
       <span
         id={id}
         data-clipboard-text={text}
         className={classNames(styles.copy, className)}
       >
+        <span className={styles.text} style={{ maxWidth: width }}>
+          {text.slice(-100)}
+        </span>
         复制
       </span>
     );

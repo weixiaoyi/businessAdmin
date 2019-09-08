@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Button, Card, Divider, Select, Input } from "antd";
-
+import { Button, Card, Divider, Select, Input, Popover, Form } from "antd";
 import classNames from "classnames";
 import _ from "lodash";
 import { Editor } from "../../components";
@@ -9,6 +8,9 @@ import Preview from "./preview";
 import AnswerTable from "./answerTable";
 import * as styles from "./index.module.scss";
 
+const { TextArea } = Input;
+
+@Form.create()
 @Inject(({ scrapyStore: model }) => ({
   model
 }))
@@ -17,7 +19,8 @@ class Scrapy extends Component {
     selectOne: {},
     editable: null,
     selectAnswerIds: [],
-    searchUrl: undefined
+    searchUrl: undefined,
+    showUserDownload: false
   };
 
   componentDidMount() {
@@ -110,10 +113,18 @@ class Scrapy extends Component {
   };
 
   render() {
-    const { selectOne, editable, selectAnswerIds, searchUrl } = this.state;
+    const {
+      selectOne,
+      editable,
+      selectAnswerIds,
+      searchUrl,
+      showUserDownload
+    } = this.state;
     const {
       model: { dispatch, answers = [], pagination }
     } = this.props;
+
+    const { getFieldDecorator } = this.props.form;
 
     return (
       <div className={classNames(styles.Scrapy, "page")}>
@@ -202,30 +213,105 @@ class Scrapy extends Component {
           >
             {editor => (
               <div className={styles.utils}>
-                <Button
-                  disabled={!editable}
-                  type="primary"
-                  onClick={() => {
-                    this.updateAnswer({
-                      answerId: selectOne.answerId,
-                      content: editor.txt.html()
-                    });
-                  }}
-                >
-                  保存
-                </Button>
-                <Divider type="vertical" />
-                <Button
-                  disabled={editable}
-                  type="primary"
-                  onClick={() => {
-                    this.setState({
-                      editable: true
-                    });
-                  }}
-                >
-                  编辑
-                </Button>
+                <div>
+                  <Button
+                    disabled={!editable}
+                    type="primary"
+                    onClick={() => {
+                      this.updateAnswer({
+                        answerId: selectOne.answerId,
+                        content: editor.txt.html()
+                      });
+                    }}
+                  >
+                    保存
+                  </Button>
+                  <Divider type="vertical" />
+                  <Button
+                    disabled={editable}
+                    type="primary"
+                    onClick={() => {
+                      this.setState({
+                        editable: true
+                      });
+                    }}
+                  >
+                    编辑
+                  </Button>
+                </div>
+                <div>
+                  <Popover
+                    visible={showUserDownload}
+                    getPopupContainer={() =>
+                      document.getElementById("user_download")
+                    }
+                    content={
+                      <div style={{ width: 400 }}>
+                        <Form
+                          onSubmit={e => {
+                            e.preventDefault();
+                            this.props.form.validateFields((err, values) => {
+                              if (!err) {
+                                const { filename, dataUrl } = values;
+                                console.log(values);
+                                // dispatch({
+                                //   type: "ipc-download-image",
+                                //   payload: {
+                                //     dataUrl,
+                                //     filename
+                                //   }
+                                // });
+                              }
+                            });
+                          }}
+                          className="login-form"
+                          {...{
+                            labelCol: {
+                              sm: { span: 5 }
+                            },
+                            wrapperCol: {
+                              sm: { span: 19 }
+                            }
+                          }}
+                        >
+                          <Form.Item label="filename">
+                            {getFieldDecorator("filename", {
+                              rules: [{ required: true, message: "required" }]
+                            })(<Input placeholder="filename" />)}
+                          </Form.Item>
+                          <Form.Item label="dataUrl">
+                            {getFieldDecorator("dataUrl", {
+                              rules: [{ required: true, message: "required" }]
+                            })(<TextArea placeholder="dataUrl" />)}
+                          </Form.Item>
+                          <Form.Item
+                            className={styles.nolabel}
+                            label={
+                              <span style={{ after: "unset" }}>&nbsp;</span>
+                            }
+                          >
+                            <Button type="primary" htmlType="submit">
+                              确认
+                            </Button>
+                          </Form.Item>
+                        </Form>
+                      </div>
+                    }
+                    title="手动添加图片"
+                    trigger="click"
+                  >
+                    <Button
+                      id="user_download"
+                      onClick={() => {
+                        this.setState({
+                          showUserDownload: !showUserDownload
+                        });
+                      }}
+                    >
+                      手动下载图片
+                    </Button>
+                  </Popover>
+                </div>
               </div>
             )}
           </Editor>

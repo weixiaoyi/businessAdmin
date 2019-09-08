@@ -1,2 +1,7 @@
+@import "src/styles/index.scss";
 .copy {
+  display: flex;
+  .text {
+    @include ellipse();
+  }
 }

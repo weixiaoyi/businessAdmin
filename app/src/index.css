@@ -32,6 +32,10 @@ body,
   overflow-x: auto;
 }
 
+.ant-form-item {
+  margin-bottom: 12px;
+}
+
 .ant-notification {
   z-index: 10002;
 }

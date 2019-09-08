@@ -58,6 +58,15 @@
       }
       .utils {
         margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        .nolabel {
+          :global {
+            .ant-form-item-label > label::after {
+              content: unset;
+            }
+          }
+        }
       }
       .preview {
         margin-top: 20px;

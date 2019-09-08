@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Tooltip } from "antd";
 import { Inject } from "../../utils";
 import * as styles from "./preview.module.scss";
+import { Clipboard } from "../../components";
 
 @Inject(({ scrapyStore: model }) => ({
   model
@@ -55,12 +56,26 @@ class Preview extends Component {
     }
   };
 
-  render() {
-    const { links } = this.state;
+  downloadImage = async (url, filename) => {
     const {
-      content,
       model: { dispatch }
     } = this.props;
+    const dataUrl =
+      window.imageEditor && (await window.imageEditor.exportImageFromUrl(url));
+    if (dataUrl && dataUrl.length) {
+      dispatch({
+        type: "ipc-download-image",
+        payload: {
+          dataUrl,
+          filename
+        }
+      });
+    }
+  };
+
+  render() {
+    const { links } = this.state;
+    const { content } = this.props;
 
     return (
       <div className={styles.preview}>
@@ -68,29 +83,20 @@ class Preview extends Component {
           <div className={styles.images}>
             <ul id="imageList-preview">
               {links.map((item, index) => (
-                <li
-                  key={index}
-                  onClick={async () => {
-                    const dataUrl =
-                      window.imageEditor &&
-                      (await window.imageEditor.exportImageFromUrl(
-                        item.srcDefault
-                      ));
-                    if (dataUrl && dataUrl.length) {
-                      dispatch({
-                        type: "ipc-download-image",
-                        payload: {
-                          dataUrl,
-                          filename: item.filename
-                        }
-                      });
-                    }
-                  }}
-                >
+                <li key={index}>
                   <Tooltip title={item.srcDefault} placement="bottom">
-                    <img src={item.srcLocal} />
+                    <img
+                      src={item.srcLocal}
+                      onClick={() =>
+                        this.downloadImage(item.srcDefault, item.filename)
+                      }
+                    />
                   </Tooltip>
-                  ,
+                  <Clipboard
+                    className={styles.clipboard}
+                    text={item.filename}
+                    width={40}
+                  />
                 </li>
               ))}
             </ul>
