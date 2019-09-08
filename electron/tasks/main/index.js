@@ -1,7 +1,8 @@
 import path from "path";
 import { app, ipcMain, BrowserWindow } from "electron";
 import { decode } from "node-base64-image";
-import { getScrapyDb, parseDataUrl2Image } from "../../utils";
+import { getScrapyDb, parseDataUrl2Image, ensureDir } from "../../utils";
+import { PATH } from "../../constants";
 
 let win;
 
@@ -66,9 +67,11 @@ export const messageTasks = async args => {
     const {
       data: { dataUrl, filename }
     } = args;
+    const dir = path.join(__dirname, PATH.scrapyImageDir);
+    await ensureDir(dir);
     const result = await parseDataUrl2Image(
       dataUrl,
-      path.join(__dirname, `../../../app/public/images/scrapy/${filename}`)
+      path.join(dir, filename)
     ).catch(() => null);
     win.webContents.send("scrapy.download-image", result);
   }

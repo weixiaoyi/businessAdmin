@@ -31,11 +31,11 @@ class Preview extends Component {
     const links =
       images.length > 0
         ? Array.prototype.map.call(images, item => {
-            const src = item.getAttribute("data-default-watermark-src");
-            const srcLocal = src.replace(/.*\/(.*\.jpg|png)/g, "$1");
-            const filename = src.replace(/.*\/(.*)\.jpg|png/g, "$1");
+            const srcDefault = item.getAttribute("data-default-watermark-src");
+            const srcLocal = item.getAttribute("src");
+            const filename = srcLocal.replace(/.*\/(.*)\.jpg/g, "$1");
             return {
-              src,
+              srcDefault,
               srcLocal,
               filename
             };
@@ -63,14 +63,16 @@ class Preview extends Component {
       <div className={styles.preview}>
         {links.length > 0 && (
           <div className={styles.images}>
-            <ul>
+            <ul id="imageList-preview">
               {links.map((item, index) => (
                 <li
                   key={index}
                   onClick={async () => {
                     const dataUrl =
                       window.imageEditor &&
-                      (await window.imageEditor.exportImageFromUrl(item.src));
+                      (await window.imageEditor.exportImageFromUrl(
+                        item.srcDefault
+                      ));
                     if (dataUrl && dataUrl.length) {
                       dispatch({
                         type: "ipc-download-image",
@@ -82,7 +84,7 @@ class Preview extends Component {
                     }
                   }}
                 >
-                  <Tooltip title={item.src} placement="bottom">
+                  <Tooltip title={item.srcDefault} placement="bottom">
                     <img src={item.srcLocal} />
                   </Tooltip>
                   ,

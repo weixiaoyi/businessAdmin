@@ -32,8 +32,9 @@ class Editor extends Component {
   }
 
   render() {
+    const { className } = this.props;
     return (
-      <div>
+      <div className={className}>
         <div ref="editorElem" style={{ textAlign: "left" }} />
         {this.props.children(this.editor)}
       </div>

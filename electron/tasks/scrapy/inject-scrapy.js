@@ -59,6 +59,15 @@ window.ipc.on("scrapy.createUtils", () => {
 
     function parseHtml(lists) {
       return Array.prototype.map.call(lists, item => {
+        const images = item.querySelectorAll(".RichContent img");
+        Array.prototype.forEach.call(images, one => {
+          const srcDefault = one.getAttribute("data-default-watermark-src");
+          if (srcDefault) {
+            const filename = srcDefault.replace(/.*\/(.*)\.jpg|png/g, "$1");
+            one.setAttribute("src", `./images/scrapy/${filename}.jpg`);
+          }
+        });
+
         const short = item.querySelector(
           "div.ContentItem.AnswerItem[data-zop]"
         );

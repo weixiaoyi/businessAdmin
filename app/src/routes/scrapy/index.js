@@ -21,6 +21,17 @@ class Scrapy extends Component {
 
   componentDidMount() {
     this.getAnswers();
+    window.ipc &&
+      window.ipc.on("scrapy.download-image", (e, arg) => {
+        if (!arg) return;
+        const images = document
+          .getElementById("answer-operation")
+          .querySelectorAll("img");
+        Array.prototype.map.call(images, item => {
+          const src = item.getAttribute("src");
+          item.setAttribute("src", `${src}?time=${Date.now()}`);
+        });
+      });
   }
 
   componentDidUpdate() {
@@ -154,7 +165,7 @@ class Scrapy extends Component {
             />
           </div>
         </div>
-        <div className={styles.editor}>
+        <div className={styles.editor} id="answer-operation">
           {selectOne.title && (
             <div className={styles.contentHeader}>
               <span className={styles.title}>{selectOne.title}</span>
@@ -169,7 +180,11 @@ class Scrapy extends Component {
             </div>
           )}
 
-          <Editor content={selectOne.content} editable={editable}>
+          <Editor
+            className={styles.editorContent}
+            content={selectOne.content}
+            editable={editable}
+          >
             {editor => (
               <div className={styles.utils}>
                 <Button

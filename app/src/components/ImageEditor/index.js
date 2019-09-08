@@ -59,6 +59,7 @@ class ImageEditor extends Component {
       .then(size => {
         this.imageEditor.ui.activeMenuEvent();
         this.imageEditor.ui.resizeEditor({ imageSize: size });
+        return size;
       })
       .catch(this.catchError);
   };
@@ -67,7 +68,7 @@ class ImageEditor extends Component {
 
   exportImageFromUrl = (url, name = Date.now()) =>
     this.loadImageFromUrl(url, name)
-      .then(this.exportImage)
+      .then(res => (res ? this.exportImage() : null))
       .catch(this.catchError);
 
   catchError = err => {
@@ -76,6 +77,7 @@ class ImageEditor extends Component {
       message: "请求下载图片失败",
       description: "---imageEditor加载图片url失败"
     });
+    return null;
   };
 
   render() {
