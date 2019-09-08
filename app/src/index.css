@@ -28,6 +28,9 @@ body,
 .w-e-menu {
   z-index: 1 !important;
 }
+.w-e-toolbar {
+  overflow-x: auto;
+}
 
 .ant-notification {
   z-index: 10002;

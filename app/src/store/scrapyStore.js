@@ -108,13 +108,13 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  "ipc-create-scrapy" = () => {
+  "ipc-create-scrapy" = ({ url = "http://zhihu.com" }) => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
           type: "scrapy.create",
-          url: "http://zhihu.com"
+          url
         }
       });
   };

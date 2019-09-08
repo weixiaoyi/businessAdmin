@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Card, Divider } from "antd";
+import { Button, Card, Divider, Select, Input } from "antd";
 
 import classNames from "classnames";
 import _ from "lodash";
@@ -16,7 +16,8 @@ class Scrapy extends Component {
   state = {
     selectOne: {},
     editable: null,
-    selectAnswerIds: []
+    selectAnswerIds: [],
+    searchUrl: undefined
   };
 
   componentDidMount() {
@@ -109,7 +110,7 @@ class Scrapy extends Component {
   };
 
   render() {
-    const { selectOne, editable, selectAnswerIds } = this.state;
+    const { selectOne, editable, selectAnswerIds, searchUrl } = this.state;
     const {
       model: { dispatch, answers = [], pagination }
     } = this.props;
@@ -119,11 +120,26 @@ class Scrapy extends Component {
         <div className={styles.list}>
           <div className={styles.utils}>
             <div>
+              <Select
+                value={searchUrl}
+                mode="tags"
+                showSearch
+                style={{ width: 150 }}
+                onChange={value => {
+                  this.setState({
+                    searchUrl: value
+                  });
+                }}
+              />
               <Button
                 type="primary"
                 onClick={() => {
+                  console.log(searchUrl);
                   dispatch({
-                    type: "ipc-create-scrapy"
+                    type: "ipc-create-scrapy",
+                    payload: {
+                      url: searchUrl && searchUrl.length ? [0] : undefined
+                    }
                   });
                 }}
               >
