@@ -5,10 +5,14 @@ import _ from "lodash";
 class Editor extends Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      id: _.uniqueId("editor_")
+    };
   }
 
   componentDidMount() {
-    const elem = this.refs.editorElem;
+    const { id } = this.state;
+    const elem = document.getElementById(id);
     const editor = new E(elem);
     editor.customConfig.uploadImgShowBase64 = true;
     editor.customConfig.onchange = html => {
@@ -32,10 +36,11 @@ class Editor extends Component {
   }
 
   render() {
+    const { id } = this.state;
     const { className } = this.props;
     return (
       <div className={className}>
-        <div ref="editorElem" style={{ textAlign: "left" }} />
+        <div id={id} style={{ textAlign: "left" }} />
         {this.props.children(this.editor)}
       </div>
     );

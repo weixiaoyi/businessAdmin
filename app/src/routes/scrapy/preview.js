@@ -31,7 +31,10 @@ class Preview extends Component {
     const links =
       images.length > 0
         ? Array.prototype.map.call(images, item => {
-            const srcDefault = item.getAttribute("data-default-watermark-src");
+            const srcDefault =
+              item.getAttribute("data-default-watermark-src") ||
+              item.getAttribute("data-actualsrc") ||
+              item.getAttribute("data-original");
             const srcLocal = item.getAttribute("src");
             const filename = srcLocal.replace(/.*\/(.*)\.jpg/g, "$1");
             return {
