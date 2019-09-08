@@ -134,7 +134,6 @@ class Scrapy extends Component {
               <Button
                 type="primary"
                 onClick={() => {
-                  console.log(searchUrl);
                   dispatch({
                     type: "ipc-create-scrapy",
                     payload: {

@@ -66,13 +66,17 @@ class ImageEditor extends Component {
 
   exportImage = () => this.imageEditor.toDataURL();
 
-  exportImageFromUrl = (url, name = Date.now()) =>
-    this.loadImageFromUrl(url, name)
-      .then(res => (res ? this.exportImage() : null))
-      .catch(this.catchError);
+  exportImageFromUrl = async (url, name = Date.now()) => {
+    const loadUrl = await this.loadImageFromUrl(url, name);
+    if (loadUrl && loadUrl.then) {
+      return this.exportImage();
+    } else {
+      return this.catchError();
+    }
+  };
 
   catchError = err => {
-    console.log(err);
+    err && console.log(err);
     notification.open({
       message: "请求下载图片失败",
       description: "---imageEditor加载图片url失败"
