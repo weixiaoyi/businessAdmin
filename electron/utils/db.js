@@ -4,7 +4,7 @@ import FileAsync from "lowdb/adapters/FileAsync";
 
 export const getScrapyDb = () => {
   const adapter = new FileAsync(
-    path.join(__dirname, "../assets/scrapy-db.json"),
+    path.join(__dirname, "../assets/database/scrapy-db.json"),
     {
       defaultValue: { answers: [] },
       serialize: array => JSON.stringify(array),

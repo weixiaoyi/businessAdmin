@@ -17,7 +17,8 @@
     "babel-plugin-add-module-exports": "^1.0.2",
     "cross-env": "^5.2.0",
     "lodash": "^4.17.15",
-    "lowdb": "^1.0.0"
+    "lowdb": "^1.0.0",
+    "node-base64-image": "^1.0.6"
   },
   "devDependencies": {
     "electron": "^6.0.5",

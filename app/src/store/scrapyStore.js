@@ -34,34 +34,64 @@ export default class ScrapyStore extends ModelExtend {
 
     window.ipc &&
       window.ipc.on("scrapy.delete-answers", (e, arg) => {
-        notification.success({
-          message: "answer删除",
-          description: `answerId:${arg}被删除`
-        });
-        this["ipc-get-scrapy-answers"]();
+        if (arg) {
+          notification.success({
+            message: "answer删除成功",
+            description: `answerId:${arg}被删除`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "answer删除失败",
+            description: `answerId:${arg}，删除失败`
+          });
+        }
       });
 
     window.ipc &&
       window.ipc.on("scrapy.mass-delete-answers", (e, arg) => {
-        notification.success({
-          message: "answer批量删除",
-          description: `answerId:${arg}被删除`
-        });
-        this["ipc-get-scrapy-answers"]();
+        if (arg) {
+          notification.success({
+            message: "answer批量删除成功",
+            description: `answerId:${arg}被删除`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "answer批量删除失败",
+            description: `answerIds:${arg}，删除失败`
+          });
+        }
       });
 
     window.ipc &&
       window.ipc.on("scrapy.update-answers", (e, arg) => {
         if (arg) {
           notification.success({
-            message: "answer更新",
+            message: "answer更新成功",
             description: `answerId:${arg}更新成功`
           });
           this["ipc-get-scrapy-answers"]();
         } else {
           notification.error({
-            message: "answer未找到",
-            description: `answerId:${arg}已经被删除`
+            message: "answer未找到，更新失败",
+            description: `answerId:${arg}未找到，更新失败`
+          });
+        }
+      });
+
+    window.ipc &&
+      window.ipc.on("scrapy.download-image", (e, arg) => {
+        if (arg) {
+          notification.success({
+            message: "图片下载成功",
+            description: `${arg}下载成功`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "下载败",
+            description: `图片下载失败`
           });
         }
       });
@@ -131,6 +161,18 @@ export default class ScrapyStore extends ModelExtend {
         data: {
           type: "scrapy.mass-delete-answers",
           answerIds
+        }
+      });
+  };
+
+  "ipc-download-image" = ({ dataUrl, filename }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "scrapy.download-image",
+          dataUrl,
+          filename
         }
       });
   };

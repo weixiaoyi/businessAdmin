@@ -159,10 +159,12 @@ class Scrapy extends Component {
             <div className={styles.contentHeader}>
               <span className={styles.title}>{selectOne.title}</span>
               <div className={styles.info}>
-                <span className={styles.author}>({selectOne.authorName})</span>
                 {selectOne.createTime && (
-                  <span>{formatTime(selectOne.createTime)}</span>
+                  <span className={styles.createTime}>
+                    {formatTime(selectOne.createTime)}
+                  </span>
                 )}
+                <span className={styles.author}>({selectOne.authorName})</span>
               </div>
             </div>
           )}
@@ -197,9 +199,11 @@ class Scrapy extends Component {
               </div>
             )}
           </Editor>
-          <div className={styles.preview}>
-            <Preview content={selectOne.content} />
-          </div>
+          {selectOne.content && (
+            <div className={styles.preview}>
+              <Preview content={selectOne.content} />
+            </div>
+          )}
         </div>
       </div>
     );

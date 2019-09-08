@@ -46,3 +46,10 @@ div[contenteditable="false"] {
   cursor: not-allowed;
   background: #dfdfdf;
 }
+
+ul,
+li {
+  list-style: none;
+  margin: unset;
+  padding: unset;
+}

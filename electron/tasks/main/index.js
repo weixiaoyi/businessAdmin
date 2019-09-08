@@ -1,5 +1,7 @@
+import path from "path";
 import { app, ipcMain, BrowserWindow } from "electron";
-import { getScrapyDb } from "../../utils";
+import { decode } from "node-base64-image";
+import { getScrapyDb, parseDataUrl2Image } from "../../utils";
 
 let win;
 
@@ -27,11 +29,12 @@ export const messageTasks = async args => {
     const {
       data: { answerId }
     } = args;
-    await scrapyDb
+    const result = await scrapyDb
       .get("answers")
       .remove({ answerId })
-      .write();
-    win.webContents.send("scrapy.delete-answers", answerId);
+      .write()
+      .catch(() => null);
+    win.webContents.send("scrapy.delete-answers", result ? answerId : null);
   } else if (type === "scrapy.update-answers") {
     const {
       data: { answerId, ...rest }
@@ -42,19 +45,31 @@ export const messageTasks = async args => {
       .assign({ ...rest })
       .write()
       .catch(() => null);
-    if (findOne) {
-      win.webContents.send("scrapy.update-answers", answerId);
-    } else {
-      win.webContents.send("scrapy.update-answers", null);
-    }
+    win.webContents.send(
+      "scrapy.update-answers",
+      findOne ? findOne.answerId : null
+    );
   } else if (type === "scrapy.mass-delete-answers") {
     const {
       data: { answerIds }
     } = args;
-    await scrapyDb
+    const result = await scrapyDb
       .get("answers")
       .remove(item => answerIds.find(one => one === item.answerId))
-      .write();
-    win.webContents.send("scrapy.mass-delete-answers", answerIds);
+      .write()
+      .catch(() => null);
+    win.webContents.send(
+      "scrapy.mass-delete-answers",
+      result && result.length ? answerIds : null
+    );
+  } else if (type === "scrapy.download-image") {
+    const {
+      data: { dataUrl, filename }
+    } = args;
+    const result = await parseDataUrl2Image(
+      dataUrl,
+      path.join(__dirname, `../../../app/public/images/scrapy/${filename}`)
+    ).catch(() => null);
+    win.webContents.send("scrapy.download-image", result);
   }
 };
