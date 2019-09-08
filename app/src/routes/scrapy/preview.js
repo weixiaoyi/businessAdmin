@@ -84,14 +84,17 @@ class Preview extends Component {
             <ul id="imageList-preview">
               {links.map((item, index) => (
                 <li key={index}>
-                  <Tooltip title={item.srcDefault} placement="bottom">
-                    <img
-                      src={item.srcLocal}
-                      onClick={() =>
-                        this.downloadImage(item.srcDefault, item.filename)
-                      }
-                    />
-                  </Tooltip>
+                  <div className={styles.imageContainer}>
+                    <Tooltip title={item.srcDefault} placement="bottom">
+                      <img
+                        src={item.srcLocal}
+                        onClick={() =>
+                          this.downloadImage(item.srcDefault, item.filename)
+                        }
+                      />
+                    </Tooltip>
+                  </div>
+
                   <Clipboard
                     className={styles.clipboard}
                     text={item.filename}
