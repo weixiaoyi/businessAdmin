@@ -68,9 +68,9 @@ class ImageEditor extends Component {
 
   exportImageFromUrl = async (url, name = Date.now()) => {
     const loadUrl = await this.loadImageFromUrl(url, name);
-    if (loadUrl && loadUrl.then) {
+    if (loadUrl) {
       return this.exportImage();
-    } else {
+    } else if (typeof loadUrl === "undefined") {
       return this.catchError();
     }
   };
