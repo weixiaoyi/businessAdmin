@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Card, Divider, Select, Input, Popover, Form } from "antd";
 import { Editor } from "../../components";
 import { Inject, formatTime } from "../../utils";
-import * as styles from "./index.module.scss";
+import * as styles from "./answerEditor.module.scss";
 
 const { TextArea } = Input;
 
@@ -50,7 +50,7 @@ class AnswerEditor extends Component {
     const { getFieldDecorator } = this.props.form;
 
     return (
-      <div>
+      <div className={styles.answerEditor}>
         {selectOne.title && (
           <div className={styles.contentHeader}>
             <span className={styles.title}>{selectOne.title}</span>

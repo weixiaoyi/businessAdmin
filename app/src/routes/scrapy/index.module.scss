@@ -29,45 +29,6 @@
       }
     }
     &.editor {
-      .contentHeader {
-        .title {
-          font-size: 16px;
-          font-weight: bold;
-        }
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        .info {
-          margin-left: 10px;
-          span + span {
-            margin-left: 10px;
-          }
-          .author {
-            font-weight: bold;
-            white-space: nowrap;
-          }
-          .createTime {
-            white-space: nowrap;
-          }
-        }
-      }
-      .editorContent {
-        img {
-          max-width: 300px;
-        }
-      }
-      .utils {
-        margin-top: 10px;
-        display: flex;
-        justify-content: space-between;
-        .nolabel {
-          :global {
-            .ant-form-item-label > label::after {
-              content: unset;
-            }
-          }
-        }
-      }
       .preview {
         margin-top: 20px;
       }
