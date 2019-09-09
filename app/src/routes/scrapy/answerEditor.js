@@ -31,7 +31,13 @@ class AnswerEditor extends Component {
 
   render() {
     const { showUserDownload } = this.state;
-    const { selectOne, editable, changeEditable, updateAnswer } = this.props;
+    const {
+      model: { dispatch },
+      selectOne,
+      editable,
+      changeEditable,
+      updateAnswer
+    } = this.props;
 
     const { getFieldDecorator } = this.props.form;
 
@@ -95,15 +101,21 @@ class AnswerEditor extends Component {
                           e.preventDefault();
                           this.props.form.validateFields((err, values) => {
                             if (!err) {
-                              const { filename, dataUrl } = values;
-                              console.log(values);
-                              // dispatch({
-                              //   type: "ipc-download-image",
-                              //   payload: {
-                              //     dataUrl,
-                              //     filename
-                              //   }
-                              // });
+                              const { filename } = values;
+                              const html = this.dataUrlEditor.txt.html();
+                              const div = document.createElement("div");
+                              div.innerHTML = html;
+                              const img = div.getElementsByTagName("img")[0];
+                              if (img) {
+                                const src = img.getAttribute("src");
+                                dispatch({
+                                  type: "ipc-download-image",
+                                  payload: {
+                                    dataUrl: src,
+                                    filename
+                                  }
+                                });
+                              }
                             }
                           });
                         }}
@@ -123,9 +135,14 @@ class AnswerEditor extends Component {
                           })(<Input placeholder="filename" />)}
                         </Form.Item>
                         <Form.Item label="dataUrl">
-                          {getFieldDecorator("dataUrl", {
-                            rules: [{ required: true, message: "required" }]
-                          })(<TextArea placeholder="dataUrl" />)}
+                          {getFieldDecorator("dataUrl")(
+                            <Editor
+                              className={styles.dataUrl}
+                              getEditor={editor =>
+                                (this.dataUrlEditor = editor)
+                              }
+                            />
+                          )}
                         </Form.Item>
                         <Form.Item
                           className={styles.nolabel}

@@ -22,6 +22,7 @@ class Editor extends Component {
     };
     editor.create();
     this.editor = editor;
+    this.props.getEditor && this.props.getEditor(editor);
   }
 
   componentDidUpdate(prevProps) {
@@ -41,7 +42,7 @@ class Editor extends Component {
     return (
       <div className={className}>
         <div id={id} style={{ textAlign: "left" }} />
-        {this.props.children(this.editor)}
+        {this.props.children && this.props.children(this.editor)}
       </div>
     );
   }

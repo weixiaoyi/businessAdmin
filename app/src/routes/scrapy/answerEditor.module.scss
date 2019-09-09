@@ -30,6 +30,16 @@
     margin-top: 10px;
     display: flex;
     justify-content: space-between;
+    .dataUrl {
+      :global {
+        .w-e-text-container {
+          height: 100px !important;
+        }
+        .w-e-toolbar {
+          display: none;
+        }
+      }
+    }
     .nolabel {
       :global {
         .ant-form-item-label > label::after {
