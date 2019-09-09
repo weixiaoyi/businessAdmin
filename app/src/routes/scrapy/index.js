@@ -14,6 +14,7 @@ import * as styles from "./index.module.scss";
 }))
 class Scrapy extends Component {
   state = {
+    editable: null,
     selectOne: {},
     selectAnswerIds: [],
     searchUrl: undefined
@@ -58,6 +59,19 @@ class Scrapy extends Component {
     });
   };
 
+  updateAnswer = ({ answerId, ...rest }) => {
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-update-answer",
+      payload: {
+        answerId,
+        ...rest
+      }
+    });
+  };
+
   switchAnswer = ({ selectOne, editable }) => {
     this.setState({
       selectOne,
@@ -84,8 +98,14 @@ class Scrapy extends Component {
     });
   };
 
+  changeEditable = status => {
+    this.setState({
+      editable: status
+    });
+  };
+
   render() {
-    const { selectOne, selectAnswerIds, searchUrl } = this.state;
+    const { selectOne, selectAnswerIds, searchUrl, editable } = this.state;
     const {
       model: { dispatch, answers = [], pagination }
     } = this.props;
@@ -156,7 +176,12 @@ class Scrapy extends Component {
           </div>
         </div>
         <div className={styles.editor} id="answer-operation">
-          <AnswerEditor selectOne={selectOne} />
+          <AnswerEditor
+            selectOne={selectOne}
+            editable={editable}
+            changeEditable={this.changeEditable}
+            updateAnswer={this.updateAnswer}
+          />
           {selectOne.content && (
             <div className={styles.preview}>
               <Preview content={selectOne.content} />

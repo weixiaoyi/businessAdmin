@@ -12,7 +12,6 @@ const { TextArea } = Input;
 }))
 class AnswerEditor extends Component {
   state = {
-    editable: null,
     showUserDownload: false
   };
 
@@ -30,22 +29,9 @@ class AnswerEditor extends Component {
       });
   }
 
-  updateAnswer = ({ answerId, ...rest }) => {
-    const {
-      model: { dispatch }
-    } = this.props;
-    dispatch({
-      type: "ipc-update-answer",
-      payload: {
-        answerId,
-        ...rest
-      }
-    });
-  };
-
   render() {
-    const { editable, showUserDownload } = this.state;
-    const { selectOne } = this.props;
+    const { showUserDownload } = this.state;
+    const { selectOne, editable, changeEditable, updateAnswer } = this.props;
 
     const { getFieldDecorator } = this.props.form;
 
@@ -77,7 +63,7 @@ class AnswerEditor extends Component {
                   disabled={!editable}
                   type="primary"
                   onClick={() => {
-                    this.updateAnswer({
+                    updateAnswer({
                       answerId: selectOne.answerId,
                       content: editor.txt.html()
                     });
@@ -90,9 +76,7 @@ class AnswerEditor extends Component {
                   disabled={editable}
                   type="primary"
                   onClick={() => {
-                    this.setState({
-                      editable: true
-                    });
+                    changeEditable(true);
                   }}
                 >
                   编辑
