@@ -21,6 +21,10 @@
         }
       }
     }
+    .operationButton {
+      display: flex;
+      justify-content: space-between;
+    }
   }
   img[data-original] {
     background: red;

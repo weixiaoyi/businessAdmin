@@ -24,6 +24,7 @@ class Preview extends Component {
     const { content } = this.props;
     if (content && contentPrev !== content) {
       this.parseLinks();
+      this.resetFields();
     }
   }
 
@@ -74,6 +75,11 @@ class Preview extends Component {
         }
       });
     }
+  };
+
+  resetFields = () => {
+    this.props.form.resetFields();
+    this.dataUrlEditor.txt.html("");
   };
 
   render() {
@@ -153,9 +159,14 @@ class Preview extends Component {
                     className={styles.nolabel}
                     label={<span style={{ after: "unset" }}>&nbsp;</span>}
                   >
-                    <Button type="primary" htmlType="submit">
-                      确认
-                    </Button>
+                    <div className={styles.operationButton}>
+                      <Button type="primary" htmlType="submit">
+                        确认
+                      </Button>
+                      <Button type="danger" onClick={this.resetFields}>
+                        重置
+                      </Button>
+                    </div>
                   </Form.Item>
                 </Form>
               </div>
