@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Tooltip } from "antd";
+import classNames from "classnames";
 import { Inject } from "../../utils";
 import * as styles from "./preview.module.scss";
 import { Clipboard } from "../../components";
@@ -78,7 +79,7 @@ class Preview extends Component {
     const { content } = this.props;
 
     return (
-      <div className={styles.preview}>
+      <div className={classNames(styles.preview, "image-update")}>
         {links.length > 0 && (
           <div className={styles.images}>
             <ul id="imageList-preview">
