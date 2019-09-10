@@ -26,10 +26,6 @@
       justify-content: space-between;
     }
   }
-  img[data-original] {
-    background: red;
-    max-width: 400px;
-  }
   .images {
     ul {
       display: flex;
@@ -63,6 +59,18 @@
           bottom: -20px;
         }
       }
+    }
+  }
+  .answerPreview {
+    color: black;
+    img,
+    figcaption {
+      max-width: 400px;
+    }
+    figcaption {
+      display: flex;
+      justify-content: center;
+      color: #999;
     }
   }
 }

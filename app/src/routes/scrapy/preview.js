@@ -79,7 +79,7 @@ class Preview extends Component {
 
   resetFields = () => {
     this.props.form.resetFields();
-    this.dataUrlEditor.txt.html("");
+    this.dataUrlEditor && this.dataUrlEditor.txt.html("");
   };
 
   render() {
@@ -222,6 +222,7 @@ class Preview extends Component {
           )}
 
           <div
+            className={styles.answerPreview}
             id="answer-preview"
             dangerouslySetInnerHTML={{ __html: content }}
           />
