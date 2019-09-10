@@ -1,16 +1,18 @@
 import React, { Component } from "react";
-import { Button, Tooltip } from "antd";
+import { Button, Tooltip, Select, Input, Popover, Form } from "antd";
 import classNames from "classnames";
 import { Inject } from "../../utils";
 import * as styles from "./preview.module.scss";
-import { Clipboard } from "../../components";
+import { Clipboard, Editor } from "../../components";
 
+@Form.create()
 @Inject(({ scrapyStore: model }) => ({
   model
 }))
 class Preview extends Component {
   state = {
-    links: []
+    links: [],
+    showUserDownload: false
   };
 
   componentDidMount() {
@@ -75,42 +77,144 @@ class Preview extends Component {
   };
 
   render() {
-    const { links } = this.state;
-    const { content } = this.props;
+    const { links, showUserDownload } = this.state;
+    const {
+      content,
+      model: { dispatch }
+    } = this.props;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
 
     return (
-      <div className={classNames(styles.preview, "image-update")}>
-        {links.length > 0 && (
-          <div className={styles.images}>
-            <ul id="imageList-preview">
-              {links.map((item, index) => (
-                <li key={index}>
-                  <div className={styles.imageContainer}>
-                    <Tooltip title={item.srcDefault} placement="bottom">
-                      <img
-                        src={item.srcLocal}
-                        onClick={() =>
-                          this.downloadImage(item.srcDefault, item.filename)
+      <div className={classNames(styles.preview)}>
+        <div className={styles.utils}>
+          <Popover
+            visible={showUserDownload}
+            getPopupContainer={() => document.getElementById("user_download")}
+            content={
+              <div style={{ width: 400 }}>
+                <Form
+                  onSubmit={e => {
+                    e.preventDefault();
+                    this.props.form.validateFields((err, values) => {
+                      if (!err) {
+                        const { filename } = values;
+                        const html = this.dataUrlEditor.txt.html();
+                        const div = document.createElement("div");
+                        div.innerHTML = html;
+                        const img = div.getElementsByTagName("img")[0];
+                        if (img) {
+                          const src = img.getAttribute("src");
+                          dispatch({
+                            type: "ipc-download-image",
+                            payload: {
+                              dataUrl: src,
+                              filename
+                            }
+                          });
                         }
+                      }
+                    });
+                  }}
+                  className="login-form"
+                  {...{
+                    labelCol: {
+                      sm: { span: 5 }
+                    },
+                    wrapperCol: {
+                      sm: { span: 19 }
+                    }
+                  }}
+                >
+                  <Form.Item label="filename">
+                    {getFieldDecorator("filename", {
+                      rules: [
+                        { required: true, message: "required" },
+                        {
+                          validator: (rule, value, callback) => {
+                            if (links.find(item => item.filename === value)) {
+                              return callback();
+                            } else {
+                              return callback("未在当前图片列表找到对应的图片");
+                            }
+                          }
+                        }
+                      ]
+                    })(<Input placeholder="filename" />)}
+                  </Form.Item>
+                  <Form.Item label="dataUrl">
+                    {getFieldDecorator("dataUrl")(
+                      <Editor
+                        className={styles.dataUrl}
+                        getEditor={editor => (this.dataUrlEditor = editor)}
                       />
-                    </Tooltip>
-                  </div>
+                    )}
+                  </Form.Item>
+                  <Form.Item
+                    className={styles.nolabel}
+                    label={<span style={{ after: "unset" }}>&nbsp;</span>}
+                  >
+                    <Button type="primary" htmlType="submit">
+                      确认
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </div>
+            }
+            title="手动添加图片"
+            trigger="click"
+          >
+            <Button
+              id="user_download"
+              onClick={() => {
+                this.setState({
+                  showUserDownload: !showUserDownload
+                });
+              }}
+            >
+              手动下载图片
+            </Button>
+          </Popover>
+        </div>
+        <div className="image-update">
+          {links.length > 0 && (
+            <div className={styles.images}>
+              <ul id="imageList-preview">
+                {links.map((item, index) => (
+                  <li
+                    key={index}
+                    className={
+                      getFieldValue("filename") === item.filename
+                        ? styles.active
+                        : null
+                    }
+                  >
+                    <div className={styles.imageContainer}>
+                      <Tooltip title={item.srcDefault} placement="bottom">
+                        <img
+                          src={item.srcLocal}
+                          onClick={() =>
+                            this.downloadImage(item.srcDefault, item.filename)
+                          }
+                        />
+                      </Tooltip>
+                    </div>
 
-                  <Clipboard
-                    className={styles.clipboard}
-                    text={item.filename}
-                    width={40}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+                    <Clipboard
+                      className={styles.clipboard}
+                      text={item.filename}
+                      width={40}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-        <div
-          id="answer-preview"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+          <div
+            id="answer-preview"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </div>
       </div>
     );
   }
