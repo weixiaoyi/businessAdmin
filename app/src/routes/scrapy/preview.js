@@ -221,11 +221,13 @@ class Preview extends Component {
             </div>
           )}
 
-          <div
-            className={styles.answerPreview}
-            id="answer-preview"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+          <div className={styles.previewContainer}>
+            <div
+              className={styles.answerPreview}
+              id="answer-preview"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </div>
         </div>
       </div>
     );
