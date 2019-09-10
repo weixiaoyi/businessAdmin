@@ -22,6 +22,12 @@ class Scrapy extends Component {
 
   componentDidMount() {
     this.getAnswers();
+    const webview = document.querySelector("webview");
+    webview.addEventListener("did-finish-load", () => {});
+  }
+  componentWillUnmount() {
+    const webview = document.querySelector("webview");
+    webview.removeEventListener("did-finish-load");
   }
 
   componentDidUpdate() {
@@ -166,6 +172,9 @@ class Scrapy extends Component {
             />
 
             <webview
+              allowpopups={"true"}
+              webpreferences="allowRunningInsecureContent, javascript=no"
+              enableblinkfeatures="PreciseMemoryInfo, CSSVariables"
               className={styles.webview}
               src={
                 selectOne.questionId
