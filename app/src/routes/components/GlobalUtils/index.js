@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import { Drawer } from "antd";
 import { ImageEditor } from "../../../components";
+import * as styles from "./index.module.scss";
 
 class GlobalUtils extends Component {
+  state = {
+    showFeature: "ImageEditor"
+  };
   render() {
+    const { showFeature } = this.state;
     const { onClose } = this.props;
+    const buttons = [
+      { name: "ImageEditor", desc: "导入图片截图", handler: () => {} }
+    ];
     return (
       <Drawer
         width={1000}
@@ -16,7 +24,22 @@ class GlobalUtils extends Component {
         visible={true}
         onClose={onClose}
       >
-        <ImageEditor />
+        <ul className={styles.buttons}>
+          {buttons.map(item => (
+            <li
+              key={item.desc}
+              onClick={item.handler && item.handler}
+              className={showFeature === item.name ? styles.active : null}
+            >
+              {item.desc}
+            </li>
+          ))}
+        </ul>
+        <div
+          style={{ display: showFeature === "ImageEditor" ? "block" : "none" }}
+        >
+          <ImageEditor />
+        </div>
       </Drawer>
     );
   }

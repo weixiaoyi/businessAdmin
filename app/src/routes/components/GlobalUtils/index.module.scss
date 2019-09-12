@@ -1,0 +1,12 @@
+@import "src/styles/index.scss";
+.buttons {
+  display: flex;
+  color: black;
+  li + li {
+    margin-left: 10px;
+  }
+  li.active {
+    color: $yellow;
+    cursor: pointer;
+  }
+}
