@@ -3,6 +3,7 @@ import { notification } from "antd";
 import { Clipboard } from "../index";
 import ImageUIEditor from "tui-image-editor";
 import blackTheme from "./theme/black-theme";
+import { bindWindow } from "../../utils";
 import "tui-image-editor/dist/tui-image-editor.css";
 import * as styles from "./index.module.scss";
 
@@ -43,12 +44,10 @@ class ImageEditor extends Component {
       usageStatistics: true
     });
 
-    if (window && !window.imageEditor) {
-      window.imageEditor = {
-        loadImageFromUrl: this.loadImageFromUrl,
-        exportImage: this.exportImage,
-        exportImageFromUrl: this.exportImageFromUrl
-      };
+    if (window) {
+      bindWindow.loadImageFromUrl(this.loadImageFromUrl);
+      bindWindow.exportImageDataUrl(this.exportImageDataUrl);
+      bindWindow.exportImageDataUrlFromUrl(this.exportImageDataUrlFromUrl);
     }
   }
 
@@ -64,12 +63,12 @@ class ImageEditor extends Component {
       .catch(this.catchError);
   };
 
-  exportImage = () => this.imageEditor.toDataURL();
+  exportImageDataUrl = () => this.imageEditor.toDataURL();
 
-  exportImageFromUrl = async (url, name = Date.now()) => {
+  exportImageDataUrlFromUrl = async (url, name = Date.now()) => {
     const loadUrl = await this.loadImageFromUrl(url, name);
     if (loadUrl) {
-      return this.exportImage();
+      return this.exportImageDataUrl();
     } else if (typeof loadUrl === "undefined") {
       return this.catchError();
     }
@@ -109,7 +108,7 @@ class ImageEditor extends Component {
           <button
             className={styles.export}
             onClick={() => {
-              const dataUrl = this.exportImage();
+              const dataUrl = this.exportImageDataUrl();
               if (dataUrl && dataUrl.length) {
                 this.setState({
                   dataUrl

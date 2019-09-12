@@ -65,7 +65,8 @@ class Preview extends Component {
       model: { dispatch }
     } = this.props;
     const dataUrl =
-      window.imageEditor && (await window.imageEditor.exportImageFromUrl(url));
+      window.imageEditor &&
+      (await window.imageEditor.exportImageDataUrlFromUrl(url));
     if (dataUrl && dataUrl.length) {
       dispatch({
         type: "ipc-download-image",
