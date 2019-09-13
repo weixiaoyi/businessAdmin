@@ -25,10 +25,7 @@ class Answer extends Component {
     const webview = document.querySelector("webview");
     webview.addEventListener("did-finish-load", () => {});
   }
-  componentWillUnmount() {
-    const webview = document.querySelector("webview");
-    webview.removeEventListener("did-finish-load");
-  }
+  componentWillUnmount() {}
 
   componentDidUpdate() {
     const { selectOne, selectAnswerIds } = this.state;

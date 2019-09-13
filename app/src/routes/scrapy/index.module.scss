@@ -2,4 +2,9 @@
 
 .Scrapy {
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  .switchNavs {
+    margin-bottom: 10px;
+  }
 }

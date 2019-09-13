@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form } from "antd";
+import { Radio, Form, Tabs } from "antd";
 import classNames from "classnames";
 import { Inject } from "../../utils";
 import Answer from "./answer";
@@ -16,9 +16,29 @@ class Scrapy extends Component {
 
   render() {
     const { active } = this.state;
+    const navs = [
+      { name: "answer", desc: "所有answer" },
+      { name: "question", desc: "所有question" }
+    ];
     return (
       <div className={classNames(styles.Scrapy, "page")}>
-        {active === "answer" && <Answer />}
+        <div className={styles.switchNavs}>
+          <Radio.Group
+            value={active}
+            onChange={e => {
+              this.setState({
+                active: e.target.value
+              });
+            }}
+          >
+            {navs.map(item => (
+              <Radio.Button key={item.name} value={item.name}>
+                {item.desc}
+              </Radio.Button>
+            ))}
+          </Radio.Group>
+        </div>
+        {active === "answer" && <Answer />},
       </div>
     );
   }
