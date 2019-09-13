@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import routers from "../app-router-config/routers";
 import { PATH } from "../../constants";
-import { GlobalUtils } from "../components";
+import { GlobalUtils, GlobalUtilsQuick } from "../components";
 import * as styles from "./index.module.scss";
 
 class App extends Component {
@@ -19,21 +19,29 @@ class App extends Component {
 
   render() {
     const { visible } = this.state;
+
     return (
       <div className="App">
-        <Router>
-          <Switch>
-            {routers.map(item => (
-              <Route
-                key={item.path}
-                path={item.path}
-                exact
-                render={props => <item.component {...props} />}
-              />
-            ))}
-            <Redirect key={0} to={PATH.default} />
-          </Switch>
-        </Router>
+        <div className={styles.layout}>
+          <div className={styles.leftSidebar}>
+            <GlobalUtilsQuick />
+          </div>
+          <div className={styles.content}>
+            <Router>
+              <Switch>
+                {routers.map(item => (
+                  <Route
+                    key={item.path}
+                    path={item.path}
+                    exact
+                    render={props => <item.component {...props} />}
+                  />
+                ))}
+                <Redirect key={0} to={PATH.default} />
+              </Switch>
+            </Router>
+          </div>
+        </div>
         <div className={styles.utils}>
           <div
             className={styles.desc}

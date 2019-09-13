@@ -1,3 +1,25 @@
+@import "src/styles/index.scss";
+
+.layout {
+  display: flex;
+  flex-grow: 1;
+  .leftSidebar {
+    height: 100%;
+    top: 0;
+    position: fixed;
+    padding: 10px 0;
+    min-width: 30px;
+    background: #6e6e6e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .content {
+    margin-left: 30px;
+    flex-grow: 1;
+    display: flex;
+  }
+}
 .utils {
   width: 50px;
   height: 50px;
@@ -7,7 +29,7 @@
   z-index: 1;
   bottom: 20px;
   left: 20px;
-  background: rgba(0, 0, 0, 0.6);
+  background: $red;
   .desc {
     cursor: pointer;
     width: 100%;
