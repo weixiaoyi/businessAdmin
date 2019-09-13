@@ -11,11 +11,12 @@ export default window => {
 };
 
 export const messageTasks = async args => {
-  const scrapyDb = await getScrapyDb();
   const {
+    dbName,
     data: { type },
     data
   } = args;
+  const scrapyDb = await getScrapyDb(dbName);
   if (type === "scrapy.get-answers") {
     const { pageNum, pageSize } = data;
     const answers = scrapyDb.get("answers").value();

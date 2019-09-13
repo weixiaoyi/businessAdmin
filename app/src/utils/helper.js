@@ -1,5 +1,6 @@
 import { observer, inject } from "mobx-react";
 import dayjs from "dayjs";
+import store from "store";
 
 export const Inject = func => {
   return c => {
@@ -8,3 +9,18 @@ export const Inject = func => {
 };
 
 export const formatTime = time => dayjs(time).format("YYYY-MM-DD HH:mm:ss");
+
+export const localSave = {
+  get: (key, defaultValue) => {
+    return store.get(key) || defaultValue;
+  },
+  set: (key, value) => {
+    store.set(key, value);
+  },
+  remove: key => {
+    store.remove(key);
+  },
+  clearAll: () => {
+    store.clearAll();
+  }
+};

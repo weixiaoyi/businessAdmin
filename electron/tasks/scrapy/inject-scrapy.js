@@ -13,7 +13,9 @@ const detailStyle = {
   color: "white"
 };
 
-window.ipc.on("scrapy.createUtils", () => {
+window.ipc.on("scrapy.createUtils", (e, args) => {
+  const { dbName } = args;
+  if (!dbName) return console.error("未获取到数据库参数");
   const div = document.createElement("div");
   const content = `
 <div id="electron-utils" style=${formatStyle({
@@ -161,6 +163,7 @@ window.ipc.on("scrapy.createUtils", () => {
       } else {
         window.ipc.send("ipc", {
           from: "app.wins.scrapy.render",
+          dbName,
           data: {
             type: "scrapy.push-answers",
             message: answers

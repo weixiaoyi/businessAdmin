@@ -1,5 +1,2 @@
-export const PATH = {
-  default: "/",
-  home: "/",
-  scrapy: "/scrapy"
-};
+export * from "./path";
+export * from "./db";

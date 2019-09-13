@@ -24,11 +24,12 @@ const init = args => {
 };
 
 export const messageTasks = async args => {
-  const db = await getScrapyDb();
   const {
+    dbName,
     data,
     data: { type }
   } = args;
+  const db = await getScrapyDb(dbName);
   if (type === "scrapy.push-answers") {
     let newMessageAmount = 0;
     const messages = data.message;

@@ -18,7 +18,7 @@ class Scrapy extends Component {
     const { active } = this.state;
     const navs = [
       { name: "answer", desc: "所有answer" },
-      { name: "question", desc: "所有question" }
+      { name: "db", desc: "当前数据库管理" }
     ];
     return (
       <div className={classNames(styles.Scrapy, "page")}>

@@ -1,17 +1,23 @@
 import { autorun, computed, observable } from "mobx";
 import ModelExtend from "./modelExtend";
 import { notification } from "antd";
+import { localSave } from "../utils";
+import { db } from "../constants";
 
 export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;
     this.listenIpc();
+    autorun(() => {
+      localSave.set("scrapy_dbName", this.dbName);
+    });
   }
 
   @observable name = "scrapyStore";
   @observable answers = [];
   @observable pagination = {};
+  @observable dbName = localSave.get("scrapy_dbName") || db.scrapy[0].name;
 
   listenIpc = () => {
     window.ipc &&
@@ -101,6 +107,7 @@ export default class ScrapyStore extends ModelExtend {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
+        dbName: this.dbName,
         data: {
           type: "scrapy.create-answer-preview",
           url: payload.href
@@ -112,6 +119,7 @@ export default class ScrapyStore extends ModelExtend {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
+        dbName: this.dbName,
         data: {
           type: "scrapy.create",
           url
@@ -123,6 +131,7 @@ export default class ScrapyStore extends ModelExtend {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
+        dbName: this.dbName,
         data: {
           type: "scrapy.get-answers",
           pageSize: pageSize || this.pagination.pageSize || 10,
@@ -135,6 +144,7 @@ export default class ScrapyStore extends ModelExtend {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
+        dbName: this.dbName,
         data: {
           type: "scrapy.update-answers",
           answerId,
@@ -147,6 +157,7 @@ export default class ScrapyStore extends ModelExtend {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
+        dbName: this.dbName,
         data: {
           type: "scrapy.delete-answers",
           answerId
@@ -158,6 +169,7 @@ export default class ScrapyStore extends ModelExtend {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
+        dbName: this.dbName,
         data: {
           type: "scrapy.mass-delete-answers",
           answerIds
@@ -169,6 +181,7 @@ export default class ScrapyStore extends ModelExtend {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
+        dbName: this.dbName,
         data: {
           type: "scrapy.download-image",
           dataUrl,
