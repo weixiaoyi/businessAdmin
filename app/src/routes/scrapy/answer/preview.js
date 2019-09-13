@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Button, Tooltip, Select, Input, Popover, Form } from "antd";
 import classNames from "classnames";
-import { Inject } from "../../utils";
+import { Inject } from "../../../utils";
 import * as styles from "./preview.module.scss";
-import { Clipboard, Editor } from "../../components";
+import { Clipboard, Editor } from "../../../components";
 
 @Form.create()
 @Inject(({ scrapyStore: model }) => ({

@@ -55,7 +55,7 @@ export const messageTasks = async args => {
             .write();
         }
       })
-    );
+    ).catch(() => null);
     if (newMessageAmount) {
       const notice = new Notification({
         body: `新采集到${newMessageAmount}条数据`,

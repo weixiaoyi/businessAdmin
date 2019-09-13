@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table, Button, Popconfirm, Divider } from "antd";
-import { observer } from "../../utils";
+import { observer } from "../../../utils";
 import * as styles from "./answerTable.module.scss";
 
 @observer

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Button, Card, Divider } from "antd";
 import classNames from "classnames";
-import { Editor } from "../../components";
-import { Inject, formatTime } from "../../utils";
+import { Editor } from "../../../components";
+import { Inject, formatTime } from "../../../utils";
 import * as styles from "./answerEditor.module.scss";
 
 @Inject(({ scrapyStore: model }) => ({
