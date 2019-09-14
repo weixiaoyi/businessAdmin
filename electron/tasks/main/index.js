@@ -28,6 +28,11 @@ export const messageTasks = async (args, app) => {
       pageSize,
       current: pageNum
     });
+  } else if (type === "scrapy.get-all-answers") {
+    const answers = scrapyDb.get("answers").value();
+    win.webContents.send("scrapy.get-all-answers", {
+      data: answers
+    });
   } else if (type === "scrapy.delete-answers") {
     const {
       data: { answerId }

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Button, Tooltip, Select, Input, Popover, Form } from "antd";
 import classNames from "classnames";
-import html2pdf from "html2pdf.js";
 import { Inject } from "../../../utils";
 import * as styles from "./preview.module.scss";
 import { Clipboard, Editor } from "../../../components";
+import { Answer } from "../../components";
 
 @Form.create()
 @Inject(({ scrapyStore: model }) => ({
@@ -84,15 +84,6 @@ class Preview extends Component {
     this.dataUrlEditor && this.dataUrlEditor.txt.html("");
   };
 
-  saveToPdf = () => {
-    const {
-      model: { dispatch }
-    } = this.props;
-    dispatch({
-      type: "ipc-save-to-pdf"
-    });
-  };
-
   render() {
     const { links, showUserDownload } = this.state;
     const {
@@ -103,7 +94,6 @@ class Preview extends Component {
 
     return (
       <div className={classNames(styles.preview)}>
-        <button onClick={this.saveToPdf}>下载pdf</button>
         <div className={styles.utils}>
           <Popover
             visible={showUserDownload}
@@ -233,12 +223,8 @@ class Preview extends Component {
             </div>
           )}
 
-          <div className={styles.previewContainer}>
-            <div
-              className={styles.answerPreview}
-              id="answer-preview"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
+          <div className={styles.previewContainer} id="answer-preview">
+            <Answer content={content} />
           </div>
         </div>
       </div>

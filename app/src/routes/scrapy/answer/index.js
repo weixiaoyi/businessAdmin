@@ -22,8 +22,19 @@ class Answer extends Component {
   componentDidMount() {
     this.getAnswers();
     this.webview = document.querySelector("webview");
+    window.ipc &&
+      window.ipc.on("scrapy.download-image", (e, arg) => {
+        if (!arg) return;
+        const imageUpdate = document.getElementsByClassName("image-update");
+        Array.prototype.map.call(imageUpdate, one => {
+          const images = one.getElementsByTagName("img");
+          Array.prototype.map.call(images, item => {
+            const src = item.getAttribute("src");
+            item.setAttribute("src", `${src}?time=${Date.now()}`);
+          });
+        });
+      });
   }
-  componentWillUnmount() {}
 
   componentDidUpdate() {
     const { selectOne, selectAnswerIds } = this.state;

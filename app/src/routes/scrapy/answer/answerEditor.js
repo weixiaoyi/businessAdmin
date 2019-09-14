@@ -2,28 +2,11 @@ import React, { Component } from "react";
 import { Button, Card, Divider } from "antd";
 import classNames from "classnames";
 import { Editor } from "../../../components";
-import { Inject, formatTime } from "../../../utils";
+import { formatTime, observer } from "../../../utils";
 import * as styles from "./answerEditor.module.scss";
 
-@Inject(({ scrapyStore: model }) => ({
-  model
-}))
+@observer
 class AnswerEditor extends Component {
-  componentDidMount() {
-    window.ipc &&
-      window.ipc.on("scrapy.download-image", (e, arg) => {
-        if (!arg) return;
-        const imageUpdate = document.getElementsByClassName("image-update");
-        Array.prototype.map.call(imageUpdate, one => {
-          const images = one.getElementsByTagName("img");
-          Array.prototype.map.call(images, item => {
-            const src = item.getAttribute("src");
-            item.setAttribute("src", `${src}?time=${Date.now()}`);
-          });
-        });
-      });
-  }
-
   render() {
     const { selectOne, editable, changeEditable, updateAnswer } = this.props;
 

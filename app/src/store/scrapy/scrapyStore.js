@@ -1,8 +1,8 @@
 import { autorun, computed, observable } from "mobx";
-import ModelExtend from "./modelExtend";
+import ModelExtend from "../modelExtend";
 import { notification } from "antd";
-import { localSave } from "../utils";
-import { db } from "../constants";
+import { localSave } from "../../utils";
+import { db } from "../../constants";
 
 export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
@@ -93,7 +93,6 @@ export default class ScrapyStore extends ModelExtend {
             message: "图片下载成功",
             description: `${arg}下载成功`
           });
-          this["ipc-get-scrapy-answers"]();
         } else {
           notification.error({
             message: "下载败",
@@ -135,17 +134,6 @@ export default class ScrapyStore extends ModelExtend {
         data: {
           type: "scrapy.create-preview-pdf",
           url
-        }
-      });
-  };
-
-  "ipc-download-pdf" = () => {
-    window.ipc &&
-      window.ipc.send("ipc", {
-        from: "app.wins.main.render",
-        dbName: this.dbName,
-        data: {
-          type: "scrapy.download-pdf"
         }
       });
   };
