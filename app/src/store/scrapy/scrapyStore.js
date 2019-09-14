@@ -126,18 +126,6 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  "ipc-create-preview-pdf" = ({ url }) => {
-    window.ipc &&
-      window.ipc.send("ipc", {
-        from: "app.wins.main.render",
-        dbName: this.dbName,
-        data: {
-          type: "scrapy.create-preview-pdf",
-          url
-        }
-      });
-  };
-
   "ipc-get-scrapy-answers" = ({ current, pageSize } = {}) => {
     window.ipc &&
       window.ipc.send("ipc", {
@@ -197,17 +185,6 @@ export default class ScrapyStore extends ModelExtend {
           type: "scrapy.download-image",
           dataUrl,
           filename
-        }
-      });
-  };
-
-  "ipc-save-to-pdf" = () => {
-    window.ipc &&
-      window.ipc.send("ipc", {
-        from: "app.wins.main.render",
-        dbName: this.dbName,
-        data: {
-          type: "scrapy.savePdf"
         }
       });
   };

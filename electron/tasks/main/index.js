@@ -33,6 +33,10 @@ export const messageTasks = async (args, app) => {
     win.webContents.send("scrapy.get-all-answers", {
       data: answers
     });
+    app.wins.scrapyPreviewPdf &&
+      app.wins.scrapyPreviewPdf.webContents.send("scrapy.get-all-answers", {
+        data: answers
+      });
   } else if (type === "scrapy.delete-answers") {
     const {
       data: { answerId }

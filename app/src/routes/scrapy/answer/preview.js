@@ -224,7 +224,7 @@ class Preview extends Component {
           )}
 
           <div className={styles.previewContainer} id="answer-preview">
-            <Answer content={content} />
+            <Answer content={content} className={styles.answer} />
           </div>
         </div>
       </div>

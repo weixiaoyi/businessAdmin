@@ -66,6 +66,10 @@
   .previewContainer {
     display: flex;
     justify-content: center;
+    .answer {
+      box-shadow: 2px 2px 5px #333333;
+      width: 694px;
+    }
   }
   .answerPreview {
     box-shadow: 2px 2px 5px #333333;

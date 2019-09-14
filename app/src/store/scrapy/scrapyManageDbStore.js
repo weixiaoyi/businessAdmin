@@ -2,7 +2,7 @@ import { autorun, computed, observable } from "mobx";
 import ModelExtend from "../modelExtend";
 import { notification } from "antd";
 
-export default class ScrapyPdfStore extends ModelExtend {
+export default class ScrapyManageDbStore extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;
@@ -27,6 +27,29 @@ export default class ScrapyPdfStore extends ModelExtend {
         dbName: this.rootStore.scrapyStore.dbName,
         data: {
           type: "scrapy.get-all-answers"
+        }
+      });
+  };
+
+  "ipc-create-preview-pdf" = ({ url }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        dbName: this.rootStore.scrapyStore.dbName,
+        data: {
+          type: "scrapy.create-preview-pdf",
+          url
+        }
+      });
+  };
+
+  "ipc-download-pdf" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        dbName: this.rootStore.scrapyStore.dbName,
+        data: {
+          type: "scrapy.download-pdf"
         }
       });
   };

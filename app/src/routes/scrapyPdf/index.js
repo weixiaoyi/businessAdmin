@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Inject } from "../../utils";
+import { Answer } from "../components";
 
-@Inject(({ scrapyPdfStore: model }) => ({
+@Inject(({ scrapyManageDbStore: model }) => ({
   model
 }))
 class ScrapyPdf extends Component {
@@ -22,8 +23,17 @@ class ScrapyPdf extends Component {
     const {
       model: { answers }
     } = this.props;
-    console.log(answers, "-----answers");
-    return <div className="pdf">pdf</div>;
+    return (
+      <div className="pdf">
+        <ul>
+          {answers.map(item => (
+            <li key={item.answerId}>
+              <Answer content={item.content} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   }
 }
 

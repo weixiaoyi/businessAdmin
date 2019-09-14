@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import classNames from "classnames";
 import * as styles from "./index.module.scss";
 
 class Preview extends Component {
   render() {
-    const { content } = this.props;
+    const { content, className } = this.props;
     return (
       <div
-        className={styles.answerPreview}
+        className={classNames(styles.answerPreview, className)}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     );

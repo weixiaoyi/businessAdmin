@@ -2,16 +2,29 @@ import React, { Component } from "react";
 import { Button } from "antd";
 import classNames from "classnames";
 import { Inject } from "../../../utils";
+import { Answer } from "../../components";
 import * as styles from "./index.module.scss";
-import { PATH } from "../../../constants";
 
-@Inject(({ scrapyStore: model }) => ({
+@Inject(({ scrapyManageDbStore: model }) => ({
   model
 }))
 class ManageDb extends Component {
-  render() {
+  componentDidMount() {
+    this.getAllAnswer();
+  }
+
+  getAllAnswer = () => {
     const {
       model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-get-scrapy-all-answers"
+    });
+  };
+
+  render() {
+    const {
+      model: { dispatch, answers }
     } = this.props;
     return (
       <div className={classNames(styles.ManageDb, "page")}>
@@ -38,7 +51,15 @@ class ManageDb extends Component {
             下载PDF
           </Button>
         </div>
-        <div className={styles.right}>456</div>
+        <div className={styles.right}>
+          <ul>
+            {answers.map(item => (
+              <li key={item.answerId}>
+                <Answer content={item.content} />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     );
   }

@@ -69,7 +69,7 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
             one.getAttribute("data-original");
           if (srcDefault) {
             const filename = srcDefault.replace(/.*\/(.*)\.jpg|png/g, "$1");
-            one.setAttribute("src", `./images/${dbName}/${filename}.jpg`);
+            one.setAttribute("src", `/images/${dbName}/${filename}.jpg`);
           }
         });
 
