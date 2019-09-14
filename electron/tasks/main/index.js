@@ -94,7 +94,7 @@ export const messageTasks = async (args, app) => {
         if (err) throw err;
         fs.writeFile("./print.pdf", data, error => {
           if (error) throw error;
-          console.log("Write PDF successfully.");
+          win.webContents.send("scrapy.download-pdf");
         });
       }
     );

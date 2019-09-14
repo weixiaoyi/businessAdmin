@@ -1,0 +1,19 @@
+.pdf {
+  background: white;
+  ul {
+    li + li {
+      margin-top: 10px;
+    }
+    li {
+      .pdfAnswer {
+        padding: 5px;
+      }
+      figure {
+        text-align: center;
+      }
+      img {
+        max-width: 400px;
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Inject } from "../../utils";
 import { Answer } from "../components";
+import * as styles from "./index.module.scss";
 
 @Inject(({ scrapyManageDbStore: model }) => ({
   model
@@ -24,11 +25,16 @@ class ScrapyPdf extends Component {
       model: { answers }
     } = this.props;
     return (
-      <div className="pdf">
+      <div className={styles.pdf}>
         <ul>
-          {answers.map(item => (
+          {answers.map((item, index) => (
             <li key={item.answerId}>
-              <Answer content={item.content} />
+              <Answer
+                className={styles.pdfAnswer}
+                content={item.content}
+                authorName={item.authorName}
+                ins={index + 1}
+              />
             </li>
           ))}
         </ul>

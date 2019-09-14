@@ -198,7 +198,10 @@ class Answer extends Component {
           />
           {selectOne.content && (
             <div className={styles.preview}>
-              <Preview content={selectOne.content} />
+              <Preview
+                content={selectOne.content}
+                authorName={selectOne.authorName}
+              />
             </div>
           )}
         </div>

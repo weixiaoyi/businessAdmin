@@ -88,6 +88,7 @@ class Preview extends Component {
     const { links, showUserDownload } = this.state;
     const {
       content,
+      authorName,
       model: { dispatch }
     } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -224,7 +225,11 @@ class Preview extends Component {
           )}
 
           <div className={styles.previewContainer} id="answer-preview">
-            <Answer content={content} className={styles.answer} />
+            <Answer
+              content={content}
+              authorName={authorName}
+              className={styles.answer}
+            />
           </div>
         </div>
       </div>

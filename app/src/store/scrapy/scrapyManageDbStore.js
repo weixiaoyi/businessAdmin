@@ -18,6 +18,13 @@ export default class ScrapyManageDbStore extends ModelExtend {
           answers: data
         });
       });
+
+    window.ipc &&
+      window.ipc.on("scrapy.download-pdf", () => {
+        notification.success({
+          message: `pdf导出成功 ！`
+        });
+      });
   };
 
   "ipc-get-scrapy-all-answers" = () => {

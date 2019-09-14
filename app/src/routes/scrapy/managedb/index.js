@@ -53,9 +53,13 @@ class ManageDb extends Component {
         </div>
         <div className={styles.right}>
           <ul>
-            {answers.map(item => (
+            {answers.map((item, index) => (
               <li key={item.answerId}>
-                <Answer content={item.content} />
+                <Answer
+                  content={item.content}
+                  authorName={item.authorName}
+                  ins={index + 1}
+                />
               </li>
             ))}
           </ul>
