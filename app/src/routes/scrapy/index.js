@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { Inject } from "../../utils";
 import { db } from "../../constants";
 import Answer from "./answer";
+import ManageDb from "./managedb";
 import * as styles from "./index.module.scss";
 
 const { Option, OptGroup } = Select;
@@ -24,7 +25,7 @@ class Scrapy extends Component {
     } = this.props;
     const navs = [
       { name: "answer", desc: "所有answer" },
-      { name: "db", desc: "当前数据库管理" }
+      { name: "manageDb", desc: "当前数据库管理" }
     ];
     return (
       <div className={classNames(styles.Scrapy, "page")}>
@@ -66,7 +67,8 @@ class Scrapy extends Component {
             </Select>
           </div>
         </div>
-        {active === "answer" && <Answer />},
+        {active === "answer" && <Answer />}
+        {active === "manageDb" && <ManageDb />}
       </div>
     );
   }

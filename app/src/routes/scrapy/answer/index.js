@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Card, Divider, Select, Input, Popover, Form } from "antd";
+import { Button, Card, Divider, Select, Input, Popover } from "antd";
 import classNames from "classnames";
 import _ from "lodash";
 import { Inject } from "../../../utils";
@@ -8,7 +8,6 @@ import AnswerTable from "./answerTable";
 import AnswerEditor from "./answerEditor";
 import * as styles from "./index.module.scss";
 
-@Form.create()
 @Inject(({ scrapyStore: model }) => ({
   model
 }))
@@ -22,8 +21,7 @@ class Answer extends Component {
 
   componentDidMount() {
     this.getAnswers();
-    const webview = document.querySelector("webview");
-    webview.addEventListener("did-finish-load", () => {});
+    this.webview = document.querySelector("webview");
   }
   componentWillUnmount() {}
 
@@ -76,6 +74,7 @@ class Answer extends Component {
   };
 
   switchAnswer = ({ selectOne, editable }) => {
+    this.webview && this.webview.stop();
     this.setState({
       selectOne,
       editable
@@ -170,8 +169,6 @@ class Answer extends Component {
 
             <webview
               allowpopups={"true"}
-              webpreferences="allowRunningInsecureContent, javascript=no"
-              enableblinkfeatures="PreciseMemoryInfo, CSSVariables"
               className={styles.webview}
               src={
                 selectOne.questionId

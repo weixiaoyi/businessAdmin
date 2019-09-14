@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Tooltip, Select, Input, Popover, Form } from "antd";
 import classNames from "classnames";
+import html2pdf from "html2pdf.js";
 import { Inject } from "../../../utils";
 import * as styles from "./preview.module.scss";
 import { Clipboard, Editor } from "../../../components";
@@ -81,6 +82,16 @@ class Preview extends Component {
   resetFields = () => {
     this.props.form.resetFields();
     this.dataUrlEditor && this.dataUrlEditor.txt.html("");
+  };
+
+  saveToPdf = () => {
+    const element = document.getElementById("answer-preview");
+    html2pdf()
+      .set({
+        filename: "myfile.pdf"
+      })
+      .from(element)
+      .save();
   };
 
   render() {
@@ -223,6 +234,13 @@ class Preview extends Component {
           )}
 
           <div className={styles.previewContainer}>
+            <button
+              onClick={() => {
+                this.saveToPdf();
+              }}
+            >
+              下载pdf
+            </button>
             <div
               className={styles.answerPreview}
               id="answer-preview"
