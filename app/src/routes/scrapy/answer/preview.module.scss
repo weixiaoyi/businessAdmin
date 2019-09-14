@@ -28,7 +28,7 @@
   }
   .images {
     display: flex;
-    justify-content: center;
+    //justify-content: center;
     ul {
       max-width: 800px;
       display: flex;
@@ -97,11 +97,42 @@
       color: #999;
     }
     :global {
+      a {
+        text-decoration: none;
+        color: #1a1a1a;
+      }
       .GifPlayer {
         text-align: center;
       }
       .GifPlayer-icon {
         display: none;
+      }
+      .Popover {
+        display: inline-block;
+        * {
+          display: inline-block;
+        }
+      }
+      .LinkCard + .LinkCard {
+        margin-top: 20px;
+      }
+      .LinkCard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .LinkCard-content {
+          color: #1a1a1a;
+          width: 390px;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #f6f6f6;
+          img {
+            max-width: 90px;
+            max-height: 60px;
+          }
+        }
       }
     }
   }

@@ -25,6 +25,66 @@
     img {
       max-width: 300px;
     }
+    ul,
+    ol,
+    li {
+      list-style: unset;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    h3 {
+      font-size: 16px;
+    }
+    figcaption {
+      max-width: 100%;
+    }
+    figcaption {
+      display: flex;
+      justify-content: center;
+      color: #999;
+    }
+    :global {
+      a {
+        text-decoration: none;
+        color: #1a1a1a;
+      }
+      .GifPlayer {
+        text-align: center;
+      }
+      .GifPlayer-icon {
+        display: none;
+      }
+      .Popover {
+        display: inline-block;
+        * {
+          display: inline-block;
+        }
+      }
+      .LinkCard + .LinkCard {
+        margin-top: 20px;
+      }
+      .LinkCard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .LinkCard-content {
+          color: #1a1a1a;
+          width: 390px;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #f6f6f6;
+          img {
+            max-width: 90px;
+            max-height: 60px;
+          }
+        }
+      }
+    }
   }
   .utils {
     margin: 10px 0;
