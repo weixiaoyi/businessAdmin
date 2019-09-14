@@ -1,5 +1,6 @@
 export const PATH = {
   default: "/",
   home: "/",
-  scrapy: "/scrapy"
+  scrapy: "/scrapy",
+  scrapyPdf: "/blank/scrapy/pdf"
 };

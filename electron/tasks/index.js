@@ -1,5 +1,6 @@
 import { app, ipcMain, BrowserWindow } from "electron";
 import { createWindow } from "../utils";
+import fs from "fs";
 
 ipcMain.on("ipc", (event, args) => {
   const {

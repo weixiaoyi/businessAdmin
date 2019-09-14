@@ -10,7 +10,7 @@ import { PATH } from "../../constants";
 import { GlobalUtils, GlobalUtilsQuick } from "../components";
 import * as styles from "./index.module.scss";
 
-class App extends Component {
+class Main extends Component {
   state = {
     visible: false
   };
@@ -19,7 +19,6 @@ class App extends Component {
 
   render() {
     const { visible } = this.state;
-
     return (
       <div className="App">
         <div className={styles.layout}>
@@ -58,6 +57,41 @@ class App extends Component {
           </div>
         </div>
       </div>
+    );
+  }
+}
+
+class Blank extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Router>
+          <Switch>
+            {routers.map(item => (
+              <Route
+                key={item.path}
+                path={item.path}
+                exact
+                render={props => <item.component {...props} />}
+              />
+            ))}
+            <Redirect key={0} to={PATH.default} />
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        <Switch>
+          <Route path="/blank/(.*)?" render={props => <Blank {...props} />} />
+          <Route path="/" render={props => <Main {...props} />} />
+        </Switch>
+      </Router>
     );
   }
 }

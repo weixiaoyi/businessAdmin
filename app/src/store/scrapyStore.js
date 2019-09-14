@@ -189,4 +189,15 @@ export default class ScrapyStore extends ModelExtend {
         }
       });
   };
+
+  "ipc-save-to-pdf" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        dbName: this.dbName,
+        data: {
+          type: "scrapy.savePdf"
+        }
+      });
+  };
 }

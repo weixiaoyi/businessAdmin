@@ -1,7 +1,13 @@
 .home {
   height: 100%;
   padding: 20px;
-  .card {
-    flex-grow: 1;
+  .navs {
+    display: flex;
+    :global {
+      .ant-card {
+        width: 20%;
+        max-width: 20%;
+      }
+    }
   }
 }

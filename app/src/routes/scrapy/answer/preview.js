@@ -85,13 +85,12 @@ class Preview extends Component {
   };
 
   saveToPdf = () => {
-    const element = document.getElementById("answer-preview");
-    html2pdf()
-      .set({
-        filename: "myfile.pdf"
-      })
-      .from(element)
-      .save();
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-save-to-pdf"
+    });
   };
 
   render() {
@@ -104,6 +103,7 @@ class Preview extends Component {
 
     return (
       <div className={classNames(styles.preview)}>
+        <button onClick={this.saveToPdf}>下载pdf</button>
         <div className={styles.utils}>
           <Popover
             visible={showUserDownload}
@@ -234,13 +234,6 @@ class Preview extends Component {
           )}
 
           <div className={styles.previewContainer}>
-            <button
-              onClick={() => {
-                this.saveToPdf();
-              }}
-            >
-              下载pdf
-            </button>
             <div
               className={styles.answerPreview}
               id="answer-preview"

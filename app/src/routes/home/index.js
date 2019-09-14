@@ -9,14 +9,22 @@ class Home extends Component {
   render() {
     return (
       <div className={classNames(styles.home, "page")}>
-        <Card
-          size="small"
-          title="知乎爬虫"
-          extra={<Link to={PATH.scrapy}>More</Link>}
-          style={{ width: 300 }}
-        >
-          知乎爬虫
-        </Card>
+        <div className={styles.navs}>
+          <Card
+            size="small"
+            title="知乎爬虫"
+            extra={<Link to={PATH.scrapy}>More</Link>}
+          >
+            知乎爬虫
+          </Card>
+          <Card
+            size="small"
+            title="知乎爬虫"
+            extra={<Link to={PATH.scrapyPdf}>More</Link>}
+          >
+            pdf
+          </Card>
+        </div>
       </div>
     );
   }

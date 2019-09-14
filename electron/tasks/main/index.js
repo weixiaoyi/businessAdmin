@@ -3,6 +3,7 @@ import { app, ipcMain, BrowserWindow } from "electron";
 import { decode } from "node-base64-image";
 import { getScrapyDb, parseDataUrl2Image, ensureDir } from "../../utils";
 import { PATH } from "../../constants";
+//import fs from "fs";
 
 let win;
 
@@ -75,5 +76,21 @@ export const messageTasks = async args => {
       path.join(dir, filename)
     ).catch(() => null);
     win.webContents.send("scrapy.download-image", result);
+  } else if (type === "scrapy.savePdf") {
+    // win.webContents.printToPDF(
+    //   {
+    //     marginsType: 0,
+    //     pageSize: "A6",
+    //     landscape: false
+    //   },
+    //   (err, data) => {
+    //     console.log(err, data, "------");
+    //     if (err) throw err;
+    //     fs.writeFile("./print.pdf", data, error => {
+    //       if (error) throw error;
+    //       console.log("Write PDF successfully.");
+    //     });
+    //   }
+    // );
   }
 };
