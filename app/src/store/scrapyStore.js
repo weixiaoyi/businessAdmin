@@ -127,6 +127,29 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
+  "ipc-create-preview-pdf" = ({ url }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        dbName: this.dbName,
+        data: {
+          type: "scrapy.create-preview-pdf",
+          url
+        }
+      });
+  };
+
+  "ipc-download-pdf" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        dbName: this.dbName,
+        data: {
+          type: "scrapy.download-pdf"
+        }
+      });
+  };
+
   "ipc-get-scrapy-answers" = ({ current, pageSize } = {}) => {
     window.ipc &&
       window.ipc.send("ipc", {

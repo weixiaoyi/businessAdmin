@@ -17,6 +17,7 @@ export default [
   {
     title: "ScrapyPdf",
     component: ScrapyPdf,
-    path: PATH.scrapyPdf
+    path: PATH.scrapyPdf,
+    blank: true
   }
 ];

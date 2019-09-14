@@ -1,6 +1,5 @@
 import { app, ipcMain, BrowserWindow } from "electron";
 import { createWindow } from "../utils";
-import fs from "fs";
 
 ipcMain.on("ipc", (event, args) => {
   const {
@@ -23,6 +22,15 @@ ipcMain.on("ipc", (event, args) => {
         onCloseCallback: () => (app.wins.scrapy = null),
         onLoadHref: href => href.replace(/answer\/.*$/, "")
       });
+    } else if (type === "scrapy.create-preview-pdf") {
+      if (app.wins.scrapyPreviewPdf) return;
+      const { url } = data;
+      app.wins.scrapyPreviewPdf = createWindow({
+        width: 800,
+        height: 800,
+        url,
+        onCloseCallback: () => (app.wins.scrapyPreviewPdf = null)
+      });
     } else if (type === "scrapy.create-answer-preview") {
       const { url } = data;
       createWindow({
@@ -31,9 +39,9 @@ ipcMain.on("ipc", (event, args) => {
         url
       });
     } else {
-      require("./main").messageTasks(args);
+      require("./main").messageTasks(args, app);
     }
   } else if (from === "app.wins.scrapy.render") {
-    require("./scrapy").messageTasks(args);
+    require("./scrapy").messageTasks(args, app);
   }
 });
