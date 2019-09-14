@@ -14,9 +14,8 @@
     }
     &.right {
       ul {
-        li + li {
-          border-top: 1px solid red;
-        }
+        max-height: 900px;
+        overflow-y: auto;
         li {
         }
       }
