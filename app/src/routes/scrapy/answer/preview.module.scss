@@ -27,7 +27,10 @@
     }
   }
   .images {
+    display: flex;
+    justify-content: center;
     ul {
+      max-width: 800px;
       display: flex;
       overflow-x: auto;
       padding-bottom: 20px;
@@ -71,6 +74,12 @@
     padding: 16px 20px;
     color: #1a1a1a;
     font-size: 15px;
+    ul,
+    ol,
+    li {
+      list-style: unset;
+    }
+
     h2 {
       font-size: 18px;
       font-weight: bold;

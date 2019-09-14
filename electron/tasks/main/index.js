@@ -68,7 +68,7 @@ export const messageTasks = async args => {
     const {
       data: { dataUrl, filename }
     } = args;
-    const dir = path.join(__dirname, PATH.scrapyImageDir);
+    const dir = path.join(__dirname, PATH.scrapyImageDir, dbName);
     await ensureDir(dir);
     const result = await parseDataUrl2Image(
       dataUrl,
