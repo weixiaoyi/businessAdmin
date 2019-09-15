@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { app, ipcMain, BrowserWindow, Notification } from "electron";
+import { Notification } from "electron";
 import { getScrapyDb } from "../../utils";
 
 let win;
@@ -11,7 +11,7 @@ export default (window, args) => {
 
 const init = args => {
   const js = fs
-    .readFileSync(path.join(__dirname, "inject-scrapy.js"))
+    .readFileSync(path.join(__dirname, "inject-create.js"))
     .toString();
   win.webContents.on("did-navigate", () => {
     win.webContents

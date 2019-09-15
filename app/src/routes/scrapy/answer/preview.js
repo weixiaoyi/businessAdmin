@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { Inject } from "../../../utils";
 import * as styles from "./preview.module.scss";
 import { Clipboard, Editor } from "../../../components";
+import { seeIcon } from "../../../svgs";
 import { Answer } from "../../components";
 
 @Form.create()
@@ -213,16 +214,29 @@ class Preview extends Component {
                       </Tooltip>
                     </div>
 
-                    <Clipboard
-                      className={styles.clipboard}
-                      text={item.filename}
-                      width={40}
-                      success={text => {
-                        this.props.form.setFieldsValue({
-                          filename: text
-                        });
-                      }}
-                    />
+                    <div className={styles.imageUtil}>
+                      <Clipboard
+                        className={styles.clipboard}
+                        text={item.filename}
+                        width={40}
+                        success={text => {
+                          this.props.form.setFieldsValue({
+                            filename: text
+                          });
+                        }}
+                      />
+                      <span
+                        className={styles.seeIcon}
+                        onClick={() => {
+                          const webview = document.querySelector("webview");
+                          // Array.prototype.map.call(images, item => {
+                          //   console.log(item.getAttribute("src"));
+                          // });
+                        }}
+                      >
+                        {seeIcon}
+                      </span>
+                    </div>
                   </li>
                 ))}
               </ul>

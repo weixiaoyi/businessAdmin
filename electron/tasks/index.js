@@ -17,7 +17,7 @@ ipcMain.on("ipc", (event, args) => {
         height: 800,
         url,
         onOpenCallback: window => {
-          require("./scrapy").default(window, args, app);
+          require("./scrapy/create").default(window, args, app);
         },
         onCloseCallback: () => (app.wins.scrapy = null),
         onLoadHref: href => href.replace(/answer\/.*$/, "")
@@ -33,15 +33,22 @@ ipcMain.on("ipc", (event, args) => {
       });
     } else if (type === "scrapy.create-answer-preview") {
       const { url } = data;
-      createWindow({
+      app.wins.scrapyPreviewAnser = createWindow({
         width: 800,
         height: 800,
-        url
+        url,
+        onOpenCallback: window => {
+          import("./scrapy/create-answer-preview").then(
+            result =>
+              result && result.default && result.default(window, args, app)
+          );
+        },
+        onCloseCallback: () => (app.wins.scrapyPreviewAnser = null)
       });
     } else {
       require("./main").messageTasks(args, app);
     }
   } else if (from === "app.wins.scrapy.render") {
-    require("./scrapy").messageTasks(args, app);
+    require("./scrapy/create").messageTasks(args, app);
   }
 });

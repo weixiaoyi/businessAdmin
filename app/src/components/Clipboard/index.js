@@ -3,7 +3,7 @@ import { message } from "antd";
 import ClipboardJS from "clipboard";
 import _ from "lodash";
 import classNames from "classnames";
-import { copy } from "../../svgs";
+import { copyIcon } from "../../svgs";
 import * as styles from "./index.module.scss";
 
 class Clipboard extends Component {
@@ -36,7 +36,7 @@ class Clipboard extends Component {
         <span className={styles.text} style={{ maxWidth: width }}>
           {text.slice(-100)}
         </span>
-        {copy}
+        {copyIcon}
       </span>
     );
   }

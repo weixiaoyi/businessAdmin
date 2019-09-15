@@ -38,6 +38,7 @@ export const createWindow = options => {
     });
     return win;
   } catch (err) {
+    console.log(err, "---err");
     win.close();
     win = null;
     const notice = new Notification({

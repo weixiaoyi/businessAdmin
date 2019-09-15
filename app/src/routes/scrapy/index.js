@@ -16,7 +16,7 @@ const { Option, OptGroup } = Select;
 }))
 class Scrapy extends Component {
   state = {
-    active: "manageDb"
+    active: "answer"
   };
 
   render() {
