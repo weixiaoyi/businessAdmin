@@ -95,7 +95,7 @@ export default class ScrapyStore extends ModelExtend {
           });
         } else {
           notification.error({
-            message: "下载败",
+            message: "下载失败",
             description: `图片下载失败`
           });
         }
