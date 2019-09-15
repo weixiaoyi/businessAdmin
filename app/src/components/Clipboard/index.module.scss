@@ -1,6 +1,7 @@
 @import "src/styles/index.scss";
 .copy {
   display: flex;
+  align-items: center;
   .text {
     @include ellipse();
   }
