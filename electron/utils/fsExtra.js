@@ -1,1 +1,1 @@
-export { ensureDir } from "fs-extra";
+export { ensureDir, outputFile } from "fs-extra";

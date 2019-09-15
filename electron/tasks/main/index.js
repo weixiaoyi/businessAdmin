@@ -1,9 +1,13 @@
 import path from "path";
 import { app, ipcMain, BrowserWindow } from "electron";
 import { decode } from "node-base64-image";
-import { getScrapyDb, parseDataUrl2Image, ensureDir } from "../../utils";
+import {
+  getScrapyDb,
+  parseDataUrl2Image,
+  ensureDir,
+  outputFile
+} from "../../utils";
 import { PATH } from "../../constants";
-import fs from "fs";
 
 let win;
 
@@ -86,17 +90,16 @@ export const messageTasks = async (args, app) => {
     ).catch(() => null);
     win.webContents.send("scrapy.download-image", result);
   } else if (type === "scrapy.download-pdf") {
-    app.wins.scrapyPreviewPdf.webContents.printToPDF(
-      {
-        printBackground: true
-      },
-      (err, data) => {
-        if (err) throw err;
-        fs.writeFile("./print.pdf", data, error => {
-          if (error) throw error;
+    app.wins.scrapyPreviewPdf &&
+      app.wins.scrapyPreviewPdf.webContents.printToPDF(
+        {
+          printBackground: true
+        },
+        async (err, data) => {
+          if (err) throw err;
+          await outputFile("./print.pdf", data);
           win.webContents.send("scrapy.download-pdf");
-        });
-      }
-    );
+        }
+      );
   }
 };

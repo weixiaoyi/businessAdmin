@@ -29,7 +29,7 @@ class Answer extends Component {
         Array.prototype.map.call(imageUpdate, one => {
           const images = one.getElementsByTagName("img");
           Array.prototype.map.call(images, item => {
-            const src = item.getAttribute("src");
+            const src = item.getAttribute("src").replace(/(.*)\?time=.*/, "$1");
             item.setAttribute("src", `${src}?time=${Date.now()}`);
           });
         });
