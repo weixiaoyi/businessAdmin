@@ -20,10 +20,16 @@ export default class ScrapyManageDbStore extends ModelExtend {
       });
 
     window.ipc &&
-      window.ipc.on("scrapy.download-pdf", () => {
-        notification.success({
-          message: `pdf导出成功 ！`
-        });
+      window.ipc.on("scrapy.download-pdf", (e, { success, message }) => {
+        if (success) {
+          notification.success({
+            message: `pdf导出成功 ！`
+          });
+        } else {
+          notification.error({
+            message
+          });
+        }
       });
   };
 

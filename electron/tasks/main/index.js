@@ -90,15 +90,30 @@ export const messageTasks = async (args, app) => {
     ).catch(() => null);
     win.webContents.send("scrapy.download-image", result);
   } else if (type === "scrapy.download-pdf") {
+    if (!app.wins.scrapyPreviewPdf) {
+      return win.webContents.send("scrapy.download-pdf", {
+        success: false,
+        message: "请先打开预览pdf窗口"
+      });
+    }
+
     app.wins.scrapyPreviewPdf &&
       app.wins.scrapyPreviewPdf.webContents.printToPDF(
         {
           printBackground: true
         },
         async (err, data) => {
-          if (err) throw err;
-          await outputFile("./print.pdf", data);
-          win.webContents.send("scrapy.download-pdf");
+          if (err) {
+            return win.webContents.send("scrapy.download-pdf", {
+              success: false,
+              message: err
+            });
+          } else {
+            await outputFile("./print.pdf", data);
+            win.webContents.send("scrapy.download-pdf", {
+              success: true
+            });
+          }
         }
       );
   }
