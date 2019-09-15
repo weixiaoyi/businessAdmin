@@ -50,6 +50,15 @@
       color: #999;
     }
     :global {
+      .ztext-empty-paragraph {
+        margin: 0;
+        height: 0;
+      }
+      hr {
+        width: 240px;
+        border-top: 1px solid #d3d3d3;
+        margin: 2em auto;
+      }
       a {
         text-decoration: none;
         color: #1a1a1a;

@@ -16,7 +16,10 @@ class Clipboard extends Component {
   componentDidMount() {
     const { id } = this.state;
     const clipboard = new ClipboardJS(`#${id}`);
-    clipboard.on("success", () => message.success("复制成功"));
+    clipboard.on("success", () => {
+      message.success("复制成功");
+      this.props.success && this.props.success(this.props.text);
+    });
     clipboard.on("error", () => message.error("复制失败"));
   }
 

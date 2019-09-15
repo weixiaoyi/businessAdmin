@@ -36,6 +36,9 @@
   h3 {
     font-size: 16px;
   }
+  img + figcaption {
+    margin-top: 5px;
+  }
   img,
   figcaption {
     max-width: 100%;
@@ -48,8 +51,18 @@
     display: flex;
     justify-content: center;
     color: #999;
+    font-size: 13px;
   }
   :global {
+    .ztext-empty-paragraph {
+      margin: 0;
+      height: 0;
+    }
+    hr {
+      width: 240px;
+      border-top: 1px solid #d3d3d3;
+      margin: 2em auto;
+    }
     a {
       text-decoration: none;
       color: #1a1a1a;

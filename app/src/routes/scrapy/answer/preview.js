@@ -217,6 +217,11 @@ class Preview extends Component {
                       className={styles.clipboard}
                       text={item.filename}
                       width={40}
+                      success={text => {
+                        this.props.form.setFieldsValue({
+                          filename: text
+                        });
+                      }}
                     />
                   </li>
                 ))}
