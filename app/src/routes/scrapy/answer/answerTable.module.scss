@@ -1,17 +1,24 @@
 @import "src/styles/index.scss";
 
+.answerId {
+  display: block;
+  @include ellipse();
+}
 .answerContent {
   cursor: pointer;
   @include ellipse();
 }
 .notApprove,
-.delete {
+.delete,
+.offline {
   color: $red;
 }
-.approve {
+.approve,
+.online {
   color: $green;
 }
-.delayApprove {
+.delayApprove,
+.waitUpload {
   color: $yellow;
 }
 

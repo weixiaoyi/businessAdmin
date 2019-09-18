@@ -23,12 +23,12 @@ class AnswerTable extends Component {
 
     const columns = [
       {
-        title: "answerId",
-        width: 100,
+        title: "id",
         dataIndex: "answerId",
         key: "answerId",
         render: (v, record) => (
           <a
+            className={styles.answerId}
             onClick={e => {
               e.stopPropagation();
               dispatch({
@@ -47,10 +47,10 @@ class AnswerTable extends Component {
         title: "内容",
         dataIndex: "content",
         key: "content",
-        width: 220,
+        width: 100,
         render: (v, record) => (
           <div
-            style={{ width: 200 }}
+            style={{ width: 80 }}
             className={styles.answerContent}
             onClick={() =>
               switchAnswer({
@@ -67,7 +67,6 @@ class AnswerTable extends Component {
         title: "状态",
         dataIndex: "approve",
         key: "approve",
-        width: 100,
         render: v => (
           <div>
             {!v ? (
@@ -81,12 +80,28 @@ class AnswerTable extends Component {
         )
       },
       {
+        title: "是否上线",
+        dataIndex: "online",
+        key: "online",
+        render: v => (
+          <div>
+            {v === "on" ? (
+              <span className={styles.online}>已上线</span>
+            ) : v === "off" ? (
+              <span className={styles.offline}>已下线</span>
+            ) : (
+              <span className={styles.waitUpload}>等待上传</span>
+            )}
+          </div>
+        )
+      },
+      {
         title: "赞同",
         dataIndex: "upVoteNum",
         key: "upVoteNum"
       },
       {
-        title: "操作",
+        title: "本地操作",
         dataIndex: "operation",
         key: "operation",
         render: (v, record) => (
@@ -137,6 +152,79 @@ class AnswerTable extends Component {
             )}
           </span>
         )
+      },
+      {
+        title: "同步服务器",
+        dataIndex: "server",
+        key: "server",
+        render: (v, record) => (
+          <span>
+            <Popconfirm
+              title="确认删除?"
+              onConfirm={() => {
+                dispatch({
+                  type: "ipc-delete-answer",
+                  payload: {
+                    answerId: record.answerId
+                  }
+                });
+              }}
+            >
+              <a className={styles.delete}>删除</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <>
+              <a
+                onClick={() => {
+                  dispatch({
+                    type: "uploadAnser",
+                    payload: {}
+                  });
+                }}
+              >
+                上传
+              </a>
+              <Divider type="vertical" />
+            </>
+            <>
+              <a
+                onClick={() => {
+                  updateAnswer({
+                    answerId: record.answerId,
+                    approve: 1
+                  });
+                }}
+              >
+                上线
+              </a>
+              <Divider type="vertical" />
+            </>
+
+            <>
+              <a
+                onClick={() => {
+                  updateAnswer({
+                    answerId: record.answerId,
+                    approve: 2
+                  });
+                }}
+              >
+                下线
+              </a>
+              <Divider type="vertical" />
+            </>
+            <a
+              onClick={() => {
+                updateAnswer({
+                  answerId: record.answerId,
+                  approve: 2
+                });
+              }}
+            >
+              检测
+            </a>
+          </span>
+        )
       }
     ];
 
@@ -151,7 +239,7 @@ class AnswerTable extends Component {
     };
     return (
       <Table
-        scroll={{ x: 650 }}
+        scroll={{ x: 800 }}
         rowSelection={rowSelection}
         rowClassName={record =>
           selectOne.answerId === record.answerId ? styles.activeRow : null

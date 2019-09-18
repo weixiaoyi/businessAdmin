@@ -58,7 +58,7 @@ export const messageTasks = async (args, app) => {
     const findOne = await scrapyDb
       .get("answers")
       .find({ answerId })
-      .assign({ ...rest })
+      .assign({ ...rest, type: undefined })
       .write()
       .catch(() => null);
     win.webContents.send(
@@ -96,7 +96,6 @@ export const messageTasks = async (args, app) => {
         message: "请先打开预览pdf窗口"
       });
     }
-
     app.wins.scrapyPreviewPdf &&
       app.wins.scrapyPreviewPdf.webContents.printToPDF(
         {

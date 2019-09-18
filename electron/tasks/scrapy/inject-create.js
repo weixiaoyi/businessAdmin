@@ -95,7 +95,7 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
         const authorName = shortInfo.authorName;
         const answerId = shortInfo.itemId;
         const title = shortInfo.title;
-        const type = shortInfo.type;
+        const answerType = shortInfo.type;
         const questionId = extraInfo.card.content.parent_token;
         const authorId = extraInfo.card.content.author_member_hash_id;
         const upVoteNum = extraInfo.card.content.upvote_num;
@@ -106,7 +106,7 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
           authorName,
           authorId,
           title,
-          type,
+          answerType,
           content: richText.innerHTML,
           upVoteNum
         };

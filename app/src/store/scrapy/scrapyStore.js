@@ -188,4 +188,8 @@ export default class ScrapyStore extends ModelExtend {
         }
       });
   };
+
+  uploadAnser = payload => {
+    console.log(payload, "---payload");
+  };
 }

@@ -51,6 +51,7 @@ export const messageTasks = async args => {
               authorId: item.authorId,
               content: item.content,
               upVoteNum: item.upVoteNum,
+              answerType: item.answerType,
               createTime: Date.now()
             })
             .write();
