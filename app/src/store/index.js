@@ -1,11 +1,13 @@
 import { default as GlobalStore } from "./globalStore";
 import { default as ScrapyStore } from "./scrapy/scrapyStore";
-import { default as ScrapyManageDbStore } from "./scrapy/scrapyManageDbStore";
+import { default as PdfStore } from "./scrapy/pdfStore";
+import { default as OnlineStore } from "./scrapy/onlineStore";
 class RootStore {
   constructor() {
     this.globalStore = new GlobalStore(this);
     this.scrapyStore = new ScrapyStore(this);
-    this.scrapyManageDbStore = new ScrapyManageDbStore(this);
+    this.pdfStore = new PdfStore(this);
+    this.onlineStore = new OnlineStore(this);
   }
 }
 

@@ -159,17 +159,7 @@ class AnswerTable extends Component {
         key: "server",
         render: (v, record) => (
           <span>
-            <Popconfirm
-              title="确认删除?"
-              onConfirm={() => {
-                dispatch({
-                  type: "ipc-delete-answer",
-                  payload: {
-                    answerId: record.answerId
-                  }
-                });
-              }}
-            >
+            <Popconfirm title="确认删除?" onConfirm={() => {}}>
               <a className={styles.delete}>删除</a>
             </Popconfirm>
             <Divider type="vertical" />
@@ -177,8 +167,15 @@ class AnswerTable extends Component {
               <a
                 onClick={() => {
                   dispatch({
-                    type: "uploadAnser",
-                    payload: {}
+                    type: "uploadAnswer",
+                    payload: {
+                      answerId: record.answerId,
+                      content: record.content,
+                      title: record.title,
+                      questionId: record.questionId,
+                      authorName: record.authorName,
+                      upVoteNum: record.upVoteNum
+                    }
                   });
                 }}
               >
@@ -187,42 +184,15 @@ class AnswerTable extends Component {
               <Divider type="vertical" />
             </>
             <>
-              <a
-                onClick={() => {
-                  updateAnswer({
-                    answerId: record.answerId,
-                    approve: 1
-                  });
-                }}
-              >
-                上线
-              </a>
+              <a onClick={() => {}}>上线</a>
               <Divider type="vertical" />
             </>
 
             <>
-              <a
-                onClick={() => {
-                  updateAnswer({
-                    answerId: record.answerId,
-                    approve: 2
-                  });
-                }}
-              >
-                下线
-              </a>
+              <a onClick={() => {}}>下线</a>
               <Divider type="vertical" />
             </>
-            <a
-              onClick={() => {
-                updateAnswer({
-                  answerId: record.answerId,
-                  approve: 2
-                });
-              }}
-            >
-              检测
-            </a>
+            <a onClick={() => {}}>检测</a>
           </span>
         )
       }

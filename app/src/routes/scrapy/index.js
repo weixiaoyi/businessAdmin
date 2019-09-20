@@ -5,7 +5,8 @@ import { LayOut } from "../components";
 import { Inject } from "../../utils";
 import { db, PATH } from "../../constants";
 import Answer from "./answer";
-import ManageDb from "./managedb";
+import PreviewPdf from "./previewpdf";
+import OnlineDb from "./onlinedb";
 import * as styles from "./index.module.scss";
 
 const { Option, OptGroup } = Select;
@@ -26,7 +27,8 @@ class Scrapy extends Component {
     } = this.props;
     const navs = [
       { name: "answer", desc: "所有answer" },
-      { name: "manageDb", desc: "当前数据库管理" }
+      { name: "previewpdf", desc: "pdf预览发布" },
+      { name: "onlinedb", desc: "线上数据库" }
     ];
     return (
       <LayOut>
@@ -74,7 +76,8 @@ class Scrapy extends Component {
             </div>
           </div>
           {active === "answer" && <Answer />}
-          {active === "manageDb" && <ManageDb />}
+          {active === "previewpdf" && <PreviewPdf />}
+          {active === "onlinedb" && <OnlineDb />}
         </div>
       </LayOut>
     );

@@ -5,10 +5,10 @@ import { Inject } from "../../../utils";
 import { Answer } from "../../components";
 import * as styles from "./index.module.scss";
 
-@Inject(({ scrapyManageDbStore: model }) => ({
+@Inject(({ pdfStore: model }) => ({
   model
 }))
-class ManageDb extends Component {
+class PreviewPdf extends Component {
   componentDidMount() {
     this.getAllAnswer();
   }
@@ -27,7 +27,7 @@ class ManageDb extends Component {
       model: { dispatch, answers }
     } = this.props;
     return (
-      <div className={classNames(styles.ManageDb, "page")}>
+      <div className={classNames(styles.previewpdf, "page")}>
         <div className={styles.left}>
           <Button
             onClick={() => {
@@ -69,4 +69,4 @@ class ManageDb extends Component {
   }
 }
 
-export default ManageDb;
+export default PreviewPdf;

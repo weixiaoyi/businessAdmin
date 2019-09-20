@@ -2,7 +2,7 @@ import { autorun, computed, observable } from "mobx";
 import ModelExtend from "../modelExtend";
 import { notification } from "antd";
 
-export default class ScrapyManageDbStore extends ModelExtend {
+export default class PdfStore extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;

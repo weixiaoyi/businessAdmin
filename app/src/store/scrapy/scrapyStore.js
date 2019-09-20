@@ -189,7 +189,7 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  uploadAnser = payload => {
+  uploadAnswer = payload => {
     console.log(payload, "---payload");
   };
 }

@@ -3,7 +3,7 @@ import { Inject } from "../../utils";
 import { Answer } from "../components";
 import * as styles from "./index.module.scss";
 
-@Inject(({ scrapyManageDbStore: model }) => ({
+@Inject(({ pdfStore: model }) => ({
   model
 }))
 class ScrapyPdf extends Component {
