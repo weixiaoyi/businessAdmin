@@ -17,6 +17,9 @@ class OnlineDb extends Component {
     const {
       model: { dispatch }
     } = this.props;
+    dispatch({
+      type: "getAnswers"
+    });
   };
 
   render() {
@@ -25,29 +28,7 @@ class OnlineDb extends Component {
     } = this.props;
     return (
       <div className={classNames(styles.onlineDb, "page")}>
-        <div className={styles.left}>
-          <Button
-            onClick={() => {
-              dispatch({
-                type: "ipc-create-preview-pdf",
-                payload: {
-                  url: "http://localhost:3000/blank/scrapy/pdf"
-                }
-              });
-            }}
-          >
-            预览PDF
-          </Button>
-          <Button
-            onClick={() => {
-              dispatch({
-                type: "ipc-download-pdf"
-              });
-            }}
-          >
-            下载PDF
-          </Button>
-        </div>
+        <div className={styles.left}>hahahahahha</div>
         <div className={styles.right}>
           <ul>
             {onlineAnswers.map((item, index) => (

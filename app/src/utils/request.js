@@ -16,7 +16,7 @@ axios.interceptors.request.use(
 
 export const request = (options = {}) => {
   const {
-    url = "",
+    url,
     method = "get",
     formData = false,
     params,

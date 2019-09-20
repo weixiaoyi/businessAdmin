@@ -5,7 +5,7 @@ app.wins = {};
 
 function createMainWindow() {
   app.wins.main = createWindow({
-    url: "http://localhost:3000",
+    url: "http://dev.1000fuye.com",
     width: 1000,
     height: 1000,
     openDevTools: true,
