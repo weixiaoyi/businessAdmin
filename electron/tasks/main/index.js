@@ -1,14 +1,4 @@
-import path from "path";
-import { app, ipcMain, BrowserWindow } from "electron";
-import { decode } from "node-base64-image";
-import {
-  getScrapyDb,
-  parseDataUrl2Image,
-  ensureDir,
-  outputFile
-} from "../../utils";
-import { PATH } from "../../constants";
-
+import * as scrapy from "./scrapy";
 let win;
 
 export default window => {
@@ -17,103 +7,25 @@ export default window => {
 
 export const messageTasks = async (args, app) => {
   const {
-    dbName,
-    data: { type },
-    data
+    data: { type }
   } = args;
-  const scrapyDb = await getScrapyDb(dbName);
   if (type === "scrapy.get-answers") {
-    const { pageNum, pageSize } = data;
-    const answers = scrapyDb.get("answers").value();
-    const list = answers.slice((pageNum - 1) * pageSize, pageNum * pageSize);
-    win.webContents.send("scrapy.get-answers", {
-      data: list,
-      total: answers.length,
-      pageSize,
-      current: pageNum
-    });
+    await scrapy.get_answers({ args, win, app });
   } else if (type === "scrapy.get-all-answers") {
-    const answers = scrapyDb.get("answers").value();
-    win.webContents.send("scrapy.get-all-answers", {
-      data: answers
-    });
-    app.wins.scrapyPreviewPdf &&
-      app.wins.scrapyPreviewPdf.webContents.send("scrapy.get-all-answers", {
-        data: answers
-      });
+    await scrapy.get_all_answers({ args, win, app });
   } else if (type === "scrapy.delete-answers") {
-    const {
-      data: { answerId }
-    } = args;
-    const result = await scrapyDb
-      .get("answers")
-      .remove({ answerId })
-      .write()
-      .catch(() => null);
-    win.webContents.send("scrapy.delete-answers", result ? answerId : null);
+    await scrapy.delete_answers({ args, win, app });
   } else if (type === "scrapy.update-answers") {
-    const {
-      data: { answerId, ...rest }
-    } = args;
-    const findOne = await scrapyDb
-      .get("answers")
-      .find({ answerId })
-      .assign({ ...rest, type: undefined })
-      .write()
-      .catch(() => null);
-    win.webContents.send(
-      "scrapy.update-answers",
-      findOne ? findOne.answerId : null
-    );
+    await scrapy.update_answers({ args, win, app });
   } else if (type === "scrapy.mass-delete-answers") {
-    const {
-      data: { answerIds }
-    } = args;
-    const result = await scrapyDb
-      .get("answers")
-      .remove(item => answerIds.find(one => one === item.answerId))
-      .write()
-      .catch(() => null);
-    win.webContents.send(
-      "scrapy.mass-delete-answers",
-      result && result.length ? answerIds : null
-    );
+    await scrapy.mass_delete_answers({ args, win, app });
   } else if (type === "scrapy.download-image") {
-    const {
-      data: { dataUrl, filename }
-    } = args;
-    const dir = path.join(__dirname, PATH.scrapyImageDir, dbName);
-    await ensureDir(dir);
-    const result = await parseDataUrl2Image(
-      dataUrl,
-      path.join(dir, filename)
-    ).catch(() => null);
-    win.webContents.send("scrapy.download-image", result);
+    await scrapy.download_image({ args, win, app });
   } else if (type === "scrapy.download-pdf") {
-    if (!app.wins.scrapyPreviewPdf) {
-      return win.webContents.send("scrapy.download-pdf", {
-        success: false,
-        message: "请先打开预览pdf窗口"
-      });
-    }
-    app.wins.scrapyPreviewPdf &&
-      app.wins.scrapyPreviewPdf.webContents.printToPDF(
-        {
-          printBackground: true
-        },
-        async (err, data) => {
-          if (err) {
-            return win.webContents.send("scrapy.download-pdf", {
-              success: false,
-              message: err
-            });
-          } else {
-            await outputFile("./print.pdf", data);
-            win.webContents.send("scrapy.download-pdf", {
-              success: true
-            });
-          }
-        }
-      );
+    await scrapy.download_pdf({ args, win, app });
+  } else if (type === "scrapy.upload-answer-success") {
+    await scrapy.upload_answer_success({ args, win, app });
+  } else if (type === "scrapy.online-answer-success") {
+    await scrapy.online_answer_success({ args, win, app });
   }
 };

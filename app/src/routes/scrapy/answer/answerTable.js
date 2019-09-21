@@ -89,6 +89,8 @@ class AnswerTable extends Component {
               <span className={styles.online}>已上线</span>
             ) : v === "off" ? (
               <span className={styles.offline}>已下线</span>
+            ) : v === "upload" ? (
+              <span>已经上传</span>
             ) : (
               <span className={styles.waitUpload}>等待上传</span>
             )}
@@ -165,6 +167,7 @@ class AnswerTable extends Component {
             <Divider type="vertical" />
             <>
               <a
+                disabled={record.online}
                 onClick={() => {
                   dispatch({
                     type: "uploadAnswer",
@@ -184,12 +187,26 @@ class AnswerTable extends Component {
               <Divider type="vertical" />
             </>
             <>
-              <a onClick={() => {}}>上线</a>
+              <a
+                disabled={!record.online || record.online === "on"}
+                onClick={() => {
+                  dispatch({
+                    type: "onlineAnswer",
+                    payload: {
+                      answerId: record.answerId
+                    }
+                  });
+                }}
+              >
+                上线
+              </a>
               <Divider type="vertical" />
             </>
 
             <>
-              <a onClick={() => {}}>下线</a>
+              <a disabled={record.online !== "on"} onClick={() => {}}>
+                下线
+              </a>
               <Divider type="vertical" />
             </>
             <a onClick={() => {}}>检测</a>

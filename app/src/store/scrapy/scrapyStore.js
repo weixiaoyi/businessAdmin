@@ -3,7 +3,7 @@ import ModelExtend from "../modelExtend";
 import { notification, message } from "antd";
 import { localSave } from "../../utils";
 import { db } from "../../constants";
-import { uploadAnswer } from "../../services";
+import { uploadAnswer, onlineAnswer } from "../../services";
 
 export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
@@ -101,6 +101,38 @@ export default class ScrapyStore extends ModelExtend {
           });
         }
       });
+
+    window.ipc &&
+      window.ipc.on("scrapy.upload-answer-success", (e, arg) => {
+        if (arg) {
+          notification.success({
+            message: "answer上传成功",
+            description: `answerId:${arg}上传成功`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "answer上传失败",
+            description: `answerId:${arg}上传失败`
+          });
+        }
+      });
+
+    window.ipc &&
+      window.ipc.on("scrapy.online-answer-success", (e, arg) => {
+        if (arg) {
+          notification.success({
+            message: "answer上线成功",
+            description: `answerId:${arg}上线成功`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "answer上线失败",
+            description: `answerId:${arg}上线失败`
+          });
+        }
+      });
   };
 
   "ipc-create-answer-preview" = payload => {
@@ -194,6 +226,31 @@ export default class ScrapyStore extends ModelExtend {
     const res = await uploadAnswer(payload).catch(this.handleError);
     if (res) {
       message.success("上传成功");
+      window.ipc &&
+        window.ipc.send("ipc", {
+          from: "app.wins.main.render",
+          dbName: this.dbName,
+          data: {
+            type: "scrapy.upload-answer-success",
+            answerId: payload.answerId
+          }
+        });
+    }
+  };
+
+  onlineAnswer = async payload => {
+    const res = await onlineAnswer(payload).catch(this.handleError);
+    if (res) {
+      message.success("上线成功");
+      window.ipc &&
+        window.ipc.send("ipc", {
+          from: "app.wins.main.render",
+          dbName: this.dbName,
+          data: {
+            type: "scrapy.online-answer-success",
+            answerId: payload.answerId
+          }
+        });
     }
   };
 }

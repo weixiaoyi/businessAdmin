@@ -44,6 +44,22 @@ class OnlineDb extends Component {
             {v}
           </div>
         )
+      },
+      {
+        title: "是否上线",
+        dataIndex: "online",
+        key: "online",
+        render: v => (
+          <div>
+            {v === "on" ? (
+              <span className={styles.online}>已上线</span>
+            ) : v === "off" ? (
+              <span className={styles.offline}>已下线</span>
+            ) : (
+              <span className={styles.waiting}>等待上线</span>
+            )}
+          </div>
+        )
       }
     ];
     return (

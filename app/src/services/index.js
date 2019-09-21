@@ -14,3 +14,10 @@ export const uploadAnswer = payload =>
     method: "post",
     data: payload
   });
+
+export const onlineAnswer = payload =>
+  request({
+    url: `${baseUrl}/answers/onlineAnswer`,
+    method: "post",
+    data: payload
+  });
