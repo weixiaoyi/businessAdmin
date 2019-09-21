@@ -1,6 +1,7 @@
 import { observer, inject } from "mobx-react";
 import dayjs from "dayjs";
 import store from "store";
+import queryString from "query-string";
 
 export const Inject = func => {
   return c => {
@@ -24,3 +25,5 @@ export const localSave = {
     store.clearAll();
   }
 };
+
+export const parseString = search => queryString.parse(search);

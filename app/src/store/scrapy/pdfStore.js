@@ -1,6 +1,6 @@
 import { autorun, computed, observable } from "mobx";
 import ModelExtend from "../modelExtend";
-import { notification } from "antd";
+import { notification, message } from "antd";
 
 export default class PdfStore extends ModelExtend {
   constructor(rootStore) {
@@ -33,13 +33,14 @@ export default class PdfStore extends ModelExtend {
       });
   };
 
-  "ipc-get-scrapy-all-answers" = () => {
+  "ipc-get-scrapy-all-answers" = ({ dbName }) => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
-        dbName: this.rootStore.scrapyStore.dbName,
+        dbName: dbName || this.rootStore.scrapyStore.dbName,
         data: {
-          type: "scrapy.get-all-answers"
+          type: "scrapy.get-all-answers",
+          dbName
         }
       });
   };
@@ -51,7 +52,8 @@ export default class PdfStore extends ModelExtend {
         dbName: this.rootStore.scrapyStore.dbName,
         data: {
           type: "scrapy.create-preview-pdf",
-          url
+          url: `${url}?dbName=${this.rootStore.scrapyStore.dbName}`,
+          dbName: this.rootStore.scrapyStore.dbName
         }
       });
   };

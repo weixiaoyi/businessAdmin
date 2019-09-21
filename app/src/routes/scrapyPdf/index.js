@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Inject } from "../../utils";
+import { Inject, parseString } from "../../utils";
 import { Answer } from "../components";
 import * as styles from "./index.module.scss";
 
@@ -13,10 +13,18 @@ class ScrapyPdf extends Component {
 
   getAllAnswer = () => {
     const {
-      model: { dispatch }
+      model: { dispatch },
+      history: {
+        location: { search }
+      }
     } = this.props;
+    const dbName = parseString(search).dbName;
+    if (!dbName) return alert("未从地址栏获取到dbName查询参数");
     dispatch({
-      type: "ipc-get-scrapy-all-answers"
+      type: "ipc-get-scrapy-all-answers",
+      payload: {
+        dbName: parseString(search).dbName
+      }
     });
   };
 
