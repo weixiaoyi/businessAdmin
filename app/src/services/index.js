@@ -1,6 +1,13 @@
 import { request } from "../utils";
 const baseUrl = "/fuye1000/api";
 
+export const getOnlineDbs = payload =>
+  request({
+    method: "get",
+    url: `${baseUrl}/answerDbs/getAnswerDbs`,
+    params: payload
+  });
+
 export const getAnswers = payload =>
   request({
     method: "get",

@@ -1,0 +1,13 @@
+@import "src/styles/index.scss";
+.answerContent {
+  @include ellipse();
+}
+.online {
+  color: $green;
+}
+.offline {
+  color: $red;
+}
+.waiting {
+  color: $yellow;
+}
