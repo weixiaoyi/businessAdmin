@@ -73,8 +73,10 @@ class AnswerTable extends Component {
               <span className={styles.notApprove}>未审批</span>
             ) : v === 1 ? (
               <span className={styles.approve}>审批通过</span>
-            ) : (
+            ) : v === 2 ? (
               <span className={styles.delayApprove}>延迟审批</span>
+            ) : (
+              "未知"
             )}
           </div>
         )
@@ -108,20 +110,25 @@ class AnswerTable extends Component {
         key: "operation",
         render: (v, record) => (
           <span>
-            <Popconfirm
-              title="确认删除?"
-              onConfirm={() => {
-                dispatch({
-                  type: "ipc-delete-answer",
-                  payload: {
-                    answerId: record.answerId
-                  }
-                });
-              }}
-            >
-              <a className={styles.delete}>删除</a>
-            </Popconfirm>
-            <Divider type="vertical" />
+            {!record.online && (
+              <>
+                <Popconfirm
+                  title="确认删除?"
+                  onConfirm={() => {
+                    dispatch({
+                      type: "ipc-delete-answer",
+                      payload: {
+                        answerId: record.answerId
+                      }
+                    });
+                  }}
+                >
+                  <a className={styles.delete}>删除</a>
+                </Popconfirm>
+                <Divider type="vertical" />
+              </>
+            )}
+
             {record.approve !== 1 && (
               <>
                 <a
@@ -138,7 +145,7 @@ class AnswerTable extends Component {
               </>
             )}
 
-            {record.approve !== 2 && (
+            {record.approve !== 2 && record.online !== "on" && (
               <>
                 <a
                   onClick={() => {
@@ -161,54 +168,84 @@ class AnswerTable extends Component {
         key: "server",
         render: (v, record) => (
           <span>
-            <Popconfirm title="确认删除?" onConfirm={() => {}}>
-              <a className={styles.delete}>删除</a>
-            </Popconfirm>
-            <Divider type="vertical" />
-            <>
-              <a
-                disabled={record.online}
-                onClick={() => {
-                  dispatch({
-                    type: "uploadAnswer",
-                    payload: {
-                      answerId: record.answerId,
-                      content: record.content,
-                      title: record.title,
-                      questionId: record.questionId,
-                      authorName: record.authorName,
-                      prevUpVoteNum: record.upVoteNum
-                    }
-                  });
-                }}
-              >
-                上传
-              </a>
-              <Divider type="vertical" />
-            </>
-            <>
-              <a
-                disabled={!record.online || record.online === "on"}
-                onClick={() => {
-                  dispatch({
-                    type: "onlineAnswer",
-                    payload: {
-                      answerId: record.answerId
-                    }
-                  });
-                }}
-              >
-                上线
-              </a>
-              <Divider type="vertical" />
-            </>
+            {record.online === "off" && (
+              <>
+                <Popconfirm
+                  title="确认删除?"
+                  onConfirm={() => {
+                    dispatch({
+                      type: "deleteLineAnswer",
+                      payload: {
+                        answerId: record.answerId
+                      }
+                    });
+                  }}
+                >
+                  <a className={styles.delete}>删除</a>
+                </Popconfirm>
+                <Divider type="vertical" />
+              </>
+            )}
 
-            <>
-              <a disabled={record.online !== "on"} onClick={() => {}}>
-                下线
-              </a>
-              <Divider type="vertical" />
-            </>
+            {record.approve === 1 && !record.online && (
+              <>
+                <a
+                  onClick={() => {
+                    dispatch({
+                      type: "uploadAnswer",
+                      payload: {
+                        answerId: record.answerId,
+                        content: record.content,
+                        title: record.title,
+                        questionId: record.questionId,
+                        authorName: record.authorName,
+                        prevUpVoteNum: record.upVoteNum
+                      }
+                    });
+                  }}
+                >
+                  上传
+                </a>
+                <Divider type="vertical" />
+              </>
+            )}
+
+            {record.online !== "on" && record.approve === 1 && (
+              <>
+                <a
+                  onClick={() => {
+                    dispatch({
+                      type: "onlineAnswer",
+                      payload: {
+                        answerId: record.answerId
+                      }
+                    });
+                  }}
+                >
+                  上线
+                </a>
+                <Divider type="vertical" />
+              </>
+            )}
+
+            {record.online === "on" && (
+              <>
+                <a
+                  onClick={() => {
+                    dispatch({
+                      type: "offlineAnswer",
+                      payload: {
+                        answerId: record.answerId
+                      }
+                    });
+                  }}
+                >
+                  下线
+                </a>
+                <Divider type="vertical" />
+              </>
+            )}
+
             <a onClick={() => {}}>检测</a>
           </span>
         )

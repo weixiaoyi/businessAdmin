@@ -3,7 +3,12 @@ import ModelExtend from "../modelExtend";
 import { notification, message } from "antd";
 import { localSave } from "../../utils";
 import { db } from "../../constants";
-import { uploadAnswer, onlineAnswer } from "../../services";
+import {
+  uploadAnswer,
+  onlineAnswer,
+  offlineAnswer,
+  deleteLineAnswer
+} from "../../services";
 
 export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
@@ -133,6 +138,38 @@ export default class ScrapyStore extends ModelExtend {
           });
         }
       });
+
+    window.ipc &&
+      window.ipc.on("scrapy.offline-answer-success", (e, arg) => {
+        if (arg) {
+          notification.success({
+            message: "answer下线成功",
+            description: `answerId:${arg}下线成功`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "answer下线失败",
+            description: `answerId:${arg}下线失败`
+          });
+        }
+      });
+
+    window.ipc &&
+      window.ipc.on("scrapy.delete-line-answer-success", (e, arg) => {
+        if (arg) {
+          notification.success({
+            message: "线上answer删除成功",
+            description: `线上answerId:${arg}删除成功`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "线上answer删除失败",
+            description: `线上answerId:${arg}删除失败`
+          });
+        }
+      });
   };
 
   "ipc-create-answer-preview" = payload => {
@@ -224,7 +261,7 @@ export default class ScrapyStore extends ModelExtend {
 
   uploadAnswer = async payload => {
     const res = await uploadAnswer(payload).catch(this.handleError);
-    if (res) {
+    if (res && res.data) {
       message.success("上传成功");
       window.ipc &&
         window.ipc.send("ipc", {
@@ -240,7 +277,7 @@ export default class ScrapyStore extends ModelExtend {
 
   onlineAnswer = async payload => {
     const res = await onlineAnswer(payload).catch(this.handleError);
-    if (res) {
+    if (res && res.data) {
       message.success("上线成功");
       window.ipc &&
         window.ipc.send("ipc", {
@@ -248,6 +285,38 @@ export default class ScrapyStore extends ModelExtend {
           dbName: this.dbName,
           data: {
             type: "scrapy.online-answer-success",
+            answerId: payload.answerId
+          }
+        });
+    }
+  };
+
+  offlineAnswer = async payload => {
+    const res = await offlineAnswer(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("下线成功");
+      window.ipc &&
+        window.ipc.send("ipc", {
+          from: "app.wins.main.render",
+          dbName: this.dbName,
+          data: {
+            type: "scrapy.offline-answer-success",
+            answerId: payload.answerId
+          }
+        });
+    }
+  };
+
+  deleteLineAnswer = async payload => {
+    const res = await deleteLineAnswer(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("删除线上answer成功");
+      window.ipc &&
+        window.ipc.send("ipc", {
+          from: "app.wins.main.render",
+          dbName: this.dbName,
+          data: {
+            type: "scrapy.delete-line-answer-success",
             answerId: payload.answerId
           }
         });

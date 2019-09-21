@@ -21,3 +21,17 @@ export const onlineAnswer = payload =>
     method: "post",
     data: payload
   });
+
+export const offlineAnswer = payload =>
+  request({
+    url: `${baseUrl}/answers/offlineAnswer`,
+    method: "post",
+    data: payload
+  });
+
+export const deleteLineAnswer = payload =>
+  request({
+    url: `${baseUrl}/answers/deleteLineAnswer`,
+    method: "post",
+    data: payload
+  });

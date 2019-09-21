@@ -169,3 +169,41 @@ export const online_answer_success = async ({ args, win }) => {
     findOne ? findOne.answerId : null
   );
 };
+
+// 下线answer成功
+export const offline_answer_success = async ({ args, win }) => {
+  const {
+    dbName,
+    data: { answerId }
+  } = args;
+  const scrapyDb = await getScrapyDb(dbName);
+  const findOne = await scrapyDb
+    .get("answers")
+    .find({ answerId })
+    .assign({ online: "off" })
+    .write()
+    .catch(() => null);
+  win.webContents.send(
+    "scrapy.offline-answer-success",
+    findOne ? findOne.answerId : null
+  );
+};
+
+// 删除线上answer成功
+export const delete_line_answer_success = async ({ args, win }) => {
+  const {
+    dbName,
+    data: { answerId }
+  } = args;
+  const scrapyDb = await getScrapyDb(dbName);
+  const findOne = await scrapyDb
+    .get("answers")
+    .find({ answerId })
+    .assign({ online: null })
+    .write()
+    .catch(() => null);
+  win.webContents.send(
+    "scrapy.delete-line-answer-success",
+    findOne ? findOne.answerId : null
+  );
+};
