@@ -9,21 +9,25 @@ import * as styles from "./index.module.scss";
 }))
 class OnlineDb extends Component {
   componentDidMount() {
-    this.getAllAnswer();
+    this.getAnswers();
   }
 
-  getAllAnswer = () => {
+  getAnswers = (page, pageSize) => {
     const {
       model: { dispatch }
     } = this.props;
     dispatch({
-      type: "getAnswers"
+      type: "getAnswers",
+      payload: {
+        page,
+        pageSize
+      }
     });
   };
 
   render() {
     const {
-      model: { dispatch, onlineAnswers }
+      model: { onlineAnswers, pagination }
     } = this.props;
     const columns = [
       {
@@ -46,6 +50,15 @@ class OnlineDb extends Component {
       <div className={classNames(styles.onlineDb, "page")}>
         <div className={styles.left}>
           <Table
+            onChange={({ current, pageSize }) => {
+              this.getAnswers(current, pageSize);
+            }}
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              pageSizeOptions: ["1", "10", "20", "50", "100", "1000"],
+              ...pagination
+            }}
             rowKey={"answerId"}
             columns={columns}
             dataSource={onlineAnswers}

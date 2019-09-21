@@ -3,7 +3,9 @@ const baseUrl = "/fuye1000/api";
 
 export const getAnswers = payload =>
   request({
-    url: `${baseUrl}/answers/getAnswers`
+    method: "get",
+    url: `${baseUrl}/answers/getAnswers`,
+    params: payload
   });
 
 export const uploadAnswer = payload =>
