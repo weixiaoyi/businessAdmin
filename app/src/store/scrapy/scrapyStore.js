@@ -8,7 +8,8 @@ import {
   onlineAnswer,
   offlineAnswer,
   deleteLineAnswer,
-  updateLineAnswer
+  updateLineAnswer,
+  checkLineAnswer
 } from "../../services";
 
 export default class ScrapyStore extends ModelExtend {
@@ -187,6 +188,22 @@ export default class ScrapyStore extends ModelExtend {
           });
         }
       });
+
+    window.ipc &&
+      window.ipc.on("scrapy.check-line-answer-success", (e, arg) => {
+        if (arg) {
+          notification.success({
+            message: "answer检测成功",
+            description: `answerId:${arg}检测成功`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "answer检测失败",
+            description: `answerId:${arg}检测失败`
+          });
+        }
+      });
   };
 
   "ipc-create-answer-preview" = payload => {
@@ -277,7 +294,10 @@ export default class ScrapyStore extends ModelExtend {
   };
 
   uploadAnswer = async payload => {
-    const res = await uploadAnswer(payload).catch(this.handleError);
+    const res = await uploadAnswer({
+      ...payload,
+      dbName: this.dbName
+    }).catch(this.handleError);
     if (res && res.data) {
       message.success("上传成功");
       window.ipc &&
@@ -353,6 +373,36 @@ export default class ScrapyStore extends ModelExtend {
             answerId: payload.answerId
           }
         });
+    }
+  };
+
+  checkLineAnswer = async payload => {
+    const res = await checkLineAnswer(payload).catch(this.handleError);
+    if (res && res.data) {
+      if (res.data.length > 0) {
+        const onlineOne = res.data[0];
+        window.ipc &&
+          window.ipc.send("ipc", {
+            from: "app.wins.main.render",
+            dbName: this.dbName,
+            data: {
+              type: "scrapy.check-line-answer-success",
+              answerId: payload.answerId,
+              online: onlineOne.online || "upload"
+            }
+          });
+      } else if (res.data.length === 0) {
+        window.ipc &&
+          window.ipc.send("ipc", {
+            from: "app.wins.main.render",
+            dbName: this.dbName,
+            data: {
+              type: "scrapy.check-line-answer-success",
+              answerId: payload.answerId,
+              online: null
+            }
+          });
+      }
     }
   };
 }

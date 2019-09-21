@@ -42,3 +42,10 @@ export const updateLineAnswer = payload =>
     method: "post",
     data: payload
   });
+
+export const checkLineAnswer = payload =>
+  request({
+    url: `${baseUrl}/answers/checkLineAnswer`,
+    method: "post",
+    data: payload
+  });

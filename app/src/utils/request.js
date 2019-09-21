@@ -1,5 +1,7 @@
 import axios from "axios";
 import { stringify } from "qs";
+import { message } from "antd";
+import _ from "lodash";
 
 axios.defaults.withCredentials = true;
 axios.defaults.crossDomain = true;
@@ -47,36 +49,17 @@ export const request = (options = {}) => {
     ...rest
   })
     .then(res => {
-      const { status, data = {} } = res || {};
+      // console.log(res, "----res");
+      const { status, data } = res || {};
+      if (!data) return Promise.reject("请求响应失败");
+      if (data && data.code === -1) return Promise.reject(data.msg);
       return {
         ...data,
         status
       };
     })
     .catch(error => {
-      if (error.response) {
-        const { data, status } = error.response;
-        return Promise.reject({
-          data,
-          status,
-          errMsg: error.message
-        });
-      } else {
-        if (error && error.message) {
-          if (/timeout/.test(error.message)) {
-            return Promise.reject({
-              errMsg: "请求超时"
-            });
-          } else {
-            return Promise.reject({
-              errMsg: error.message
-            });
-          }
-        } else {
-          return Promise.reject({
-            errMsg: "未知错误类型"
-          });
-        }
-      }
+      _.isString(error) && message.error(error);
+      return Promise.reject(error);
     });
 };

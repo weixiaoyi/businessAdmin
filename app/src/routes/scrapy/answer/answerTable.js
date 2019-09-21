@@ -168,7 +168,7 @@ class AnswerTable extends Component {
         key: "server",
         render: (v, record) => (
           <span>
-            {record.online === "off" && (
+            {(record.online === "off" || record.online === "upload") && (
               <>
                 <Popconfirm
                   title="确认删除?"
@@ -247,7 +247,7 @@ class AnswerTable extends Component {
               </>
             )}
 
-            {record.online === "on" && record.approve === 1 && record.update && (
+            {record.online && record.update && (
               <>
                 <a
                   onClick={() => {
@@ -266,7 +266,18 @@ class AnswerTable extends Component {
               </>
             )}
 
-            <a onClick={() => {}}>检测</a>
+            <a
+              onClick={() => {
+                dispatch({
+                  type: "checkLineAnswer",
+                  payload: {
+                    answerId: record.answerId
+                  }
+                });
+              }}
+            >
+              检测
+            </a>
           </span>
         )
       }

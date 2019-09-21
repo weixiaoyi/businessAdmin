@@ -56,6 +56,11 @@ class OnlineDb extends Component {
         key: "prevUpVoteNum"
       },
       {
+        title: "数据库名称",
+        dataIndex: "dbName",
+        key: "dbName"
+      },
+      {
         title: "是否上线",
         dataIndex: "online",
         key: "online",

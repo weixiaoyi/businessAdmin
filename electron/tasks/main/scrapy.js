@@ -226,3 +226,22 @@ export const update_line_answer_success = async ({ args, win }) => {
     findOne ? findOne.answerId : null
   );
 };
+
+// 检测线上answer
+export const check_line_answer_success = async ({ args, win }) => {
+  const {
+    dbName,
+    data: { answerId, online }
+  } = args;
+  const scrapyDb = await getScrapyDb(dbName);
+  const findOne = await scrapyDb
+    .get("answers")
+    .find({ answerId })
+    .assign({ online })
+    .write()
+    .catch(() => null);
+  win.webContents.send(
+    "scrapy.check-line-answer-success",
+    findOne ? findOne.answerId : null
+  );
+};
