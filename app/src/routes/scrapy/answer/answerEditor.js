@@ -35,7 +35,8 @@ class AnswerEditor extends Component {
                 onClick={() => {
                   updateAnswer({
                     answerId: selectOne.answerId,
-                    content: this.editor.txt.html()
+                    content: this.editor.txt.html(),
+                    update: true
                   });
                 }}
               >

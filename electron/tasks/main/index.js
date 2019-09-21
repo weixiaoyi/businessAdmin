@@ -31,5 +31,7 @@ export const messageTasks = async (args, app) => {
     await scrapy.offline_answer_success({ args, win, app });
   } else if (type === "scrapy.delete-line-answer-success") {
     await scrapy.delete_line_answer_success({ args, win, app });
+  } else if (type === "scrapy.update-line-answer-success") {
+    await scrapy.update_line_answer_success({ args, win, app });
   }
 };

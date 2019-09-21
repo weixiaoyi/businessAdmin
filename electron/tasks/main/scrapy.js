@@ -51,7 +51,7 @@ export const delete_answers = async ({ args, win }) => {
   win.webContents.send("scrapy.delete-answers", result ? answerId : null);
 };
 
-// 更新answer
+// 更新本地answer
 export const update_answers = async ({ args, win }) => {
   const {
     dbName,
@@ -204,6 +204,25 @@ export const delete_line_answer_success = async ({ args, win }) => {
     .catch(() => null);
   win.webContents.send(
     "scrapy.delete-line-answer-success",
+    findOne ? findOne.answerId : null
+  );
+};
+
+// 更新线上answer成功
+export const update_line_answer_success = async ({ args, win }) => {
+  const {
+    dbName,
+    data: { answerId }
+  } = args;
+  const scrapyDb = await getScrapyDb(dbName);
+  const findOne = await scrapyDb
+    .get("answers")
+    .find({ answerId })
+    .assign({ update: false })
+    .write()
+    .catch(() => null);
+  win.webContents.send(
+    "scrapy.update-line-answer-success",
     findOne ? findOne.answerId : null
   );
 };

@@ -46,6 +46,16 @@ class OnlineDb extends Component {
         )
       },
       {
+        title: "作者",
+        dataIndex: "authorName",
+        key: "authorName"
+      },
+      {
+        title: "原始赞同",
+        dataIndex: "prevUpVoteNum",
+        key: "prevUpVoteNum"
+      },
+      {
         title: "是否上线",
         dataIndex: "online",
         key: "online",

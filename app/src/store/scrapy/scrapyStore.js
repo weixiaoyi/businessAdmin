@@ -7,7 +7,8 @@ import {
   uploadAnswer,
   onlineAnswer,
   offlineAnswer,
-  deleteLineAnswer
+  deleteLineAnswer,
+  updateLineAnswer
 } from "../../services";
 
 export default class ScrapyStore extends ModelExtend {
@@ -170,6 +171,22 @@ export default class ScrapyStore extends ModelExtend {
           });
         }
       });
+
+    window.ipc &&
+      window.ipc.on("scrapy.update-line-answer-success", (e, arg) => {
+        if (arg) {
+          notification.success({
+            message: "线上answer更新成功",
+            description: `线上answerId:${arg}更新成功`
+          });
+          this["ipc-get-scrapy-answers"]();
+        } else {
+          notification.error({
+            message: "线上answer更新失败",
+            description: `线上answerId:${arg}更新失败`
+          });
+        }
+      });
   };
 
   "ipc-create-answer-preview" = payload => {
@@ -269,6 +286,22 @@ export default class ScrapyStore extends ModelExtend {
           dbName: this.dbName,
           data: {
             type: "scrapy.upload-answer-success",
+            answerId: payload.answerId
+          }
+        });
+    }
+  };
+
+  updateLineAnswer = async payload => {
+    const res = await updateLineAnswer(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("更新线上数据成功");
+      window.ipc &&
+        window.ipc.send("ipc", {
+          from: "app.wins.main.render",
+          dbName: this.dbName,
+          data: {
+            type: "scrapy.update-line-answer-success",
             answerId: payload.answerId
           }
         });

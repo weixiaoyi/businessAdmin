@@ -35,3 +35,10 @@ export const deleteLineAnswer = payload =>
     method: "post",
     data: payload
   });
+
+export const updateLineAnswer = payload =>
+  request({
+    url: `${baseUrl}/answers/updateLineAnswer`,
+    method: "post",
+    data: payload
+  });

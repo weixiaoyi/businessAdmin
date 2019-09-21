@@ -210,23 +210,24 @@ class AnswerTable extends Component {
               </>
             )}
 
-            {record.online !== "on" && record.approve === 1 && (
-              <>
-                <a
-                  onClick={() => {
-                    dispatch({
-                      type: "onlineAnswer",
-                      payload: {
-                        answerId: record.answerId
-                      }
-                    });
-                  }}
-                >
-                  上线
-                </a>
-                <Divider type="vertical" />
-              </>
-            )}
+            {(record.online === "upload" || record.online === "off") &&
+              record.approve === 1 && (
+                <>
+                  <a
+                    onClick={() => {
+                      dispatch({
+                        type: "onlineAnswer",
+                        payload: {
+                          answerId: record.answerId
+                        }
+                      });
+                    }}
+                  >
+                    上线
+                  </a>
+                  <Divider type="vertical" />
+                </>
+              )}
 
             {record.online === "on" && (
               <>
@@ -241,6 +242,25 @@ class AnswerTable extends Component {
                   }}
                 >
                   下线
+                </a>
+                <Divider type="vertical" />
+              </>
+            )}
+
+            {record.online === "on" && record.approve === 1 && record.update && (
+              <>
+                <a
+                  onClick={() => {
+                    dispatch({
+                      type: "updateLineAnswer",
+                      payload: {
+                        answerId: record.answerId,
+                        content: record.content
+                      }
+                    });
+                  }}
+                >
+                  更新
                 </a>
                 <Divider type="vertical" />
               </>
