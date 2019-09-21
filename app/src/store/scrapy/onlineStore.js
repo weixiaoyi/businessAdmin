@@ -12,6 +12,8 @@ export default class OnlineStore extends ModelExtend {
 
   getAnswers = async () => {
     const res = await getAnswers();
-    console.log(res, "-----res");
+    if (res && res.data) {
+      this.commit("onlineAnswers", res.data);
+    }
   };
 }

@@ -1,8 +1,9 @@
 import { autorun, computed, observable } from "mobx";
 import ModelExtend from "../modelExtend";
-import { notification } from "antd";
+import { notification, message } from "antd";
 import { localSave } from "../../utils";
 import { db } from "../../constants";
+import { uploadAnswer } from "../../services";
 
 export default class ScrapyStore extends ModelExtend {
   constructor(rootStore) {
@@ -189,7 +190,10 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
-  uploadAnswer = payload => {
-    console.log(payload, "---payload");
+  uploadAnswer = async payload => {
+    const res = await uploadAnswer(payload).catch(this.handleError);
+    if (res) {
+      message.success("上传成功");
+    }
   };
 }

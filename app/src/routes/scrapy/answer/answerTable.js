@@ -174,7 +174,7 @@ class AnswerTable extends Component {
                       title: record.title,
                       questionId: record.questionId,
                       authorName: record.authorName,
-                      upVoteNum: record.upVoteNum
+                      prevUpVoteNum: record.upVoteNum
                     }
                   });
                 }}
