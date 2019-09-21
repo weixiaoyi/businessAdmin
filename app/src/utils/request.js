@@ -2,6 +2,7 @@ import axios from "axios";
 import { stringify } from "qs";
 import { message } from "antd";
 import _ from "lodash";
+import { generateAccessToken } from "./encrypt";
 
 axios.defaults.withCredentials = true;
 axios.defaults.crossDomain = true;
@@ -28,6 +29,10 @@ export const request = (options = {}) => {
   } = options;
   return axios({
     ...{
+      headers: {
+        Authorization: generateAccessToken(),
+        signature: generateAccessToken()
+      },
       method,
       params,
       data,
