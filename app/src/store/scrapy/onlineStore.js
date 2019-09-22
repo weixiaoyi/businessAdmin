@@ -1,7 +1,14 @@
 import { autorun, computed, observable } from "mobx";
 import ModelExtend from "../modelExtend";
 import { notification, message } from "antd";
-import { getAnswers, getOnlineDbs, onlineAnswerDb } from "../../services";
+import {
+  getAnswers,
+  getOnlineDbs,
+  onlineAnswerDb,
+  offlineAnswerDb,
+  deleteLineDb,
+  updateLineDb
+} from "../../services";
 import { db } from "../../constants";
 
 export default class OnlineStore extends ModelExtend {
@@ -70,6 +77,30 @@ export default class OnlineStore extends ModelExtend {
     const res = await onlineAnswerDb(payload).catch(this.handleError);
     if (res && res.data) {
       message.success("上线成功");
+      this.getOnlineDbs();
+    }
+  };
+
+  updateLineDb = async payload => {
+    const res = await updateLineDb(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("更新成功");
+      this.getOnlineDbs();
+    }
+  };
+
+  offlineDb = async payload => {
+    const res = await offlineAnswerDb(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("下线成功");
+      this.getOnlineDbs();
+    }
+  };
+
+  deleteLineDb = async payload => {
+    const res = await deleteLineDb(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("线上数据库删除成功");
       this.getOnlineDbs();
     }
   };

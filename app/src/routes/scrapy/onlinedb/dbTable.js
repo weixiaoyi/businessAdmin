@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Table, Divider, Icon } from "antd";
+import { Button, Table, Divider, Icon, Popconfirm } from "antd";
 import _ from "lodash";
 import { Inject } from "../../../utils";
 import * as styles from "./dbTable.module.scss";
@@ -8,6 +8,9 @@ import * as styles from "./dbTable.module.scss";
   model
 }))
 class DbTable extends Component {
+  state = {
+    selectOne: {}
+  };
   componentDidMount() {
     this.getOnlineDbs();
   }
@@ -29,11 +32,23 @@ class DbTable extends Component {
     const {
       model: { dispatch, localDbs, dbPagination }
     } = this.props;
+    const { selectOne } = this.state;
     const columns = [
       {
         title: "数据库名称（对内）",
         dataIndex: "name",
-        key: "name"
+        key: "name",
+        render: (v, record) => (
+          <a
+            onClick={() => {
+              this.setState({
+                selectOne: record
+              });
+            }}
+          >
+            {v}
+          </a>
+        )
       },
       {
         title: "简短描述（对内）",
@@ -81,56 +96,104 @@ class DbTable extends Component {
         )
       },
       {
-        title: "操作 ",
+        title: "服务端操作 ",
         dataIndex: "operation",
         key: "operation",
         render: (v, record) => (
           <div>
-            <a
-              onClick={() => {
-                dispatch({
-                  type: "onlineDb",
-                  payload: {
-                    name: record.name,
-                    desc: record.desc,
-                    title: record.title,
-                    intro: record.intro,
-                    member: {
-                      limit: record.member.limit,
-                      price: record.member.price
+            {record.online !== "on" && (
+              <Popconfirm
+                title="确认上线?"
+                onConfirm={() => {
+                  dispatch({
+                    type: "onlineDb",
+                    payload: {
+                      name: record.name,
+                      desc: record.desc,
+                      title: record.title,
+                      intro: record.intro,
+                      member: {
+                        limit: record.member.limit,
+                        price: record.member.price
+                      }
                     }
+                  });
+                }}
+              >
+                <a>上线</a>
+                <Divider type="vertical" />
+              </Popconfirm>
+            )}
+            {record.online === "on" && (
+              <Popconfirm
+                title="确认下线?"
+                onConfirm={() => {
+                  dispatch({
+                    type: "offlineDb",
+                    payload: {
+                      name: record.name
+                    }
+                  });
+                }}
+              >
+                <a>下线</a>
+                <Divider type="vertical" />
+              </Popconfirm>
+            )}
+
+            {(record.online === "on" || record.online === "off") &&
+              record.onlineData &&
+              (record.name !== _.get(record, "onlineData.name") ||
+                record.desc !== _.get(record, "onlineData.desc") ||
+                record.title !== _.get(record, "onlineData.title") ||
+                record.intro !== _.get(record, "onlineData.intro") ||
+                record.member.limit !==
+                  _.get(record, "onlineData.member.limit") ||
+                record.member.price !==
+                  _.get(record, "onlineData.member.price")) && (
+                <Popconfirm
+                  title="确认更新线上数据库?"
+                  onConfirm={() => {
+                    dispatch({
+                      type: "updateLineDb",
+                      payload: {
+                        name: record.name,
+                        desc: record.desc,
+                        title: record.title,
+                        intro: record.intro,
+                        member: {
+                          limit: record.member.limit,
+                          price: record.member.price
+                        }
+                      }
+                    });
+                  }}
+                >
+                  <a>
+                    <span>更新</span>
+                  </a>
+                  <Divider type="vertical" />
+                </Popconfirm>
+              )}
+
+            <Popconfirm
+              title="确认删除?"
+              onConfirm={() => {
+                dispatch({
+                  type: "deleteLineDb",
+                  payload: {
+                    name: record.name
                   }
                 });
               }}
             >
-              上线
-            </a>
-            <Divider type="vertical" />
-            <a onClick={() => {}}>下线</a>
-            <Divider type="vertical" />
-            <a onClick={() => {}}>
-              {record.onlineData &&
-                (record.name !== _.get(record, "onlineData.name") ||
-                  record.desc !== _.get(record, "onlineData.desc") ||
-                  record.title !== _.get(record, "onlineData.title") ||
-                  record.intro !== _.get(record, "onlineData.intro") ||
-                  record.member.limit !==
-                    _.get(record, "onlineData.member.limit") ||
-                  record.member.price !==
-                    _.get(record, "onlineData.member.price")) && (
-                  <span>
-                    更新
-                    <Divider type="vertical" />
-                  </span>
-                )}
-            </a>
-
-            <a onClick={() => {}}>删除</a>
-            <Divider type="vertical" />
+              <a>删除</a>
+            </Popconfirm>
           </div>
         )
       }
     ];
+
     return (
       <div>
         <Table
@@ -148,8 +211,31 @@ class DbTable extends Component {
           columns={columns}
           dataSource={localDbs}
         />
-        <ul>
-          <li>hahha</li>
+        <ul className={styles.info}>
+          <li>
+            <span>数据库名称：</span>
+            {selectOne.name}
+          </li>
+          <li>
+            <span>简短描述（对内）：</span>
+            {selectOne.desc}
+          </li>
+          <li>
+            <span>title（对外）：</span>
+            {selectOne.title}
+          </li>
+          <li>
+            <span>intro（对外）：</span>
+            {selectOne.intro}
+          </li>
+          <li>
+            <span>limit：</span>
+            {selectOne.member && selectOne.member.limit}
+          </li>
+          <li>
+            <span>价格：</span>
+            {selectOne.member && selectOne.member.price}
+          </li>
         </ul>
       </div>
     );

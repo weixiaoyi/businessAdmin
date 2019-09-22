@@ -15,6 +15,27 @@ export const onlineAnswerDb = payload =>
     data: payload
   });
 
+export const offlineAnswerDb = payload =>
+  request({
+    url: `${baseUrl}/answerDbs/offlineAnswerDb`,
+    method: "post",
+    data: payload
+  });
+
+export const deleteLineDb = payload =>
+  request({
+    url: `${baseUrl}/answerDbs/deleteLineDb`,
+    method: "post",
+    data: payload
+  });
+
+export const updateLineDb = payload =>
+  request({
+    url: `${baseUrl}/answerDbs/updateLineDb`,
+    method: "post",
+    data: payload
+  });
+
 export const getAnswers = payload =>
   request({
     method: "get",
