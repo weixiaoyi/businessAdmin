@@ -8,6 +8,13 @@ export const getOnlineDbs = payload =>
     params: payload
   });
 
+export const onlineAnswerDb = payload =>
+  request({
+    url: `${baseUrl}/answerDbs/onlineAnswerDb`,
+    method: "post",
+    data: payload
+  });
+
 export const getAnswers = payload =>
   request({
     method: "get",

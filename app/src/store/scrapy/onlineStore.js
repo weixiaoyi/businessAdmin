@@ -1,7 +1,8 @@
 import { autorun, computed, observable } from "mobx";
 import ModelExtend from "../modelExtend";
-import { notification } from "antd";
-import { getAnswers, getOnlineDbs } from "../../services";
+import { notification, message } from "antd";
+import { getAnswers, getOnlineDbs, onlineAnswerDb } from "../../services";
+import { db } from "../../constants";
 
 export default class OnlineStore extends ModelExtend {
   constructor(rootStore) {
@@ -14,7 +15,8 @@ export default class OnlineStore extends ModelExtend {
     current: 1,
     total: 0
   };
-  @observable onlineDbs = [];
+
+  @observable localDbs = db.scrapy;
   @observable dbPagination = {
     pageSize: 100,
     current: 1,
@@ -25,21 +27,23 @@ export default class OnlineStore extends ModelExtend {
     const res = await getOnlineDbs({
       page: this.dbPagination.current,
       pageSize: this.dbPagination.pageSize,
-      ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
-      ...(payload.page ? { page: payload.page } : {}),
+      ...(payload && payload.pageSize ? { pageSize: payload.pageSize } : {}),
+      ...(payload && payload.page ? { page: payload.page } : {}),
       dbName: this.rootStore.scrapyStore.dbName
     });
-    console.log(res, "--res");
-    // if (res && res.data) {
-    //   this.commit({
-    //     onlineAnswers: res.data,
-    //     pagination: {
-    //       current: res.current,
-    //       pageSize: res.pageSize,
-    //       total: res.total
-    //     }
-    //   });
-    // }
+    if (res && res.data) {
+      this.commit(
+        "localDbs",
+        this.localDbs.map(item => {
+          const findOne = res.data.find(one => one.name === item.name) || {};
+          return {
+            ...item,
+            online: findOne.online ? findOne.online : "waiting",
+            onlineData: findOne
+          };
+        })
+      );
+    }
   };
 
   getAnswers = async payload => {
@@ -59,6 +63,14 @@ export default class OnlineStore extends ModelExtend {
           total: res.total
         }
       });
+    }
+  };
+
+  onlineDb = async payload => {
+    const res = await onlineAnswerDb(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("上线成功");
+      this.getOnlineDbs();
     }
   };
 }

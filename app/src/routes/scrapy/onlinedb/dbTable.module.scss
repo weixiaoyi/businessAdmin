@@ -1,1 +1,14 @@
 @import "src/styles/index.scss";
+
+.limitContent {
+  @include ellipse();
+}
+.online {
+  color: $green;
+}
+.offline {
+  color: $red;
+}
+.waiting {
+  color: $yellow;
+}
