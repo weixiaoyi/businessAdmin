@@ -37,7 +37,7 @@ export default class OnlineStore extends ModelExtend {
       ...(payload && payload.pageSize ? { pageSize: payload.pageSize } : {}),
       ...(payload && payload.page ? { page: payload.page } : {}),
       dbName: this.rootStore.scrapyStore.dbName
-    });
+    }).catch(this.handleError);
     if (res && res.data) {
       this.commit(
         "localDbs",
@@ -60,7 +60,7 @@ export default class OnlineStore extends ModelExtend {
       ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
       ...(payload.page ? { page: payload.page } : {}),
       dbName: this.rootStore.scrapyStore.dbName
-    });
+    }).catch(this.handleError);
     if (res && res.data) {
       this.commit({
         onlineAnswers: res.data,

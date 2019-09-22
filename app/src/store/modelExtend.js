@@ -1,5 +1,6 @@
 import { action } from "mobx";
 import _ from "lodash";
+import { message } from "antd";
 
 export default class ModelExtend {
   constructor(rootStore) {
@@ -75,9 +76,13 @@ export default class ModelExtend {
       _.get(err, "status") === 401 &&
       _.get(err, "data.msg") === "Unauthorized_RequiredLogin"
     ) {
+      message.error("未登陆权限不够");
     } else if (_.get(err, "data.msg")) {
+      message.error(_.get(err, "data.msg"));
     } else if (_.get(err, "errMsg")) {
+      message.error(_.get(err, "errMsg"));
     } else {
+      message.error("未知错误");
     }
     return false;
   };
