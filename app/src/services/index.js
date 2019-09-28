@@ -18,21 +18,21 @@ export const onlineAnswerDb = payload =>
 export const offlineAnswerDb = payload =>
   request({
     url: `${baseUrl}/answerDbs/offlineAnswerDb`,
-    method: "post",
+    method: "put",
     data: payload
   });
 
 export const deleteLineDb = payload =>
   request({
     url: `${baseUrl}/answerDbs/deleteLineDb`,
-    method: "post",
+    method: "delete",
     data: payload
   });
 
 export const updateLineDb = payload =>
   request({
     url: `${baseUrl}/answerDbs/updateLineDb`,
-    method: "post",
+    method: "put",
     data: payload
   });
 
@@ -53,28 +53,28 @@ export const uploadAnswer = payload =>
 export const onlineAnswer = payload =>
   request({
     url: `${baseUrl}/answers/onlineAnswer`,
-    method: "post",
+    method: "put",
     data: payload
   });
 
 export const offlineAnswer = payload =>
   request({
     url: `${baseUrl}/answers/offlineAnswer`,
-    method: "post",
+    method: "put",
     data: payload
   });
 
 export const deleteLineAnswer = payload =>
   request({
     url: `${baseUrl}/answers/deleteLineAnswer`,
-    method: "post",
+    method: "delete",
     data: payload
   });
 
 export const updateLineAnswer = payload =>
   request({
     url: `${baseUrl}/answers/updateLineAnswer`,
-    method: "post",
+    method: "put",
     data: payload
   });
 

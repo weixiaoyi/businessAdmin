@@ -4,8 +4,9 @@ import _ from "lodash";
 import { Inject } from "../../../utils";
 import * as styles from "./dbTable.module.scss";
 
-@Inject(({ onlineStore: model }) => ({
-  model
+@Inject(({ onlineStore: model, scrapyStore }) => ({
+  model,
+  scrapyStore
 }))
 class DbTable extends Component {
   state = {
@@ -30,7 +31,8 @@ class DbTable extends Component {
 
   render() {
     const {
-      model: { dispatch, localDbs, dbPagination }
+      model: { dispatch, localDbs, dbPagination },
+      scrapyStore: { dbName }
     } = this.props;
     const { selectOne } = this.state;
     const columns = [
@@ -176,19 +178,21 @@ class DbTable extends Component {
                 </Popconfirm>
               )}
 
-            <Popconfirm
-              title="确认删除?"
-              onConfirm={() => {
-                dispatch({
-                  type: "deleteLineDb",
-                  payload: {
-                    name: record.name
-                  }
-                });
-              }}
-            >
-              <a>删除</a>
-            </Popconfirm>
+            {(record.online === "on" || record.online === "off") && (
+              <Popconfirm
+                title="确认删除?"
+                onConfirm={() => {
+                  dispatch({
+                    type: "deleteLineDb",
+                    payload: {
+                      name: record.name
+                    }
+                  });
+                }}
+              >
+                <a>删除</a>
+              </Popconfirm>
+            )}
           </div>
         )
       }
@@ -197,6 +201,9 @@ class DbTable extends Component {
     return (
       <div>
         <Table
+          rowClassName={record =>
+            record.name === dbName ? styles.currentDb : null
+          }
           scroll={{ x: 800 }}
           onChange={({ current, pageSize }) => {
             this.getOnlineDbs(current, pageSize);
