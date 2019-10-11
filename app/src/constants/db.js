@@ -6,8 +6,8 @@ export const db = {
       title: "1000个副业",
       intro: "适合现代人的副业思维",
       member: {
-        limit: 20,
-        price: 30
+        limit: 10,
+        price: 50
       }
     },
     {
@@ -16,8 +16,8 @@ export const db = {
       title: "example",
       intro: "example",
       member: {
-        limit: 0,
-        price: 0
+        limit: 2,
+        price: 50
       }
     }
   ]

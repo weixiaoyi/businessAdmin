@@ -9,7 +9,7 @@ import DbTable from "./dbTable";
 @Inject(({ onlineStore: model }) => ({
   model
 }))
-class OnlineDb extends Component {
+class OnlineAnswerDb extends Component {
   render() {
     return (
       <div className={classNames(styles.onlineDb, "page")}>
@@ -26,4 +26,4 @@ class OnlineDb extends Component {
   }
 }
 
-export default OnlineDb;
+export default OnlineAnswerDb;
