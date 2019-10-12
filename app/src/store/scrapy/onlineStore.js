@@ -7,7 +7,9 @@ import {
   onlineAnswerDb,
   offlineAnswerDb,
   deleteLineDb,
-  updateLineDb
+  updateLineDb,
+  getUsers,
+  operationUserBlackList
 } from "../../services";
 import { db } from "../../constants";
 
@@ -26,6 +28,13 @@ export default class OnlineStore extends ModelExtend {
   @observable localDbs = db.scrapy;
   @observable dbPagination = {
     pageSize: 100,
+    current: 1,
+    total: 0
+  };
+
+  @observable users = [];
+  @observable userPagination = {
+    pageSize: 20,
     current: 1,
     total: 0
   };
@@ -77,7 +86,9 @@ export default class OnlineStore extends ModelExtend {
     const res = await onlineAnswerDb(payload).catch(this.handleError);
     if (res && res.data) {
       message.success("上线成功");
-      this.getOnlineDbs();
+      this.dispatch({
+        type: "getOnlineDbs"
+      });
     }
   };
 
@@ -85,7 +96,9 @@ export default class OnlineStore extends ModelExtend {
     const res = await updateLineDb(payload).catch(this.handleError);
     if (res && res.data) {
       message.success("更新成功");
-      this.getOnlineDbs();
+      this.dispatch({
+        type: "getOnlineDbs"
+      });
     }
   };
 
@@ -93,7 +106,9 @@ export default class OnlineStore extends ModelExtend {
     const res = await offlineAnswerDb(payload).catch(this.handleError);
     if (res && res.data) {
       message.success("下线成功");
-      this.getOnlineDbs();
+      this.dispatch({
+        type: "getOnlineDbs"
+      });
     }
   };
 
@@ -101,7 +116,47 @@ export default class OnlineStore extends ModelExtend {
     const res = await deleteLineDb(payload).catch(this.handleError);
     if (res && res.data) {
       message.success("线上数据库删除成功");
-      this.getOnlineDbs();
+      this.dispatch({
+        type: "getOnlineDbs"
+      });
+    }
+  };
+
+  getUsers = async payload => {
+    const res = await getUsers({
+      page: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
+      ...(payload.page ? { page: payload.page } : {})
+    }).catch(this.handleError);
+    if (res && res.data) {
+      this.commit({
+        users: res.data,
+        userPagination: {
+          current: res.current,
+          pageSize: res.pageSize,
+          total: res.total
+        }
+      });
+    }
+  };
+
+  operationUserBlackList = async payload => {
+    const { type } = payload;
+    const res = await operationUserBlackList(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success(
+        type === "inspecting"
+          ? "设置考察成功"
+          : type === "forbidden"
+          ? "禁言成功"
+          : type === "normal"
+          ? "恢复成功"
+          : null
+      );
+      this.dispatch({
+        type: "getUsers"
+      });
     }
   };
 }

@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, observable } from "mobx";
 import _ from "lodash";
 import { message } from "antd";
 
@@ -7,12 +7,13 @@ export default class ModelExtend {
     this.rootStore = rootStore;
   }
 
+  @observable loading = {};
+
   @action
   commit = (k, v, defaultValue = "") => {
     const change = (k, v, defaultValue) => {
       if (k) {
-        this[`${k}_prev`] = _.cloneDeep(this[k]);
-        _.set(this, `${k}`, v || defaultValue);
+        _.set(this, `${k}`, _.isUndefined(v) ? v || defaultValue : v);
       } else {
         console.error("commit参数的k是必须参数");
       }
@@ -29,6 +30,13 @@ export default class ModelExtend {
   };
 
   dispatch = (payloads = {}) => {
+    const setLoading = (storeName, methodName, status) => {
+      if (storeName) {
+        this.commit(`rootStore.${storeName}.loading.${methodName}`, status);
+      } else {
+        this.commit(`loading.${methodName}`, status);
+      }
+    };
     const checkExistMethod = (storeName, methodName) => {
       console.error(
         `dispatch参数的type是必须参数,并且必须存在${
@@ -55,6 +63,7 @@ export default class ModelExtend {
       }
     } else {
       [methodName] = splits;
+      storeName = undefined;
       if (!methodName || !this[methodName]) {
         checkExistMethod(storeName, methodName);
       } else {
@@ -62,11 +71,20 @@ export default class ModelExtend {
       }
     }
 
+    setLoading(storeName, methodName, true);
+
     if (result && result.then) {
-      return result.then(res => {
-        return res;
-      });
+      return result
+        .then(res => {
+          setLoading(storeName, methodName, false);
+          return res;
+        })
+        .catch(err => {
+          setLoading(storeName, methodName, false);
+          return Promise.reject(err);
+        });
     } else {
+      setLoading(storeName, methodName, false);
       return Promise.resolve(result);
     }
   };
@@ -85,10 +103,6 @@ export default class ModelExtend {
       message.error("未知错误");
     }
     return false;
-  };
-
-  setLoading = (loadingName, loadingStatus) => {
-    this.commit(loadingName, loadingStatus);
   };
 
   openModal = (payload = {}) => {

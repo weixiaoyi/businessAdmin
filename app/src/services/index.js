@@ -84,3 +84,17 @@ export const checkLineAnswer = payload =>
     method: "post",
     data: payload
   });
+
+export const getUsers = payload =>
+  request({
+    method: "get",
+    url: `api/user/getUsers`,
+    params: payload
+  });
+
+export const operationUserBlackList = payload =>
+  request({
+    url: `api/userBlackList/operationUserBlackList`,
+    method: "post",
+    data: payload
+  });

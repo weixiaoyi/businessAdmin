@@ -7,6 +7,7 @@ import { db, PATH } from "../../constants";
 import Answer from "./answer";
 import PreviewPdf from "./previewPdf";
 import OnlineAnswerDb from "./onlineAnswerDb";
+import OnlineUser from "./onlineUser";
 import * as styles from "./index.module.scss";
 
 const { Option, OptGroup } = Select;
@@ -17,7 +18,7 @@ const { Option, OptGroup } = Select;
 }))
 class Scrapy extends Component {
   state = {
-    active: "onlinedb"
+    active: "onlineUser"
   };
 
   render() {
@@ -28,7 +29,8 @@ class Scrapy extends Component {
     const navs = [
       { name: "answer", desc: "本地answer" },
       { name: "previewpdf", desc: "pdf预览发布" },
-      { name: "onlinedb", desc: "线上answer-answerDb" }
+      { name: "onlinedb", desc: "线上answer-answerDb" },
+      { name: "onlineUser", desc: "线上User" }
     ];
     return (
       <LayOut>
@@ -78,6 +80,7 @@ class Scrapy extends Component {
           {active === "answer" && <Answer />}
           {active === "previewpdf" && <PreviewPdf />}
           {active === "onlinedb" && <OnlineAnswerDb />}
+          {active === "onlineUser" && <OnlineUser />}
         </div>
       </LayOut>
     );

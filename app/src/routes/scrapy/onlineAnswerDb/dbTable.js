@@ -31,7 +31,7 @@ class DbTable extends Component {
 
   render() {
     const {
-      model: { dispatch, localDbs, dbPagination },
+      model: { dispatch, localDbs, dbPagination, loading },
       scrapyStore: { dbName }
     } = this.props;
     const { selectOne } = this.state;
@@ -201,6 +201,7 @@ class DbTable extends Component {
     return (
       <div>
         <Table
+          loading={loading.getOnlineDbs}
           rowClassName={record =>
             record.name === dbName ? styles.currentDb : null
           }

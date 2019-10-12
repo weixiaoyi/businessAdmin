@@ -26,7 +26,7 @@ class AnswerTable extends Component {
 
   render() {
     const {
-      model: { onlineAnswers, pagination }
+      model: { onlineAnswers, pagination, loading }
     } = this.props;
     const columns = [
       {
@@ -78,6 +78,7 @@ class AnswerTable extends Component {
     ];
     return (
       <Table
+        loading={loading.getAnswers}
         onChange={({ current, pageSize }) => {
           this.getAnswers(current, pageSize);
         }}
