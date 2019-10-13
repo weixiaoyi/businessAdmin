@@ -92,6 +92,13 @@ export const getUsers = payload =>
     params: payload
   });
 
+export const getBlackUsers = payload =>
+  request({
+    method: "get",
+    url: `api/userBlackList/getBlackUsers`,
+    params: payload
+  });
+
 export const operationUserBlackList = payload =>
   request({
     url: `api/userBlackList/operationUserBlackList`,

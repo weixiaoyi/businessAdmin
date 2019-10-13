@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { Inject } from "../../../utils";
 import * as styles from "./index.module.scss";
 import UserTable from "./userTable";
+import BlackUserTable from "./blackUserTable";
 
 @Inject(({ onlineStore: model }) => ({
   model
@@ -17,7 +18,8 @@ class OnlineUser extends Component {
           <UserTable />
         </div>
         <div className={styles.right}>
-          <h2>暂定</h2>
+          <h2>黑名单用户</h2>
+          <BlackUserTable />
         </div>
       </div>
     );

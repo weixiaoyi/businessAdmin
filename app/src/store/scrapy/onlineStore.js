@@ -9,7 +9,8 @@ import {
   deleteLineDb,
   updateLineDb,
   getUsers,
-  operationUserBlackList
+  operationUserBlackList,
+  getBlackUsers
 } from "../../services";
 import { db } from "../../constants";
 
@@ -34,6 +35,13 @@ export default class OnlineStore extends ModelExtend {
 
   @observable users = [];
   @observable userPagination = {
+    pageSize: 20,
+    current: 1,
+    total: 0
+  };
+
+  @observable blackUsers = [];
+  @observable blackUsersPagination = {
     pageSize: 20,
     current: 1,
     total: 0
@@ -133,6 +141,25 @@ export default class OnlineStore extends ModelExtend {
       this.commit({
         users: res.data,
         userPagination: {
+          current: res.current,
+          pageSize: res.pageSize,
+          total: res.total
+        }
+      });
+    }
+  };
+
+  getBlackUsers = async payload => {
+    const res = await getBlackUsers({
+      page: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
+      ...(payload.page ? { page: payload.page } : {})
+    }).catch(this.handleError);
+    if (res && res.data) {
+      this.commit({
+        blackUsers: res.data,
+        blackUsersPagination: {
           current: res.current,
           pageSize: res.pageSize,
           total: res.total

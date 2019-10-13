@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Button, Table, Divider } from "antd";
-import { Inject } from "../../../utils";
+import { Button, Table, Divider, Popconfirm } from "antd";
+import _ from "lodash";
+import { Inject, formatTime } from "../../../utils";
 import * as styles from "./userTable.module.scss";
 
 @Inject(({ onlineStore: model }) => ({
@@ -48,24 +49,29 @@ class UserTable extends Component {
         title: "createTime",
         dataIndex: "createTime",
         key: "createTime",
-        render: v => v.toString()
+        render: v => formatTime(v)
       },
 
       {
         title: "状态",
-        dataIndex: "type",
-        key: "type",
-        render: v => (
-          <div>
-            {v === "on" ? (
-              <span className={styles.online}>已上线</span>
-            ) : v === "off" ? (
-              <span className={styles.offline}>已下线</span>
-            ) : (
-              <span className={styles.waiting}>等待上线</span>
-            )}
-          </div>
-        )
+        dataIndex: "popUserBlackList",
+        key: "popUserBlackList",
+        render: (undefied, record) => {
+          const v = _.get(record, "popUserBlackList.type");
+          return (
+            <div>
+              {v === "normal" ? (
+                <span className={styles.normal}>正常</span>
+              ) : v === "inspecting" ? (
+                <span className={styles.inspecting}>考察中</span>
+              ) : v === "forbidden" ? (
+                <span className={styles.forbidden}>禁言中</span>
+              ) : (
+                <span className={styles.normal}>无记录</span>
+              )}
+            </div>
+          );
+        }
       },
       {
         title: "操作",
@@ -73,8 +79,9 @@ class UserTable extends Component {
         key: "operation",
         render: (v, record) => (
           <div>
-            <a
-              onClick={() => {
+            <Popconfirm
+              title="确认考察?"
+              onConfirm={() => {
                 dispatch({
                   type: "operationUserBlackList",
                   payload: {
@@ -84,11 +91,13 @@ class UserTable extends Component {
                 });
               }}
             >
-              恢复正常
-            </a>
+              <a>恢复正常 ({_.get(record, "popUserBlackList.normalTimes")})</a>
+            </Popconfirm>
+
             <Divider type="vertical" />
-            <a
-              onClick={() => {
+            <Popconfirm
+              title="确认考察?"
+              onConfirm={() => {
                 dispatch({
                   type: "operationUserBlackList",
                   payload: {
@@ -98,11 +107,13 @@ class UserTable extends Component {
                 });
               }}
             >
-              考察
-            </a>
+              <a>考察 ({_.get(record, "popUserBlackList.inspectTimes")})</a>
+            </Popconfirm>
+
             <Divider type="vertical" />
-            <a
-              onClick={() => {
+            <Popconfirm
+              title="确认禁言?"
+              onConfirm={() => {
                 dispatch({
                   type: "operationUserBlackList",
                   payload: {
@@ -112,8 +123,8 @@ class UserTable extends Component {
                 });
               }}
             >
-              禁言
-            </a>
+              <a>禁言 ({_.get(record, "popUserBlackList.forbiddenTimes")})</a>
+            </Popconfirm>
           </div>
         )
       }
