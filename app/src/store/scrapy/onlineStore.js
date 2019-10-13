@@ -12,7 +12,9 @@ import {
   operationUserBlackList,
   getBlackUsers,
   operationWebsiteConfig,
-  getWebsiteConfig
+  getWebsiteConfig,
+  getIdeasPreview,
+  inspectIdea
 } from "../../services";
 import { db, Domain } from "../../constants";
 
@@ -46,6 +48,13 @@ export default class OnlineStore extends ModelExtend {
 
   @observable blackUsers = [];
   @observable blackUsersPagination = {
+    pageSize: 20,
+    current: 1,
+    total: 0
+  };
+
+  @observable ideasPreview = [];
+  @observable ideasPreviewPagination = {
     pageSize: 20,
     current: 1,
     total: 0
@@ -168,6 +177,40 @@ export default class OnlineStore extends ModelExtend {
           pageSize: res.pageSize,
           total: res.total
         }
+      });
+    }
+  };
+
+  getIdeasPreview = async payload => {
+    const res = await getIdeasPreview({
+      page: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
+      ...(payload.page ? { page: payload.page } : {})
+    }).catch(this.handleError);
+    if (res && res.data) {
+      this.commit({
+        ideasPreview: res.data,
+        ideasPreviewPagination: {
+          current: res.current,
+          pageSize: res.pageSize,
+          total: res.total
+        }
+      });
+    }
+  };
+
+  inspectIdea = async payload => {
+    const { id, online, denyWhy } = payload;
+    const res = await inspectIdea({
+      id,
+      online,
+      denyWhy
+    }).catch(this.handleError);
+    if (res && res.data) {
+      message.success("审核成功");
+      this.dispatch({
+        type: "getIdeasPreview"
       });
     }
   };

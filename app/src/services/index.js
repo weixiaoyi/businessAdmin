@@ -119,3 +119,17 @@ export const operationWebsiteConfig = payload =>
     method: "post",
     data: payload
   });
+
+export const getIdeasPreview = payload =>
+  request({
+    method: "get",
+    url: `${baseUrl}/ideas/getIdeasPreview`,
+    params: payload
+  });
+
+export const inspectIdea = payload =>
+  request({
+    url: `${baseUrl}/ideas/inspectIdea`,
+    method: "put",
+    data: payload
+  });

@@ -9,6 +9,7 @@ import PreviewPdf from "./previewPdf";
 import OnlineAnswerDb from "./onlineAnswerDb";
 import OnlineUser from "./onlineUser";
 import OnlineWebsiteConfig from "./onlineWebsiteConfig";
+import OnlineIdea from "./onlineIdea";
 import * as styles from "./index.module.scss";
 
 const { Option, OptGroup } = Select;
@@ -19,7 +20,7 @@ const { Option, OptGroup } = Select;
 }))
 class Scrapy extends Component {
   state = {
-    active: "onlineWebsiteConfig"
+    active: "onlineIdea"
   };
 
   render() {
@@ -32,7 +33,8 @@ class Scrapy extends Component {
       { name: "previewpdf", desc: "pdf预览发布" },
       { name: "onlineWebsiteConfig", desc: "线上网站配置" },
       { name: "onlinedb", desc: "线上answer-answerDb(线上/线下)" },
-      { name: "onlineUser", desc: "线上User-blackUser" }
+      { name: "onlineUser", desc: "线上User-blackUser" },
+      { name: "onlineIdea", desc: "线上Idea-ideaComment" }
     ];
     return (
       <LayOut>
@@ -84,6 +86,7 @@ class Scrapy extends Component {
           {active === "onlineWebsiteConfig" && <OnlineWebsiteConfig />}
           {active === "onlinedb" && <OnlineAnswerDb />}
           {active === "onlineUser" && <OnlineUser />}
+          {active === "onlineIdea" && <OnlineIdea />}
         </div>
       </LayOut>
     );

@@ -1,0 +1,14 @@
+@import "src/styles/index.scss";
+
+.ellipes {
+  @include ellipse();
+}
+.on {
+  color: $green;
+}
+.deny {
+  color: $red;
+}
+.off {
+  color: $yellow;
+}
