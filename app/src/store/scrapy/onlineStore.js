@@ -10,15 +10,19 @@ import {
   updateLineDb,
   getUsers,
   operationUserBlackList,
-  getBlackUsers
+  getBlackUsers,
+  operationWebsiteConfig,
+  getWebsiteConfig
 } from "../../services";
-import { db } from "../../constants";
+import { db, Domain } from "../../constants";
 
 export default class OnlineStore extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;
   }
+  @observable websiteConfig = {};
+
   @observable onlineAnswers = [];
   @observable pagination = {
     pageSize: 20,
@@ -183,6 +187,35 @@ export default class OnlineStore extends ModelExtend {
       );
       this.dispatch({
         type: "getUsers"
+      });
+      this.dispatch({
+        type: "getBlackUsers"
+      });
+    }
+  };
+
+  getWebsiteConfig = async () => {
+    const res = await getWebsiteConfig({
+      domain: Domain.fuye.value
+    }).catch(this.handleError);
+    if (res && res.data) {
+      this.commit({
+        websiteConfig: res.data
+      });
+      return res.data;
+    }
+  };
+
+  operationWebsiteConfig = async payload => {
+    const { domain, detail } = payload;
+    const res = await operationWebsiteConfig({
+      domain,
+      detail
+    }).catch(this.handleError);
+    if (res && res.data) {
+      message.success("配置成功");
+      this.dispatch({
+        type: "getWebsiteConfig"
       });
     }
   };

@@ -8,6 +8,7 @@ import Answer from "./answer";
 import PreviewPdf from "./previewPdf";
 import OnlineAnswerDb from "./onlineAnswerDb";
 import OnlineUser from "./onlineUser";
+import OnlineWebsiteConfig from "./onlineWebsiteConfig";
 import * as styles from "./index.module.scss";
 
 const { Option, OptGroup } = Select;
@@ -18,7 +19,7 @@ const { Option, OptGroup } = Select;
 }))
 class Scrapy extends Component {
   state = {
-    active: "onlineUser"
+    active: "onlineWebsiteConfig"
   };
 
   render() {
@@ -27,10 +28,11 @@ class Scrapy extends Component {
       model: { dbName, dispatch }
     } = this.props;
     const navs = [
-      { name: "answer", desc: "本地answer" },
+      { name: "answer", desc: "本地answer/同步线上" },
       { name: "previewpdf", desc: "pdf预览发布" },
-      { name: "onlinedb", desc: "线上answer-answerDb" },
-      { name: "onlineUser", desc: "线上User" }
+      { name: "onlineWebsiteConfig", desc: "线上网站配置" },
+      { name: "onlinedb", desc: "线上answer-answerDb(线上/线下)" },
+      { name: "onlineUser", desc: "线上User-blackUser" }
     ];
     return (
       <LayOut>
@@ -79,6 +81,7 @@ class Scrapy extends Component {
           </div>
           {active === "answer" && <Answer />}
           {active === "previewpdf" && <PreviewPdf />}
+          {active === "onlineWebsiteConfig" && <OnlineWebsiteConfig />}
           {active === "onlinedb" && <OnlineAnswerDb />}
           {active === "onlineUser" && <OnlineUser />}
         </div>

@@ -105,3 +105,17 @@ export const operationUserBlackList = payload =>
     method: "post",
     data: payload
   });
+
+export const getWebsiteConfig = payload =>
+  request({
+    method: "get",
+    url: `api/websiteConfig/getWebsiteConfig`,
+    params: payload
+  });
+
+export const operationWebsiteConfig = payload =>
+  request({
+    url: `api/websiteConfig/operationWebsiteConfig`,
+    method: "post",
+    data: payload
+  });
