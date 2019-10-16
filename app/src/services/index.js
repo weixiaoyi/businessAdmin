@@ -133,3 +133,31 @@ export const inspectIdea = payload =>
     method: "put",
     data: payload
   });
+
+export const getGroups = payload =>
+  request({
+    url: `${baseUrl}/group/getGroups`,
+    method: "get",
+    params: payload
+  });
+
+export const addGroup = payload =>
+  request({
+    url: `${baseUrl}/group/addGroup`,
+    method: "post",
+    data: payload
+  });
+
+export const updateGroup = payload =>
+  request({
+    url: `${baseUrl}/group/updateGroup`,
+    method: "put",
+    data: payload
+  });
+
+export const deleteGroup = payload =>
+  request({
+    url: `${baseUrl}/group/deleteGroup`,
+    method: "delete",
+    data: payload
+  });

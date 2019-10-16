@@ -14,7 +14,11 @@ import {
   operationWebsiteConfig,
   getWebsiteConfig,
   getIdeasPreview,
-  inspectIdea
+  inspectIdea,
+  addGroup,
+  updateGroup,
+  deleteGroup,
+  getGroups
 } from "../../services";
 import { db, Domain } from "../../constants";
 
@@ -59,6 +63,8 @@ export default class OnlineStore extends ModelExtend {
     current: 1,
     total: 0
   };
+
+  @observable groups = [];
 
   getOnlineDbs = async payload => {
     const res = await getOnlineDbs({
@@ -259,6 +265,48 @@ export default class OnlineStore extends ModelExtend {
       message.success("配置成功");
       this.dispatch({
         type: "getWebsiteConfig"
+      });
+    }
+  };
+
+  getGroups = async () => {
+    const res = await getGroups().catch(this.handleError);
+    if (res && res.code && res.data) {
+      this.commit("groups", res.data);
+    }
+  };
+
+  operationGroup = async payload => {
+    const { action } = payload;
+    let res;
+    if (action === "add") {
+      const { type, title, desc, avatar } = payload;
+      res = await addGroup({
+        type,
+        title,
+        desc,
+        avatar
+      }).catch(this.handleError);
+    } else if (action === "update") {
+      const { id, type, title, desc, avatar } = payload;
+      res = await updateGroup({
+        id,
+        type,
+        title,
+        desc,
+        avatar
+      }).catch(this.handleError);
+    } else if (action === "delete") {
+      const { id } = payload;
+      res = await deleteGroup({
+        id
+      }).catch(this.handleError);
+    }
+    if (res && res.code && res.data) {
+      message.success(action === "add" ? "添加圈子成功" : "");
+      this.closeModal();
+      this.dispatch({
+        type: "getGroups"
       });
     }
   };

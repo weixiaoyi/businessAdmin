@@ -1,0 +1,18 @@
+@import "src/styles/index.scss";
+
+.tabs {
+  max-width: 700px;
+}
+
+ul.groups {
+  li + li {
+    margin-top: 10px;
+  }
+  li {
+    border: 1px solid $green;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
