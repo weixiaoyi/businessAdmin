@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Button, Tabs, Divider, Popconfirm } from "antd";
+import { Button, Tabs, Divider, Popconfirm, Table } from "antd";
 import _ from "lodash";
-import { Inject } from "../../../utils";
+import { Inject, formatTime } from "../../../utils";
 import * as styles from "./groupTabs.module.scss";
 
 const { TabPane } = Tabs;
@@ -21,7 +21,7 @@ class GroupTabs extends Component {
 
   render() {
     const {
-      model: { openModal, groups = [] }
+      model: { openModal, groups = [], loading, dispatch }
     } = this.props;
 
     const sorts = groups.reduce((sum, next) => {
@@ -31,6 +31,66 @@ class GroupTabs extends Component {
       sum[next.type].push(next);
       return sum;
     }, {});
+
+    const columns = [
+      {
+        title: "avatar",
+        dataIndex: "avatar",
+        key: "avatar"
+      },
+      {
+        title: "title",
+        dataIndex: "title",
+        key: "title"
+      },
+      {
+        title: "desc",
+        dataIndex: "desc",
+        key: "desc"
+      },
+      {
+        title: "createTime",
+        dataIndex: "createTime",
+        key: "createTime",
+        render: v => formatTime(v)
+      },
+      {
+        title: "operation",
+        dataIndex: "operation",
+        key: "operation",
+        render: (v, record) => (
+          <div>
+            <a
+              onClick={() => {
+                openModal({
+                  name: "OperationGroupModal",
+                  data: {
+                    action: "edit",
+                    ...record
+                  }
+                });
+              }}
+            >
+              编辑
+            </a>
+            <Divider type="vertical" />
+            <a
+              onClick={() => {
+                dispatch({
+                  type: "operationGroup",
+                  payload: {
+                    action: "delete",
+                    id: record._id
+                  }
+                });
+              }}
+            >
+              删除
+            </a>
+          </div>
+        )
+      }
+    ];
 
     return (
       <div>
@@ -52,17 +112,14 @@ class GroupTabs extends Component {
         <Tabs defaultActiveKey="1" tabPosition="top" className={styles.tabs}>
           {_.keys(sorts).map(item => (
             <TabPane tab={`${item}(${sorts[item].length})`} key={item}>
-              <ul className={styles.groups}>
-                {sorts[item].map((one = {}) => (
-                  <li key={one._id}>
-                    <div className={styles.left}>left</div>
-                    <div className={styles.right}>
-                      <div>{one.title}</div>
-                      <div>{one.desc}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <Table
+                loading={loading.getGroups}
+                key={item}
+                pagination={false}
+                rowKey={"_id"}
+                columns={columns}
+                dataSource={sorts[item]}
+              />
             </TabPane>
           ))}
         </Tabs>

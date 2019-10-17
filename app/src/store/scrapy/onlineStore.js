@@ -287,7 +287,7 @@ export default class OnlineStore extends ModelExtend {
         desc,
         avatar
       }).catch(this.handleError);
-    } else if (action === "update") {
+    } else if (action === "edit") {
       const { id, type, title, desc, avatar } = payload;
       res = await updateGroup({
         id,
@@ -303,7 +303,13 @@ export default class OnlineStore extends ModelExtend {
       }).catch(this.handleError);
     }
     if (res && res.code && res.data) {
-      message.success(action === "add" ? "添加圈子成功" : "");
+      message.success(
+        action === "add"
+          ? "添加圈子成功"
+          : action === "edit"
+          ? "更新成功"
+          : "删除成功"
+      );
       this.closeModal();
       this.dispatch({
         type: "getGroups"
