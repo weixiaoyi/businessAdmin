@@ -280,17 +280,19 @@ export default class OnlineStore extends ModelExtend {
     const { action } = payload;
     let res;
     if (action === "add") {
-      const { type, title, desc, avatar } = payload;
+      const { index, type, title, desc, avatar } = payload;
       res = await addGroup({
+        index,
         type,
         title,
         desc,
         avatar
       }).catch(this.handleError);
     } else if (action === "edit") {
-      const { id, type, title, desc, avatar } = payload;
+      const { id, index, type, title, desc, avatar } = payload;
       res = await updateGroup({
         id,
+        index,
         type,
         title,
         desc,

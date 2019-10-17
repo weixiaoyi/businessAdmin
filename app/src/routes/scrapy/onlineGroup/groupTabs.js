@@ -24,19 +24,27 @@ class GroupTabs extends Component {
       model: { openModal, groups = [], loading, dispatch }
     } = this.props;
 
-    const sorts = groups.reduce((sum, next) => {
-      if (!sum[next.type]) {
-        sum[next.type] = [];
-      }
-      sum[next.type].push(next);
-      return sum;
-    }, {});
+    const sorts = groups
+      .sort((a, b) => a.index - b.index)
+      .reduce((sum, next) => {
+        if (!sum[next.type]) {
+          sum[next.type] = [];
+        }
+        sum[next.type].push(next);
+        return sum;
+      }, {});
 
     const columns = [
       {
+        title: "排序index",
+        dataIndex: "index",
+        key: "index"
+      },
+      {
         title: "avatar",
         dataIndex: "avatar",
-        key: "avatar"
+        key: "avatar",
+        render: v => <img width={100} height={100} src={v} />
       },
       {
         title: "title",
@@ -52,6 +60,12 @@ class GroupTabs extends Component {
         title: "createTime",
         dataIndex: "createTime",
         key: "createTime",
+        render: v => formatTime(v)
+      },
+      {
+        title: "updateTime",
+        dataIndex: "updateTime",
+        key: "updateTime",
         render: v => formatTime(v)
       },
       {
@@ -74,8 +88,9 @@ class GroupTabs extends Component {
               编辑
             </a>
             <Divider type="vertical" />
-            <a
-              onClick={() => {
+            <Popconfirm
+              title="确认删除?"
+              onConfirm={() => {
                 dispatch({
                   type: "operationGroup",
                   payload: {
@@ -85,8 +100,8 @@ class GroupTabs extends Component {
                 });
               }}
             >
-              删除
-            </a>
+              <a>删除</a>
+            </Popconfirm>
           </div>
         )
       }

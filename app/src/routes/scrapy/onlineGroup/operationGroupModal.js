@@ -73,6 +73,17 @@ class OperationGroupModal extends Component {
         onCancel={closeModal}
       >
         <Form {...formItemLayout}>
+          <Form.Item label="排序索引">
+            {getFieldDecorator("index", {
+              rules: [
+                {
+                  required: true,
+                  message: "必填"
+                }
+              ],
+              initialValue: record.index
+            })(<Input />)}
+          </Form.Item>
           <Form.Item label="分类">
             {getFieldDecorator("type", {
               rules: [
