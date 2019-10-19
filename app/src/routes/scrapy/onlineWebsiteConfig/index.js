@@ -32,6 +32,10 @@ class OnlineWebsite extends Component {
     }).then(res => {
       if (res) {
         const notifies = _.get(res, "detail.notifies");
+        const noticeTitles = notifies.reduce((sum, next, index) => {
+          sum[`noticeTitles[${index}]`] = next.title;
+          return sum;
+        }, {});
         const noticeContents = notifies.reduce((sum, next, index) => {
           sum[`noticeContents[${index}]`] = next.content;
           return sum;
@@ -53,6 +57,7 @@ class OnlineWebsite extends Component {
             this.props.form.setFieldsValue({
               domain: res.domain,
               siteMemberPrice: _.get(res, "detail.siteMemberPrice"),
+              ...noticeTitles,
               ...noticeContents,
               ...noticeTypes,
               ...noticeDates
@@ -90,6 +95,7 @@ class OnlineWebsite extends Component {
             detail: {
               siteMemberPrice,
               notifies: this.state.ids.map(item => ({
+                title: values.noticeTitles[item],
                 content: values.noticeContents[item],
                 date: values.noticeDates[item],
                 type: values.noticeTypes[item]
@@ -104,11 +110,11 @@ class OnlineWebsite extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 6 }
+        sm: { span: 2 }
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 18 }
+        sm: { span: 22 }
       }
     };
     const tailFormItemLayout = {
@@ -118,15 +124,15 @@ class OnlineWebsite extends Component {
           offset: 0
         },
         sm: {
-          span: 16,
-          offset: 6
+          span: 24,
+          offset: 2
         }
       }
     };
     const formItemLayoutWithOutLabel = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
-        sm: { span: 18, offset: 6 }
+        sm: { span: 22, offset: 2 }
       }
     };
     const { getFieldDecorator } = this.props.form;
@@ -140,6 +146,16 @@ class OnlineWebsite extends Component {
         required={false}
         key={k}
       >
+        {getFieldDecorator(`noticeTitles[${k}]`, {
+          validateTrigger: ["onChange", "onBlur"],
+          rules: [
+            {
+              required: true,
+              whitespace: true,
+              message: "请输入标题"
+            }
+          ]
+        })(<TextArea placeholder="标题" style={{ width: "20%" }} />)}
         {getFieldDecorator(`noticeContents[${k}]`, {
           validateTrigger: ["onChange", "onBlur"],
           rules: [
@@ -149,7 +165,7 @@ class OnlineWebsite extends Component {
               message: "请输入通知内容"
             }
           ]
-        })(<TextArea placeholder="内容" style={{ width: "40%" }} />)}
+        })(<TextArea placeholder="内容" style={{ width: "30%" }} />)}
         {getFieldDecorator(`noticeTypes[${k}]`, {
           validateTrigger: ["onChange", "onBlur"],
           rules: [
@@ -160,7 +176,7 @@ class OnlineWebsite extends Component {
             }
           ]
         })(
-          <Select placeholder="通知类型" style={{ width: "15%" }}>
+          <Select placeholder="通知类型" style={{ width: "10%" }}>
             <Option value="message">message</Option>
             <Option value="modal">modal</Option>
           </Select>
@@ -194,7 +210,7 @@ class OnlineWebsite extends Component {
           <Form
             {...formItemLayout}
             onSubmit={this.handleSubmit}
-            style={{ width: "70%" }}
+            // style={{ width: "70%" }}
           >
             <Form.Item label="domain">
               {getFieldDecorator("domain", {
