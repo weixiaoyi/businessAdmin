@@ -109,7 +109,7 @@ class GroupTabs extends Component {
 
     return (
       <div>
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 10 }}>
           <Button
             type="primary"
             onClick={() => {
