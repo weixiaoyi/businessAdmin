@@ -18,7 +18,11 @@ import {
   addGroup,
   updateGroup,
   deleteGroup,
-  getGroups
+  getGroups,
+  getSensitiveWord,
+  addSensitiveWord,
+  updateSensitiveWord,
+  deleteSensitiveWord
 } from "../../services";
 import { db, Domain } from "../../constants";
 
@@ -65,6 +69,7 @@ export default class OnlineStore extends ModelExtend {
   };
 
   @observable groups = [];
+  @observable sensitiveWords = [];
 
   getOnlineDbs = async payload => {
     const res = await getOnlineDbs({
@@ -309,12 +314,54 @@ export default class OnlineStore extends ModelExtend {
         action === "add"
           ? "添加圈子成功"
           : action === "edit"
-          ? "更新成功"
-          : "删除成功"
+          ? "更新圈子成功"
+          : "删除圈子成功"
       );
       this.closeModal();
       this.dispatch({
         type: "getGroups"
+      });
+    }
+  };
+
+  getSensitiveWord = async () => {
+    const res = await getSensitiveWord().catch(this.handleError);
+    if (res && res.code && res.data) {
+      this.commit("sensitiveWords", res.data);
+    }
+  };
+
+  operationSensitiveWord = async payload => {
+    const { action } = payload;
+    let res;
+    if (action === "add") {
+      const { word } = payload;
+      res = await addSensitiveWord({
+        word
+      }).catch(this.handleError);
+    } else if (action === "update") {
+      const { id, word } = payload;
+      res = await updateSensitiveWord({
+        id,
+        word
+      }).catch(this.handleError);
+    } else if (action === "delete") {
+      const { id } = payload;
+      res = await deleteSensitiveWord({
+        id
+      }).catch(this.handleError);
+    }
+    if (res && res.code && res.data) {
+      message.success(
+        action === "add"
+          ? "添加敏感词成功"
+          : action === "edit"
+          ? "更新敏感词成功"
+          : "删除敏感词成功"
+      );
+      this.closeModal();
+      this.dispatch({
+        type: "getSensitiveWord"
       });
     }
   };

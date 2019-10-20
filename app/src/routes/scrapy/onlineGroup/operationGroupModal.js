@@ -78,7 +78,7 @@ class OperationGroupModal extends Component {
               rules: [
                 {
                   required: true,
-                  message: "必填"
+                  message: "必填,整数类型"
                 }
               ],
               initialValue: record.index

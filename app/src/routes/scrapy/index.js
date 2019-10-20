@@ -11,6 +11,7 @@ import OnlineUser from "./onlineUser";
 import OnlineWebsiteConfig from "./onlineWebsiteConfig";
 import OnlineIdea from "./onlineIdea";
 import OnlineGroup from "./onlineGroup";
+import OnlineSensitiveWord from "./onlineSensitiveWord";
 import * as styles from "./index.module.scss";
 
 const { Option, OptGroup } = Select;
@@ -21,7 +22,7 @@ const { Option, OptGroup } = Select;
 }))
 class Scrapy extends Component {
   state = {
-    active: "onlineWebsiteConfig"
+    active: "onlineSensitiveWord"
   };
 
   render() {
@@ -36,7 +37,8 @@ class Scrapy extends Component {
       { name: "onlinedb", desc: "线上answer-answerDb(线上/线下)" },
       { name: "onlineUser", desc: "线上User-blackUser" },
       { name: "onlineIdea", desc: "线上Idea-ideaComment" },
-      { name: "onlineGroup", desc: "线上副业圈group" }
+      { name: "onlineGroup", desc: "线上副业圈group" },
+      { name: "onlineSensitiveWord", desc: "线上敏感词" }
     ];
     return (
       <LayOut>
@@ -90,6 +92,7 @@ class Scrapy extends Component {
           {active === "onlineUser" && <OnlineUser />}
           {active === "onlineIdea" && <OnlineIdea />}
           {active === "onlineGroup" && <OnlineGroup />}
+          {active === "onlineSensitiveWord" && <OnlineSensitiveWord />}
         </div>
       </LayOut>
     );
