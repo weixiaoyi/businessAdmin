@@ -128,9 +128,23 @@ export const getIdeasPreview = payload =>
     params: payload
   });
 
+export const getIdeasComments = payload =>
+  request({
+    method: "get",
+    url: `${FUYE}/ideaComments/getComments`,
+    params: payload
+  });
+
 export const inspectIdea = payload =>
   request({
     url: `${FUYE}/ideas/inspectIdea`,
+    method: "put",
+    data: payload
+  });
+
+export const inspectIdeaComment = payload =>
+  request({
+    url: `${FUYE}/ideaComments/inspectComment`,
     method: "put",
     data: payload
   });

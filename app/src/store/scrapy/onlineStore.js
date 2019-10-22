@@ -15,6 +15,7 @@ import {
   getWebsiteConfig,
   getIdeasPreview,
   inspectIdea,
+  inspectIdeaComment,
   addGroup,
   updateGroup,
   deleteGroup,
@@ -22,7 +23,8 @@ import {
   getSensitiveWord,
   addSensitiveWord,
   updateSensitiveWord,
-  deleteSensitiveWord
+  deleteSensitiveWord,
+  getIdeasComments
 } from "../../services";
 import { db, Domain } from "../../constants";
 
@@ -63,6 +65,13 @@ export default class OnlineStore extends ModelExtend {
 
   @observable ideasPreview = [];
   @observable ideasPreviewPagination = {
+    pageSize: 20,
+    current: 1,
+    total: 0
+  };
+
+  @observable ideasComment = [];
+  @observable ideasCommentPagination = {
     pageSize: 20,
     current: 1,
     total: 0
@@ -211,6 +220,25 @@ export default class OnlineStore extends ModelExtend {
     }
   };
 
+  getIdeasComment = async payload => {
+    const res = await getIdeasComments({
+      page: this.ideasCommentPagination.current,
+      pageSize: this.ideasCommentPagination.pageSize,
+      ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
+      ...(payload.page ? { page: payload.page } : {})
+    }).catch(this.handleError);
+    if (res && res.data) {
+      this.commit({
+        ideasComment: res.data,
+        ideasCommentPagination: {
+          current: res.current,
+          pageSize: res.pageSize,
+          total: res.total
+        }
+      });
+    }
+  };
+
   inspectIdea = async payload => {
     const { id, online, denyWhy } = payload;
     const res = await inspectIdea({
@@ -222,6 +250,20 @@ export default class OnlineStore extends ModelExtend {
       message.success("审核成功");
       this.dispatch({
         type: "getIdeasPreview"
+      });
+    }
+  };
+
+  inspectIdeaComment = async payload => {
+    const { id, online } = payload;
+    const res = await inspectIdeaComment({
+      id,
+      online
+    }).catch(this.handleError);
+    if (res && res.data) {
+      message.success("审核成功");
+      this.dispatch({
+        type: "getIdeasComment"
       });
     }
   };

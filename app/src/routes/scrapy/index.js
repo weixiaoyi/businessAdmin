@@ -12,6 +12,7 @@ import OnlineWebsiteConfig from "./onlineWebsiteConfig";
 import OnlineIdea from "./onlineIdea";
 import OnlineGroup from "./onlineGroup";
 import OnlineSensitiveWord from "./onlineSensitiveWord";
+import OnlineComment from "./onlineComment";
 import * as styles from "./index.module.scss";
 
 const { Option, OptGroup } = Select;
@@ -22,7 +23,7 @@ const { Option, OptGroup } = Select;
 }))
 class Scrapy extends Component {
   state = {
-    active: "onlineSensitiveWord"
+    active: "onlineComment"
   };
 
   render() {
@@ -33,12 +34,13 @@ class Scrapy extends Component {
     const navs = [
       { name: "answer", desc: "本地answer/同步线上" },
       { name: "previewpdf", desc: "pdf预览发布" },
-      { name: "onlineWebsiteConfig", desc: "线上网站配置" },
-      { name: "onlinedb", desc: "线上answer-answerDb(线上/线下)" },
-      { name: "onlineUser", desc: "线上User-blackUser" },
-      { name: "onlineIdea", desc: "线上Idea-ideaComment" },
-      { name: "onlineGroup", desc: "线上副业圈group" },
-      { name: "onlineSensitiveWord", desc: "线上敏感词" }
+      { name: "onlineWebsiteConfig", desc: "网站配置" },
+      { name: "onlinedb", desc: "answer-Db(线上/线下)" },
+      { name: "onlineUser", desc: "User-blackUser" },
+      { name: "onlineIdea", desc: "Idea-Detail" },
+      { name: "onlineComment", desc: "Comment" },
+      { name: "onlineGroup", desc: "副业圈group" },
+      { name: "onlineSensitiveWord", desc: "敏感词" }
     ];
     return (
       <LayOut>
@@ -91,6 +93,7 @@ class Scrapy extends Component {
           {active === "onlinedb" && <OnlineAnswerDb />}
           {active === "onlineUser" && <OnlineUser />}
           {active === "onlineIdea" && <OnlineIdea />}
+          {active === "onlineComment" && <OnlineComment />}
           {active === "onlineGroup" && <OnlineGroup />}
           {active === "onlineSensitiveWord" && <OnlineSensitiveWord />}
         </div>
