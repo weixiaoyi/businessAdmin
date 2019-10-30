@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { Inject } from "../../../utils";
 import * as styles from "./index.module.scss";
 import IdeaTable from "./ideaTable";
+import IdeaDetail from "./ideaDetail";
 
 @Inject(({ onlineStore: model }) => ({
   model
@@ -18,6 +19,7 @@ class OnlineIdea extends Component {
         </div>
         <div className={styles.right}>
           <h2>detail</h2>
+          <IdeaDetail />
         </div>
       </div>
     );

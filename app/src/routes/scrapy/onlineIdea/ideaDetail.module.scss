@@ -1,0 +1,13 @@
+.detail {
+  li + li {
+    margin-top: 10px;
+  }
+}
+.item {
+  display: flex;
+  .name {
+    font-weight: bold;
+    width: 150px;
+    min-width: 150px;
+  }
+}

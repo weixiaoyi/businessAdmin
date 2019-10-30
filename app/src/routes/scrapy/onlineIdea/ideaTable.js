@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Button, Table, Divider, Popconfirm } from "antd";
-import _ from "lodash";
 import { Inject, formatTime } from "../../../utils";
 import * as styles from "./ideaTable.module.scss";
 
@@ -132,6 +131,19 @@ class IdeaTable extends Component {
             >
               <a>通过</a>
             </Popconfirm>
+            <Divider type="vertical" />
+            <a
+              onClick={() => {
+                dispatch({
+                  type: "getIdeaDetail",
+                  payload: {
+                    id: record._id
+                  }
+                });
+              }}
+            >
+              查看详情
+            </a>
           </div>
         )
       }

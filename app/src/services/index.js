@@ -128,6 +128,13 @@ export const getIdeasPreview = payload =>
     params: payload
   });
 
+export const getIdeaDetail = payload =>
+  request({
+    method: "get",
+    url: `${FUYE}/ideas/getIdeaDetail`,
+    params: payload
+  });
+
 export const getIdeasComments = payload =>
   request({
     method: "get",

@@ -14,6 +14,7 @@ import {
   operationWebsiteConfig,
   getWebsiteConfig,
   getIdeasPreview,
+  getIdeaDetail,
   inspectIdea,
   inspectIdeaComment,
   addGroup,
@@ -79,6 +80,8 @@ export default class OnlineStore extends ModelExtend {
 
   @observable groups = [];
   @observable sensitiveWords = [];
+
+  @observable ideaDetail = {};
 
   getOnlineDbs = async payload => {
     const res = await getOnlineDbs({
@@ -216,6 +219,18 @@ export default class OnlineStore extends ModelExtend {
           pageSize: res.pageSize,
           total: res.total
         }
+      });
+    }
+  };
+
+  getIdeaDetail = async payload => {
+    const { id } = payload;
+    const res = await getIdeaDetail({
+      id
+    }).catch(this.handleError);
+    if (res && res.data) {
+      this.commit({
+        ideaDetail: res.data
       });
     }
   };
