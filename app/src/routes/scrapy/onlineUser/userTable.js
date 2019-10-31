@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { Button, Table, Divider, Popconfirm } from "antd";
+import { Button, Table, Divider, Popconfirm, Form, Input } from "antd";
 import _ from "lodash";
 import { Inject, formatTime } from "../../../utils";
 import * as styles from "./userTable.module.scss";
 
+const { Search } = Input;
+
+@Form.create()
 @Inject(({ onlineStore: model }) => ({
   model
 }))
@@ -21,6 +24,19 @@ class UserTable extends Component {
       payload: {
         page,
         pageSize
+      }
+    });
+  };
+
+  search = ({ id, name }) => {
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "getUsers",
+      payload: {
+        id,
+        name
       }
     });
   };
@@ -56,7 +72,7 @@ class UserTable extends Component {
         title: "状态",
         dataIndex: "popUserBlackList",
         key: "popUserBlackList",
-        render: (undefied, record) => {
+        render: (undefiend, record) => {
           const v = _.get(record, "popUserBlackList.type");
           return (
             <div>
@@ -130,21 +146,43 @@ class UserTable extends Component {
       }
     ];
     return (
-      <Table
-        rowKey="_id"
-        loading={loading.getUsers}
-        onChange={({ current, pageSize }) => {
-          this.getUsers(current, pageSize);
-        }}
-        pagination={{
-          showSizeChanger: true,
-          showQuickJumper: true,
-          pageSizeOptions: ["1", "10", "20", "50", "100", "1000"],
-          ...userPagination
-        }}
-        columns={columns}
-        dataSource={users}
-      />
+      <div>
+        <Form layout="inline" style={{ marginBottom: 20 }}>
+          <Form.Item>
+            <Search
+              allowClear
+              placeholder="id"
+              enterButton="搜索"
+              size="large"
+              onSearch={value => this.search({ id: value })}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Search
+              allowClear
+              placeholder="name"
+              enterButton="搜索"
+              size="large"
+              onSearch={value => this.search({ name: value })}
+            />
+          </Form.Item>
+        </Form>
+        <Table
+          rowKey="_id"
+          loading={loading.getUsers}
+          onChange={({ current, pageSize }) => {
+            this.getUsers(current, pageSize);
+          }}
+          pagination={{
+            showSizeChanger: true,
+            showQuickJumper: true,
+            pageSizeOptions: ["1", "10", "20", "50", "100", "1000"],
+            ...userPagination
+          }}
+          columns={columns}
+          dataSource={users}
+        />
+      </div>
     );
   }
 }

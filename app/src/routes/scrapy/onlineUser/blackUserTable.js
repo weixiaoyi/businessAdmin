@@ -29,6 +29,7 @@ class BlackUserTable extends Component {
     const {
       model: { blackUsers, blackUsersPagination, loading }
     } = this.props;
+
     const columns = [
       {
         title: "accountId",
@@ -94,21 +95,23 @@ class BlackUserTable extends Component {
       }
     ];
     return (
-      <Table
-        rowKey="_id"
-        loading={loading.getUsers}
-        onChange={({ current, pageSize }) => {
-          this.getUsers(current, pageSize);
-        }}
-        pagination={{
-          showSizeChanger: true,
-          showQuickJumper: true,
-          pageSizeOptions: ["1", "10", "20", "50", "100", "1000"],
-          ...blackUsersPagination
-        }}
-        columns={columns}
-        dataSource={blackUsers}
-      />
+      <div>
+        <Table
+          rowKey="_id"
+          loading={loading.getBlackUsers}
+          onChange={({ current, pageSize }) => {
+            this.getUsers(current, pageSize);
+          }}
+          pagination={{
+            showSizeChanger: true,
+            showQuickJumper: true,
+            pageSizeOptions: ["1", "10", "20", "50", "100", "1000"],
+            ...blackUsersPagination
+          }}
+          columns={columns}
+          dataSource={blackUsers}
+        />
+      </div>
     );
   }
 }

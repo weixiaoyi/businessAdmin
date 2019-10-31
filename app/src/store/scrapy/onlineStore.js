@@ -180,7 +180,10 @@ export default class OnlineStore extends ModelExtend {
       page: this.pagination.current,
       pageSize: this.pagination.pageSize,
       ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
-      ...(payload.page ? { page: payload.page } : {})
+      ...(payload.page ? { page: payload.page } : {}),
+      ...(payload.id ? { id: payload.id } : {}),
+      ...(payload.name ? { name: payload.name } : {}),
+      domain: "fuye"
     }).catch(this.handleError);
     if (res && res.data) {
       this.commit({
