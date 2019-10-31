@@ -1,23 +1,22 @@
 import React, { Component } from "react";
 import { Button, Table, Divider, Popconfirm } from "antd";
-import _ from "lodash";
 import { Inject, formatTime } from "../../../utils";
-import * as styles from "./ideaTable.module.scss";
+import * as styles from "./answerCommentTable.module.scss";
 
 @Inject(({ onlineStore: model }) => ({
   model
 }))
-class IdeaTable extends Component {
+class AnswerCommentTable extends Component {
   componentDidMount() {
-    this.getIdeasPreview();
+    this.getAnswerComment();
   }
 
-  getIdeasPreview = (page, pageSize) => {
+  getAnswerComment = (page, pageSize) => {
     const {
       model: { dispatch }
     } = this.props;
     dispatch({
-      type: "getIdeasPreview",
+      type: "getAnswerComment",
       payload: {
         page,
         pageSize
@@ -27,7 +26,7 @@ class IdeaTable extends Component {
 
   render() {
     const {
-      model: { ideasPreview, ideasPreviewPagination, loading, dispatch }
+      model: { answerComment, answerCommentPagination, loading, dispatch }
     } = this.props;
     const columns = [
       {
@@ -41,19 +40,15 @@ class IdeaTable extends Component {
         )
       },
       {
-        title: "title",
-        dataIndex: "title",
-        key: "title",
-        render: v => (
-          <div style={{ width: 100 }} className={styles.ellipes}>
-            {v}
-          </div>
-        )
+        title: "评论者",
+        dataIndex: "popUser",
+        key: "popUser",
+        render: v => <div>{v.name}</div>
       },
       {
-        title: "brief",
-        dataIndex: "brief",
-        key: "brief",
+        title: "comment",
+        dataIndex: "comment",
+        key: "comment",
         render: v => (
           <div style={{ width: 100 }} className={styles.ellipes}>
             {v}
@@ -65,20 +60,6 @@ class IdeaTable extends Component {
         dataIndex: "createTime",
         key: "createTime",
         render: v => formatTime(v)
-      },
-      {
-        title: "computed",
-        dataIndex: "computed",
-        key: "computed",
-        render: (v, record) => {
-          return (
-            <div>
-              评论数：{record.computedCommentsNum}
-              <Divider type="vertical" />
-              关注数 ：{record.computedInterestNum}
-            </div>
-          );
-        }
       },
       {
         title: "状态",
@@ -104,12 +85,10 @@ class IdeaTable extends Component {
               title="确认拒绝?"
               onConfirm={() => {
                 dispatch({
-                  type: "inspectIdea",
+                  type: "inspectAnswerComment",
                   payload: {
                     id: record._id,
-                    online: "off",
-                    denyWhy:
-                      "内容不符合规范合法要求，请重新编辑，如有疑问，请联系站点"
+                    online: "off"
                   }
                 });
               }}
@@ -122,7 +101,7 @@ class IdeaTable extends Component {
               title="确认通过"
               onConfirm={() => {
                 dispatch({
-                  type: "inspectIdea",
+                  type: "inspectAnswerComment",
                   payload: {
                     id: record._id,
                     online: "on"
@@ -138,22 +117,25 @@ class IdeaTable extends Component {
     ];
     return (
       <Table
+        expandedRowRender={record => (
+          <p style={{ margin: 0 }}>{record.comment}</p>
+        )}
         rowKey="_id"
-        loading={loading.getIdeasPreview}
+        loading={loading.getAnswerComment}
         onChange={({ current, pageSize }) => {
-          this.getIdeasPreview(current, pageSize);
+          this.getAnswerComment(current, pageSize);
         }}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
           pageSizeOptions: ["1", "10", "20", "50", "100", "1000"],
-          ...ideasPreviewPagination
+          ...answerCommentPagination
         }}
         columns={columns}
-        dataSource={ideasPreview}
+        dataSource={answerComment}
       />
     );
   }
 }
 
-export default IdeaTable;
+export default AnswerCommentTable;

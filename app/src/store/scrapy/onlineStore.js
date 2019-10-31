@@ -17,6 +17,7 @@ import {
   getIdeaDetail,
   inspectIdea,
   inspectIdeaComment,
+  inspectAnswerComment,
   addGroup,
   updateGroup,
   deleteGroup,
@@ -25,7 +26,8 @@ import {
   addSensitiveWord,
   updateSensitiveWord,
   deleteSensitiveWord,
-  getIdeasComments
+  getIdeasComments,
+  getAnswerComment
 } from "../../services";
 import { db, Domain } from "../../constants";
 
@@ -73,6 +75,13 @@ export default class OnlineStore extends ModelExtend {
 
   @observable ideasComment = [];
   @observable ideasCommentPagination = {
+    pageSize: 20,
+    current: 1,
+    total: 0
+  };
+
+  @observable answerComment = [];
+  @observable answerCommentPagination = {
     pageSize: 20,
     current: 1,
     total: 0
@@ -190,7 +199,8 @@ export default class OnlineStore extends ModelExtend {
       page: this.pagination.current,
       pageSize: this.pagination.pageSize,
       ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
-      ...(payload.page ? { page: payload.page } : {})
+      ...(payload.page ? { page: payload.page } : {}),
+      domain: "fuye"
     }).catch(this.handleError);
     if (res && res.data) {
       this.commit({
@@ -254,6 +264,25 @@ export default class OnlineStore extends ModelExtend {
     }
   };
 
+  getAnswerComment = async payload => {
+    const res = await getAnswerComment({
+      page: this.ideasCommentPagination.current,
+      pageSize: this.ideasCommentPagination.pageSize,
+      ...(payload.pageSize ? { pageSize: payload.pageSize } : {}),
+      ...(payload.page ? { page: payload.page } : {})
+    }).catch(this.handleError);
+    if (res && res.data) {
+      this.commit({
+        answerComment: res.data,
+        answerCommentPagination: {
+          current: res.current,
+          pageSize: res.pageSize,
+          total: res.total
+        }
+      });
+    }
+  };
+
   inspectIdea = async payload => {
     const { id, online, denyWhy } = payload;
     const res = await inspectIdea({
@@ -279,6 +308,20 @@ export default class OnlineStore extends ModelExtend {
       message.success("审核成功");
       this.dispatch({
         type: "getIdeasComment"
+      });
+    }
+  };
+
+  inspectAnswerComment = async payload => {
+    const { id, online } = payload;
+    const res = await inspectAnswerComment({
+      id,
+      online
+    }).catch(this.handleError);
+    if (res && res.data) {
+      message.success("审核成功");
+      this.dispatch({
+        type: "getAnswerComment"
       });
     }
   };

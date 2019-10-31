@@ -135,6 +135,13 @@ export const getIdeaDetail = payload =>
     params: payload
   });
 
+export const getAnswerComment = payload =>
+  request({
+    method: "get",
+    url: `${FUYE}/answerComments/getComments`,
+    params: payload
+  });
+
 export const getIdeasComments = payload =>
   request({
     method: "get",
@@ -152,6 +159,13 @@ export const inspectIdea = payload =>
 export const inspectIdeaComment = payload =>
   request({
     url: `${FUYE}/ideaComments/inspectComment`,
+    method: "put",
+    data: payload
+  });
+
+export const inspectAnswerComment = payload =>
+  request({
+    url: `${FUYE}/answerComments/inspectComment`,
     method: "put",
     data: payload
   });

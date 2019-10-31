@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Button, Table, Divider, Popconfirm } from "antd";
-import _ from "lodash";
 import { Inject, formatTime } from "../../../utils";
 import * as styles from "./ideaCommentTable.module.scss";
 
@@ -124,6 +123,9 @@ class IdeaCommentTable extends Component {
     ];
     return (
       <Table
+        expandedRowRender={record => (
+          <p style={{ margin: 0 }}>{record.comment}</p>
+        )}
         rowKey="_id"
         loading={loading.getIdeasComment}
         onChange={({ current, pageSize }) => {
