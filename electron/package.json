@@ -1,12 +1,29 @@
 {
-  "name": "admin",
+  "name": "fuye",
+  "productName": "1000fuye",
+  "description": "1000fuye",
   "version": "0.1.0",
   "private": true,
   "main": "./main.js",
   "homepage": ".",
   "scripts": {
     "start": "electron . --debug",
-    "start:watch": "nodemon --ignore ./assets  --watch ./**/* --exec  electron . --debug"
+    "start:watch": "nodemon --ignore ./assets  --watch ./**/* --exec  electron . --debug",
+    "dist": "rimraf dist && electron-builder"
+  },
+  "keywords": [
+    "副业"
+  ],
+  "build": {
+    "appId": "1000fuye.com",
+    "win": {
+      "icon": "./favicon.png",
+      "target": []
+    },
+    "mac": {
+      "icon": "./app.png",
+      "target": []
+    }
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
@@ -23,6 +40,8 @@
   },
   "devDependencies": {
     "electron": "^6.0.5",
-    "nodemon": "^1.19.1"
+    "electron-builder": "^22.1.0",
+    "nodemon": "^1.19.1",
+    "rimraf": "^3.0.0"
   }
 }

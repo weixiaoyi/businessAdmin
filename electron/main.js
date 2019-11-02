@@ -1,11 +1,15 @@
 require("@babel/register");
+const path = require("path");
 const { app } = require("electron");
 const { createWindow } = require("./utils");
 app.wins = {};
 
 function createMainWindow() {
   app.wins.main = createWindow({
-    url: "http://127.0.0.1:3000",
+    url:
+      process.env.NODE_ENV === "development"
+        ? "http://127.0.0.1:3000"
+        : path.join(__dirname, "../app/build/index.html"),
     width: 1000,
     height: 1000,
     openDevTools: true,
