@@ -37,15 +37,11 @@ class Preview extends Component {
     const links =
       images.length > 0
         ? Array.prototype.map.call(images, item => {
-            const srcDefault =
-              item.getAttribute("data-default-watermark-src") ||
-              item.getAttribute("data-actualsrc") ||
-              item.getAttribute("data-original") ||
-              item.getAttribute("data-thumbnail");
+            const prevLink = item.getAttribute("data-prev-link");
             const srcLocal = item.getAttribute("src") || "";
-            const filename = item.getAttribute("data-filename");
+            const filename = srcLocal.replace(/.*\?filename=(.*)?\.jpg/g, "$1");
             return {
-              srcDefault,
+              prevLink,
               srcLocal,
               filename
             };
@@ -204,11 +200,11 @@ class Preview extends Component {
                     }
                   >
                     <div className={styles.imageContainer}>
-                      <Tooltip title={item.srcDefault} placement="bottom">
+                      <Tooltip title={item.prevLink} placement="bottom">
                         <img
                           src={item.srcLocal}
                           onClick={() =>
-                            this.downloadImage(item.srcDefault, item.filename)
+                            this.downloadImage(item.prevLink, item.filename)
                           }
                         />
                       </Tooltip>

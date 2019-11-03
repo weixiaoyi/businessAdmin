@@ -76,19 +76,19 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
           if (srcDefault) {
             const filename = srcDefault.replace(/.*\/(.*)\.jpg|png/g, "$1");
             one.setAttribute("src", `http://${filename}.jpg`);
-            one.setAttribute("data-filename", `${filename}`);
+            one.setAttribute("data-prev-link", srcDefault);
             [
-              // "data-default-watermark-src",
-              // "data-actualsrc",
-              // "data-original",
-              // "data-thumbnail",
+              "data-default-watermark-src",
+              "data-actualsrc",
+              "data-original",
+              "data-thumbnail",
               "data-size",
-              "data-width",
-              "data-height",
               "data-rawwidth",
               "data-rawheight",
               "data-caption",
-              "data-lazy-status"
+              "data-lazy-status",
+              "class",
+              "width"
             ].forEach(item => one.removeAttribute(item));
           }
         });
@@ -129,7 +129,9 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
           answerType,
           content: richText.innerHTML
             .replace(/<noscript>.*?<\/noscript>/g, "")
-            .replace(/https:\/\/link\.zhihu\.com\/\?target=/g, ""),
+            .replace(/href=".*?"/g, "")
+            .replace(/rel=".*?"/g, "")
+            .replace(/data-za-detail-view-id=".*?"/g, ""),
           upVoteNum
         };
       });

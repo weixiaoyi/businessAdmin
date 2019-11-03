@@ -132,7 +132,7 @@ class Answer extends Component {
                 "src=file://",
                 appPath.imagesPath,
                 dbName,
-                `${"$1"}.jpg`
+                `${"$1"}.jpg?filename=${"$1"}.jpg`
               )
             )
           : ""
