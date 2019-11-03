@@ -2,7 +2,7 @@ import { request } from "../utils";
 const SERVICEHOST =
   process.env.NODE_ENV === "development"
     ? "http://localhost:7001"
-    : "https://1000fuye.com";
+    : "http://localhost:7001";
 const FUYE = `${SERVICEHOST}/fuye1000/api`;
 
 export const getUsers = payload =>

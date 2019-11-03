@@ -34,7 +34,7 @@ class PreviewPdf extends Component {
               dispatch({
                 type: "ipc-create-preview-pdf",
                 payload: {
-                  url: "http://localhost:3000/blank/scrapy/pdf"
+                  url: "http://localhost:3000#/blank/scrapy/pdf"
                 }
               });
             }}

@@ -1,15 +1,17 @@
-import * as scrapy from "./scrapy";
+const scrapy = require("./scrapy");
 let win;
 
-export default window => {
+exports.default = window => {
   win = window;
 };
 
-export const messageTasks = async (args, app) => {
+exports.messageTasks = async (args, app) => {
   const {
     data: { type }
   } = args;
-  if (type === "scrapy.get-answers") {
+  if (type === "scrapy.ipc-get-appPath") {
+    await scrapy.get_appPath({ args, win, app });
+  } else if (type === "scrapy.get-answers") {
     await scrapy.get_answers({ args, win, app });
   } else if (type === "scrapy.get-all-answers") {
     await scrapy.get_all_answers({ args, win, app });

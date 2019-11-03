@@ -1,14 +1,21 @@
-import path from "path";
-import {
+const path = require("path");
+const {
   getScrapyDb,
   parseDataUrl2Image,
   ensureDir,
-  outputFile
-} from "../../utils";
-import { PATH } from "../../constants";
+  outputFile,
+  setDataPath
+} = require("../../utils");
+const { PATH } = require("../../constants");
+
+exports.get_appPath = async ({ args, win }) => {
+  win.webContents.send("scrapy.get-appPath", {
+    imagesPath: path.join(setDataPath(), PATH.scrapyImageDir)
+  });
+};
 
 // 分页获取answer
-export const get_answers = async ({ args, win }) => {
+exports.get_answers = async ({ args, win }) => {
   const { dbName, data } = args;
   const scrapyDb = await getScrapyDb(dbName);
   const { pageNum, pageSize } = data;
@@ -23,7 +30,7 @@ export const get_answers = async ({ args, win }) => {
 };
 
 // 获取所有answer
-export const get_all_answers = async ({ args, win, app }) => {
+exports.get_all_answers = async ({ args, win, app }) => {
   const { dbName } = args;
   const scrapyDb = await getScrapyDb(dbName);
   const answers = scrapyDb.get("answers").value();
@@ -37,7 +44,7 @@ export const get_all_answers = async ({ args, win, app }) => {
 };
 
 // 删除answer
-export const delete_answers = async ({ args, win }) => {
+exports.delete_answers = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId }
@@ -52,7 +59,7 @@ export const delete_answers = async ({ args, win }) => {
 };
 
 // 更新本地answer
-export const update_answers = async ({ args, win }) => {
+exports.update_answers = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId, ...rest }
@@ -71,7 +78,7 @@ export const update_answers = async ({ args, win }) => {
 };
 
 // 批量删除answers
-export const mass_delete_answers = async ({ args, win }) => {
+exports.mass_delete_answers = async ({ args, win }) => {
   const {
     dbName,
     data: { answerIds }
@@ -89,12 +96,12 @@ export const mass_delete_answers = async ({ args, win }) => {
 };
 
 // 下载图片
-export const download_image = async ({ args, win }) => {
+exports.download_image = async ({ args, win }) => {
   const {
     dbName,
     data: { dataUrl, filename }
   } = args;
-  const dir = path.join(__dirname, PATH.scrapyImageDir, dbName);
+  const dir = path.join(setDataPath(), PATH.scrapyImageDir, dbName);
   await ensureDir(dir);
   const result = await parseDataUrl2Image(
     dataUrl,
@@ -104,7 +111,7 @@ export const download_image = async ({ args, win }) => {
 };
 
 // 下载pdf
-export const download_pdf = async ({ args, win, app }) => {
+exports.download_pdf = async ({ args, win, app }) => {
   if (!app.wins.scrapyPreviewPdf) {
     return win.webContents.send("scrapy.download-pdf", {
       success: false,
@@ -133,7 +140,7 @@ export const download_pdf = async ({ args, win, app }) => {
 };
 
 // 上传answer成功
-export const upload_answer_success = async ({ args, win }) => {
+exports.upload_answer_success = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId }
@@ -152,7 +159,7 @@ export const upload_answer_success = async ({ args, win }) => {
 };
 
 // 上线answer成功
-export const online_answer_success = async ({ args, win }) => {
+exports.online_answer_success = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId }
@@ -171,7 +178,7 @@ export const online_answer_success = async ({ args, win }) => {
 };
 
 // 下线answer成功
-export const offline_answer_success = async ({ args, win }) => {
+exports.offline_answer_success = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId }
@@ -190,7 +197,7 @@ export const offline_answer_success = async ({ args, win }) => {
 };
 
 // 删除线上answer成功
-export const delete_line_answer_success = async ({ args, win }) => {
+exports.delete_line_answer_success = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId }
@@ -209,7 +216,7 @@ export const delete_line_answer_success = async ({ args, win }) => {
 };
 
 // 更新线上answer成功
-export const update_line_answer_success = async ({ args, win }) => {
+exports.update_line_answer_success = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId }
@@ -228,7 +235,7 @@ export const update_line_answer_success = async ({ args, win }) => {
 };
 
 // 检测线上answer
-export const check_line_answer_success = async ({ args, win }) => {
+exports.check_line_answer_success = async ({ args, win }) => {
   const {
     dbName,
     data: { answerId, online }

@@ -1,5 +1,5 @@
-import { app, ipcMain, BrowserWindow } from "electron";
-import { createWindow } from "../utils";
+const { app, ipcMain } = require("electron");
+const { createWindow } = require("../utils");
 
 ipcMain.on("ipc", (event, args) => {
   const {
@@ -38,10 +38,11 @@ ipcMain.on("ipc", (event, args) => {
         height: 800,
         url,
         onOpenCallback: window => {
-          import("./scrapy/create-answer-preview").then(
-            result =>
-              result && result.default && result.default(window, args, app)
-          );
+          require("./scrapy/create-answer-preview").default(window, args, app);
+          // import("./scrapy/create-answer-preview").then(
+          //   result =>
+          //     result && result.default && result.default(window, args, app)
+          // );
         },
         onCloseCallback: () => (app.wins.scrapyPreviewAnser = null)
       });

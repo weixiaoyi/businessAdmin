@@ -22,6 +22,14 @@ const { Option, OptGroup } = Select;
   model
 }))
 class Scrapy extends Component {
+  componentDidMount() {
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-get-appPath"
+    });
+  }
   state = {
     active: "onlineUser"
   };

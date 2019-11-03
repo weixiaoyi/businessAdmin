@@ -40,9 +40,10 @@ class Preview extends Component {
             const srcDefault =
               item.getAttribute("data-default-watermark-src") ||
               item.getAttribute("data-actualsrc") ||
-              item.getAttribute("data-original");
-            const srcLocal = item.getAttribute("src");
-            const filename = srcLocal.replace(/.*\/(.*)\.jpg/g, "$1");
+              item.getAttribute("data-original") ||
+              item.getAttribute("data-thumbnail");
+            const srcLocal = item.getAttribute("src") || "";
+            const filename = item.getAttribute("data-filename");
             return {
               srcDefault,
               srcLocal,

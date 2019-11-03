@@ -63,13 +63,33 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
       return Array.prototype.map.call(lists, item => {
         const images = item.querySelectorAll(".RichContent img");
         Array.prototype.forEach.call(images, one => {
+          let src = one.getAttribute("src");
+          if (/svg/.test(src)) {
+            src = "";
+          }
           const srcDefault =
+            src ||
             one.getAttribute("data-default-watermark-src") ||
             one.getAttribute("data-actualsrc") ||
-            one.getAttribute("data-original");
+            one.getAttribute("data-original") ||
+            one.getAttribute("data-thumbnail");
           if (srcDefault) {
             const filename = srcDefault.replace(/.*\/(.*)\.jpg|png/g, "$1");
-            one.setAttribute("src", `/images/${dbName}/${filename}.jpg`);
+            one.setAttribute("src", `http://${filename}.jpg`);
+            one.setAttribute("data-filename", `${filename}`);
+            [
+              // "data-default-watermark-src",
+              // "data-actualsrc",
+              // "data-original",
+              // "data-thumbnail",
+              "data-size",
+              "data-width",
+              "data-height",
+              "data-rawwidth",
+              "data-rawheight",
+              "data-caption",
+              "data-lazy-status"
+            ].forEach(item => one.removeAttribute(item));
           }
         });
 
@@ -107,7 +127,9 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
           authorId,
           title,
           answerType,
-          content: richText.innerHTML,
+          content: richText.innerHTML
+            .replace(/<noscript>.*?<\/noscript>/g, "")
+            .replace(/https:\/\/link\.zhihu\.com\/\?target=/g, ""),
           upVoteNum
         };
       });

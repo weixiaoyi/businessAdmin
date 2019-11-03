@@ -43,7 +43,7 @@ class Answer extends Component {
     } = this.props;
     const findOne = answers.find(item => item.answerId === selectOne.answerId);
     if (findOne && !_.isEqual(findOne, selectOne)) {
-      this.setState({
+      this.switchAnswer({
         selectOne: findOne
       });
     }
@@ -120,9 +120,23 @@ class Answer extends Component {
   render() {
     const { selectOne, selectAnswerIds, searchUrl, editable } = this.state;
     const {
-      model: { dispatch, answers = [], pagination }
+      model: { dispatch, answers = [], pagination, dbName, appPath }
     } = this.props;
-
+    const newSelectOne = {
+      ...selectOne,
+      content:
+        selectOne && selectOne.content && window.ipc
+          ? selectOne.content.replace(
+              /src="http:\/\/(.*?)\.jpg"/g,
+              window.path.join(
+                "src=file://",
+                appPath.imagesPath,
+                dbName,
+                `${"$1"}.jpg`
+              )
+            )
+          : ""
+    };
     return (
       <div className={classNames(styles.Answer, "page")}>
         <div className={styles.list}>
@@ -145,7 +159,8 @@ class Answer extends Component {
                   dispatch({
                     type: "ipc-create-scrapy",
                     payload: {
-                      url: searchUrl && searchUrl.length ? [0] : undefined
+                      url:
+                        searchUrl && searchUrl.length ? searchUrl[0] : undefined
                     }
                   });
                 }}
@@ -171,7 +186,7 @@ class Answer extends Component {
               dispatch={dispatch}
               answers={answers}
               pagination={pagination}
-              selectOne={selectOne}
+              selectOne={newSelectOne}
               getAnswers={this.getAnswers}
               switchAnswer={this.switchAnswer}
               updateAnswer={this.updateAnswer}
@@ -182,8 +197,8 @@ class Answer extends Component {
               allowpopups={"true"}
               className={styles.webview}
               src={
-                selectOne.questionId
-                  ? `https://www.zhihu.com/question/${selectOne.questionId}/answer/${selectOne.answerId}`
+                newSelectOne.questionId
+                  ? `https://www.zhihu.com/question/${newSelectOne.questionId}/answer/${newSelectOne.answerId}`
                   : "https://www.zhihu.com/"
               }
             />
@@ -191,16 +206,16 @@ class Answer extends Component {
         </div>
         <div className={styles.editor} id="answer-operation">
           <AnswerEditor
-            selectOne={selectOne}
+            selectOne={newSelectOne}
             editable={editable}
             changeEditable={this.changeEditable}
             updateAnswer={this.updateAnswer}
           />
-          {selectOne.content && (
+          {newSelectOne.content && (
             <div className={styles.preview}>
               <Preview
-                content={selectOne.content}
-                authorName={selectOne.authorName}
+                content={newSelectOne.content}
+                authorName={newSelectOne.authorName}
               />
             </div>
           )}

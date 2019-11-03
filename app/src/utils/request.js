@@ -1,7 +1,6 @@
 import axios from "axios";
 import { stringify } from "qs";
 import { message } from "antd";
-import _ from "lodash";
 import { generateAccessToken } from "./encrypt";
 
 axios.defaults.withCredentials = true;

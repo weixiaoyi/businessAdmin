@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
 let win;
 
-export default (window, args) => {
+exports.default = (window, args) => {
   win = window;
   init(args);
 };

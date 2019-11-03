@@ -1,1 +1,2 @@
-export * from "./path";
+const { PATH } = require("./path");
+exports.PATH = PATH;

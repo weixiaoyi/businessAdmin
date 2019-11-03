@@ -1,10 +1,10 @@
-import fs from "fs";
-import path from "path";
-import { Notification } from "electron";
-import { getScrapyDb } from "../../utils";
+const fs = require("fs");
+const path = require("path");
+const { Notification } = require("electron");
+const { getScrapyDb } = require("../../utils");
 
 let win;
-export default (window, args) => {
+exports.default = (window, args) => {
   win = window;
   init(args);
 };
@@ -23,7 +23,7 @@ const init = args => {
   });
 };
 
-export const messageTasks = async args => {
+exports.messageTasks = async args => {
   const {
     dbName,
     data,

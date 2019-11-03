@@ -26,8 +26,17 @@ export default class ScrapyStore extends ModelExtend {
   @observable answers = [];
   @observable pagination = {};
   @observable dbName = localSave.get("scrapy_dbName") || db.scrapy[0].name;
+  @observable appPath = {
+    imagesPath: ""
+  };
 
   listenIpc = () => {
+    window.ipc &&
+      window.ipc.on("scrapy.get-appPath", (e, args) => {
+        const { imagesPath } = args;
+        this.commit("appPath.imagesPath", imagesPath);
+      });
+
     window.ipc &&
       window.ipc.on("scrapy.get-answers", (e, args) => {
         const { data, total, pageSize, current } = args;
@@ -202,6 +211,17 @@ export default class ScrapyStore extends ModelExtend {
             message: "answer检测失败",
             description: `answerId:${arg}检测失败`
           });
+        }
+      });
+  };
+
+  "ipc-get-appPath" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        dbName: this.dbName,
+        data: {
+          type: "scrapy.ipc-get-appPath"
         }
       });
   };

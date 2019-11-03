@@ -45,8 +45,10 @@ window.ipc.on("scrapy.createUtils", () => {
         (strings, item) => {
           return `${strings}<img style=${formatStyle(
             imageStyle
-          )} src=${item.getAttribute("data-actualsrc") ||
+          )} src=${item.getAttribute("data-default-watermark-src") ||
             item.getAttribute("data-actualsrc") ||
+            item.getAttribute("data-original") ||
+            item.getAttribute("data-thumbnail") ||
             item.getAttribute("src")} />`;
         },
         ""

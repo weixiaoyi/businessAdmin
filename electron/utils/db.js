@@ -1,12 +1,13 @@
-import path from "path";
-import low from "lowdb";
-import FileAsync from "lowdb/adapters/FileAsync";
-import { PATH } from "../constants";
-import { ensureDir } from "./fsExtra";
+const path = require("path");
+const low = require("lowdb");
+const FileAsync = require("lowdb/adapters/FileAsync");
+const { PATH } = require("../constants");
+const { ensureDir } = require("./fsExtra");
+const { setDataPath } = require("./helper");
 
-export const getScrapyDb = async dbName => {
+exports.getScrapyDb = async dbName => {
   if (!dbName) return console.log("dbName必填参数");
-  const dir = path.join(__dirname, PATH.scrapyDb);
+  const dir = path.join(setDataPath(), PATH.scrapyDb);
   await ensureDir(dir);
   const adapter = new FileAsync(path.join(dir, dbName), {
     defaultValue: { answers: [] },
