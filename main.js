@@ -9,7 +9,7 @@ function createMainWindow() {
     url:
       process.env.NODE_ENV === "development"
         ? "http://127.0.0.1:3000"
-        : path.join(__dirname, "./build/index.html"),
+        : path.join(__dirname, "./app/build/index.html"),
     width: 1000,
     height: 1000,
     openDevTools: true,

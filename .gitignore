@@ -1,3 +1,9 @@
 /app/public/images
 /electron/assets/database/scrapy-db.json
 /electron/dist
+/dist
+/app/build
+/*.pdf
+/.idea
+/node_modules
+/app/node_modules
