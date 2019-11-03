@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Inject, parseString } from "../../utils";
+import { Inject, parseString, parseImage } from "../../utils";
 import { Answer } from "../components";
 import * as styles from "./index.module.scss";
 
@@ -30,8 +30,13 @@ class ScrapyPdf extends Component {
 
   render() {
     const {
+      history: {
+        location: { search }
+      },
       model: { answers }
     } = this.props;
+    const dbName = parseString(search).dbName;
+    const imagesPath = parseString(search).imagesPath;
     return (
       <div className={styles.pdf}>
         <ul>
@@ -39,7 +44,7 @@ class ScrapyPdf extends Component {
             <li key={item.answerId}>
               <Answer
                 className={styles.pdfAnswer}
-                content={item.content}
+                content={parseImage(item.content, dbName, imagesPath)}
                 authorName={item.authorName}
                 ins={index + 1}
               />

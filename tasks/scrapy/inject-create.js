@@ -61,6 +61,7 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
 
     function parseHtml(lists) {
       return Array.prototype.map.call(lists, item => {
+        item = item.cloneNode(true);
         const images = item.querySelectorAll(".RichContent img");
         Array.prototype.forEach.call(images, one => {
           let src = one.getAttribute("src");

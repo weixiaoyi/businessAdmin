@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 import classNames from "classnames";
-import { Inject } from "../../../utils";
+import { Inject, parseImage } from "../../../utils";
 import { Answer } from "../../components";
 import * as styles from "./index.module.scss";
 
-@Inject(({ pdfStore: model }) => ({
-  model
+@Inject(({ pdfStore: model, scrapyStore }) => ({
+  model,
+  scrapyStore
 }))
 class PreviewPdf extends Component {
   componentDidMount() {
@@ -24,7 +25,8 @@ class PreviewPdf extends Component {
 
   render() {
     const {
-      model: { dispatch, answers }
+      model: { dispatch, answers },
+      scrapyStore: { dbName, appPath }
     } = this.props;
     return (
       <div className={classNames(styles.previewpdf, "page")}>
@@ -56,7 +58,7 @@ class PreviewPdf extends Component {
             {answers.map((item, index) => (
               <li key={item.answerId}>
                 <Answer
-                  content={item.content}
+                  content={parseImage(item.content, dbName, appPath.imagesPath)}
                   authorName={item.authorName}
                   ins={index + 1}
                 />

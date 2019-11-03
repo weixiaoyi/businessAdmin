@@ -52,7 +52,7 @@ export default class PdfStore extends ModelExtend {
         dbName: this.rootStore.scrapyStore.dbName,
         data: {
           type: "scrapy.create-preview-pdf",
-          url: `${url}?dbName=${this.rootStore.scrapyStore.dbName}`,
+          url: `${url}?dbName=${this.rootStore.scrapyStore.dbName}&imagesPath=${this.rootStore.scrapyStore.appPath.imagesPath}`,
           dbName: this.rootStore.scrapyStore.dbName
         }
       });

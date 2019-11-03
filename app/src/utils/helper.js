@@ -27,3 +27,16 @@ export const localSave = {
 };
 
 export const parseString = search => queryString.parse(search);
+
+export const parseImage = (content, dbName, appPath) =>
+  window.ipc && content
+    ? content.replace(
+        /src="http:\/\/(.*?)\.jpg"/g,
+        window.path.join(
+          "src=file://",
+          appPath,
+          dbName,
+          `${"$1"}.jpg?filename=${"$1"}.jpg`
+        )
+      )
+    : content;

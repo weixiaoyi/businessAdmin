@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Card, Divider, Select, Input, Popover } from "antd";
 import classNames from "classnames";
 import _ from "lodash";
-import { Inject } from "../../../utils";
+import { Inject, parseImage } from "../../../utils";
 import Preview from "./preview";
 import AnswerTable from "./answerTable";
 import AnswerEditor from "./answerEditor";
@@ -124,18 +124,7 @@ class Answer extends Component {
     } = this.props;
     const newSelectOne = {
       ...selectOne,
-      content:
-        selectOne && selectOne.content && window.ipc
-          ? selectOne.content.replace(
-              /src="http:\/\/(.*?)\.jpg"/g,
-              window.path.join(
-                "src=file://",
-                appPath.imagesPath,
-                dbName,
-                `${"$1"}.jpg?filename=${"$1"}.jpg`
-              )
-            )
-          : ""
+      content: parseImage(selectOne.content, dbName, appPath.imagesPath)
     };
     return (
       <div className={classNames(styles.Answer, "page")}>

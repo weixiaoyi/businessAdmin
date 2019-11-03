@@ -31,7 +31,7 @@ class Scrapy extends Component {
     });
   }
   state = {
-    active: "onlineUser"
+    active: "answer"
   };
 
   render() {
