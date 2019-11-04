@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { Button, Table, Divider, Popconfirm } from "antd";
 import _ from "lodash";
-import { Inject, formatTime } from "../../../utils";
+import { Inject } from "../../../utils";
+import { TableSearch } from "../../components";
+import { TimeBefore } from "../../../components";
 import * as styles from "./blackUserTable.module.scss";
 
 @Inject(({ onlineStore: model }) => ({
   model
 }))
-class BlackUserTable extends Component {
+class BlackUserTable extends TableSearch {
   componentDidMount() {
     this.getBlackUsers();
   }
@@ -34,7 +36,8 @@ class BlackUserTable extends Component {
       {
         title: "accountId",
         dataIndex: "accountId",
-        key: "accountId"
+        key: "accountId",
+        ...this.getColumnSearchProps("accountId")
       },
       {
         title: "domain",
@@ -52,13 +55,14 @@ class BlackUserTable extends Component {
         title: "updateTime",
         dataIndex: "updateTime",
         key: "updateTime",
-        render: v => formatTime(v)
+        render: v => <TimeBefore time={v} />
       },
 
       {
         title: "状态",
         dataIndex: "type",
         key: "type",
+        ...this.getColumnSearchProps("type"),
         render: (v, record) => {
           return (
             <div>

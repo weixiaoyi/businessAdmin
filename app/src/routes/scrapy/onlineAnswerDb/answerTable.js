@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { Button, Table } from "antd";
-import { Inject } from "../../../utils";
+import { Button, Table, Divider, Popconfirm } from "antd";
+import { formatTime, Inject } from "../../../utils";
+import { TimeBefore } from "../../../components";
+import { TableSearch } from "../../components";
 import * as styles from "./answerTable.module.scss";
 
 @Inject(({ onlineStore: model }) => ({
   model
 }))
-class AnswerTable extends Component {
+class AnswerTable extends TableSearch {
   componentDidMount() {
     this.getAnswers();
   }
@@ -26,43 +28,54 @@ class AnswerTable extends Component {
 
   render() {
     const {
-      model: { onlineAnswers, pagination, loading }
+      model: { dispatch, onlineAnswers, pagination, loading }
     } = this.props;
     const columns = [
       {
         title: "id",
         dataIndex: "answerId",
-        key: "answerId"
-      },
-      {
-        title: "content",
-        dataIndex: "content",
-        key: "content",
+        key: "answerId",
+        ...this.getColumnSearchProps("answerId"),
         render: v => (
-          <div style={{ width: 180 }} className={styles.answerContent}>
+          <div style={{ width: 50 }} className={styles.answerContent}>
             {v}
           </div>
         )
       },
       {
-        title: "作者",
-        dataIndex: "authorName",
-        key: "authorName"
+        title: "content",
+        dataIndex: "content",
+        key: "content",
+        ...this.getColumnSearchProps("content"),
+        render: v => (
+          <div style={{ width: 100 }} className={styles.answerContent}>
+            {v}
+          </div>
+        )
       },
       {
-        title: "原始赞同",
+        title: "创建时间",
+        dataIndex: "createTime",
+        key: "createTime",
+        render: v => <TimeBefore time={v} />
+      },
+      {
+        title: "更新时间",
+        dataIndex: "updateTime",
+        key: "updateTime",
+        render: v => v && <TimeBefore time={v} />
+      },
+      {
+        title: "原始赞同/当前",
         dataIndex: "prevUpVoteNum",
-        key: "prevUpVoteNum"
-      },
-      {
-        title: "数据库名称",
-        dataIndex: "dbName",
-        key: "dbName"
+        key: "prevUpVoteNum",
+        render: (v, record) => `${v}/${record.currentUpVoteNum}`
       },
       {
         title: "是否上线",
         dataIndex: "online",
         key: "online",
+        ...this.getColumnSearchProps("online"),
         render: v => (
           <div>
             {v === "on" ? (
@@ -74,10 +87,40 @@ class AnswerTable extends Component {
             )}
           </div>
         )
+      },
+      {
+        title: "操作",
+        dataIndex: "operation",
+        key: "operation",
+        render: (v, record) => (
+          <Popconfirm
+            title="确认删除"
+            onConfirm={() => {
+              dispatch({
+                type: "deleteLineAnswer",
+                payload: {
+                  answerId: record.answerId
+                }
+              });
+            }}
+          >
+            <a>删除</a>
+          </Popconfirm>
+        )
       }
     ];
     return (
       <Table
+        expandedRowRender={record => (
+          <div>
+            <div>
+              作者：{record.authorName}
+              <Divider type="vertical" />
+              创建时间:{formatTime(record.createTime)}
+            </div>
+            <div>{record.content}</div>
+          </div>
+        )}
         loading={loading.getAnswers}
         onChange={({ current, pageSize }) => {
           this.getAnswers(current, pageSize);

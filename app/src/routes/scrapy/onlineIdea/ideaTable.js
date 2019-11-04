@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Button, Table, Divider, Popconfirm } from "antd";
 import { Inject, formatTime } from "../../../utils";
+import { TableSearch } from "../../components";
+import { TimeBefore } from "../../../components";
 import * as styles from "./ideaTable.module.scss";
 
 @Inject(({ onlineStore: model }) => ({
   model
 }))
-class IdeaTable extends Component {
+class IdeaTable extends TableSearch {
   componentDidMount() {
     this.getIdeasPreview();
   }
@@ -33,6 +35,7 @@ class IdeaTable extends Component {
         title: "_id",
         dataIndex: "_id",
         key: "_id",
+        ...this.getColumnSearchProps("_id"),
         render: v => (
           <div style={{ width: 50 }} className={styles.ellipes}>
             {v}
@@ -43,6 +46,7 @@ class IdeaTable extends Component {
         title: "title",
         dataIndex: "title",
         key: "title",
+        ...this.getColumnSearchProps("title"),
         render: v => (
           <div style={{ width: 100 }} className={styles.ellipes}>
             {v}
@@ -50,9 +54,10 @@ class IdeaTable extends Component {
         )
       },
       {
-        title: "brief",
+        title: "内容",
         dataIndex: "brief",
         key: "brief",
+        ...this.getColumnSearchProps("brief"),
         render: v => (
           <div style={{ width: 100 }} className={styles.ellipes}>
             {v}
@@ -63,7 +68,7 @@ class IdeaTable extends Component {
         title: "createTime",
         dataIndex: "createTime",
         key: "createTime",
-        render: v => formatTime(v)
+        render: v => <TimeBefore time={v} />
       },
       {
         title: "computed",
@@ -83,6 +88,7 @@ class IdeaTable extends Component {
         title: "状态",
         dataIndex: "online",
         key: "online",
+        ...this.getColumnSearchProps("online"),
         render: (v, record) => {
           return v === "on" ? (
             <span className={styles.on}>{v}</span>
@@ -150,6 +156,12 @@ class IdeaTable extends Component {
     ];
     return (
       <Table
+        expandedRowRender={record => (
+          <div>
+            <div>创建时间：{formatTime(record.createTime)}</div>
+            {record.brief}
+          </div>
+        )}
         rowKey="_id"
         loading={loading.getIdeasPreview}
         onChange={({ current, pageSize }) => {

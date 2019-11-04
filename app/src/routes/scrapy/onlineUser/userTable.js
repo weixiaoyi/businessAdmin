@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Button, Table, Divider, Popconfirm, Form, Input } from "antd";
 import _ from "lodash";
-import { Inject, formatTime } from "../../../utils";
+import { Inject } from "../../../utils";
+import { TableSearch } from "../../components";
+import { TimeBefore } from "../../../components";
 import * as styles from "./userTable.module.scss";
 
 const { Search } = Input;
@@ -10,7 +12,7 @@ const { Search } = Input;
 @Inject(({ onlineStore: model }) => ({
   model
 }))
-class UserTable extends Component {
+class UserTable extends TableSearch {
   componentDidMount() {
     this.getUsers();
   }
@@ -49,23 +51,26 @@ class UserTable extends Component {
       {
         title: "_id",
         dataIndex: "_id",
-        key: "_id"
+        key: "_id",
+        ...this.getColumnSearchProps("online")
       },
       {
         title: "domain",
         dataIndex: "domain",
-        key: "domain"
+        key: "domain",
+        ...this.getColumnSearchProps("domain")
       },
       {
         title: "name",
         dataIndex: "name",
-        key: "name"
+        key: "name",
+        ...this.getColumnSearchProps("name")
       },
       {
         title: "createTime",
         dataIndex: "createTime",
         key: "createTime",
-        render: v => formatTime(v)
+        render: v => <TimeBefore time={v} />
       },
 
       {

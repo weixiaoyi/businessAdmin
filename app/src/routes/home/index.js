@@ -19,13 +19,6 @@ class Home extends Component {
             >
               知乎爬虫
             </Card>
-            <Card
-              size="small"
-              title="知乎爬虫"
-              extra={<Link to={PATH.scrapyPdf}>More</Link>}
-            >
-              pdf
-            </Card>
           </div>
         </div>
       </LayOut>

@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Button, Table, Divider, Popconfirm } from "antd";
 import { Inject, formatTime } from "../../../utils";
+import { TableSearch } from "../../components";
+import { TimeBefore } from "../../../components";
 import * as styles from "./answerCommentTable.module.scss";
 
 @Inject(({ onlineStore: model }) => ({
   model
 }))
-class AnswerCommentTable extends Component {
+class AnswerCommentTable extends TableSearch {
   componentDidMount() {
     this.getAnswerComment();
   }
@@ -33,6 +35,7 @@ class AnswerCommentTable extends Component {
         title: "_id",
         dataIndex: "_id",
         key: "_id",
+        ...this.getColumnSearchProps("_id"),
         render: v => (
           <div style={{ width: 50 }} className={styles.ellipes}>
             {v}
@@ -49,6 +52,7 @@ class AnswerCommentTable extends Component {
         title: "comment",
         dataIndex: "comment",
         key: "comment",
+        ...this.getColumnSearchProps("comment"),
         render: v => (
           <div style={{ width: 100 }} className={styles.ellipes}>
             {v}
@@ -59,12 +63,13 @@ class AnswerCommentTable extends Component {
         title: "createTime",
         dataIndex: "createTime",
         key: "createTime",
-        render: v => formatTime(v)
+        render: v => <TimeBefore time={v} />
       },
       {
         title: "状态",
         dataIndex: "online",
         key: "online",
+        ...this.getColumnSearchProps("online"),
         render: (v, record) => {
           return v === "on" ? (
             <span className={styles.on}>{v}</span>
@@ -118,7 +123,10 @@ class AnswerCommentTable extends Component {
     return (
       <Table
         expandedRowRender={record => (
-          <p style={{ margin: 0 }}>{record.comment}</p>
+          <div>
+            <div>创建时间：{formatTime(record.createTime)}</div>
+            {record.comment}
+          </div>
         )}
         rowKey="_id"
         loading={loading.getAnswerComment}

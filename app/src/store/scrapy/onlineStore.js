@@ -27,7 +27,8 @@ import {
   updateSensitiveWord,
   deleteSensitiveWord,
   getIdeasComments,
-  getAnswerComment
+  getAnswerComment,
+  deleteLineAnswer
 } from "../../services";
 import { db, Domain } from "../../constants";
 
@@ -131,6 +132,16 @@ export default class OnlineStore extends ModelExtend {
           pageSize: res.pageSize,
           total: res.total
         }
+      });
+    }
+  };
+
+  deleteLineAnswer = async payload => {
+    const res = await deleteLineAnswer(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("删除线上answer成功");
+      this.dispatch({
+        type: "getAnswers"
       });
     }
   };

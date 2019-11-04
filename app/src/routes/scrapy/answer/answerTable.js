@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Table, Button, Popconfirm, Divider } from "antd";
 import { observer } from "../../../utils";
+import { TableSearch } from "../../components";
 import * as styles from "./answerTable.module.scss";
 
 @observer
-class AnswerTable extends Component {
+class AnswerTable extends TableSearch {
   componentDidMount() {
     this.props.getAnswers();
   }
@@ -26,6 +27,7 @@ class AnswerTable extends Component {
         title: "id",
         dataIndex: "answerId",
         key: "answerId",
+        ...this.getColumnSearchProps("answerId"),
         render: (v, record) => (
           <a
             className={styles.answerId}
@@ -47,7 +49,7 @@ class AnswerTable extends Component {
         title: "内容",
         dataIndex: "content",
         key: "content",
-        width: 100,
+        ...this.getColumnSearchProps("content"),
         render: (v, record) => (
           <div
             style={{ width: 80 }}
@@ -67,6 +69,7 @@ class AnswerTable extends Component {
         title: "状态",
         dataIndex: "approve",
         key: "approve",
+        ...this.getColumnSearchProps("approve"),
         render: v => (
           <div>
             {!v ? (
@@ -85,6 +88,7 @@ class AnswerTable extends Component {
         title: "是否上线",
         dataIndex: "online",
         key: "online",
+        ...this.getColumnSearchProps("online"),
         render: v => (
           <div>
             {v === "on" ? (
@@ -99,6 +103,7 @@ class AnswerTable extends Component {
           </div>
         )
       },
+
       {
         title: "赞同",
         dataIndex: "upVoteNum",
@@ -294,6 +299,7 @@ class AnswerTable extends Component {
     };
     return (
       <Table
+        expandedRowRender={record => <div>{record.content}</div>}
         scroll={{ x: 800 }}
         rowSelection={rowSelection}
         rowClassName={record =>
