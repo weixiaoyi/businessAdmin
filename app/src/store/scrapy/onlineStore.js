@@ -28,7 +28,8 @@ import {
   deleteSensitiveWord,
   getIdeasComments,
   getAnswerComment,
-  deleteLineAnswer
+  deleteLineAnswer,
+  recommendLineAnswer
 } from "../../services";
 import { db, Domain } from "../../constants";
 
@@ -140,6 +141,16 @@ export default class OnlineStore extends ModelExtend {
     const res = await deleteLineAnswer(payload).catch(this.handleError);
     if (res && res.data) {
       message.success("删除线上answer成功");
+      this.dispatch({
+        type: "getAnswers"
+      });
+    }
+  };
+
+  recommendLineAnswer = async payload => {
+    const res = await recommendLineAnswer(payload).catch(this.handleError);
+    if (res && res.data) {
+      message.success("推荐指数成功");
       this.dispatch({
         type: "getAnswers"
       });

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Table, Divider, Popconfirm } from "antd";
+import { Button, Table, Divider, Popconfirm, Rate } from "antd";
 import { formatTime, Inject } from "../../../utils";
 import { TimeBefore } from "../../../components";
 import { TableSearch } from "../../components";
@@ -48,7 +48,7 @@ class AnswerTable extends TableSearch {
         key: "content",
         ...this.getColumnSearchProps("content"),
         render: v => (
-          <div style={{ width: 100 }} className={styles.answerContent}>
+          <div style={{ width: 80 }} className={styles.answerContent}>
             {v}
           </div>
         )
@@ -70,6 +70,11 @@ class AnswerTable extends TableSearch {
         dataIndex: "prevUpVoteNum",
         key: "prevUpVoteNum",
         render: (v, record) => `${v}/${record.currentUpVoteNum}`
+      },
+      {
+        title: "推荐指数",
+        dataIndex: "index",
+        key: "index"
       },
       {
         title: "是否上线",
@@ -117,6 +122,24 @@ class AnswerTable extends TableSearch {
               作者：{record.authorName}
               <Divider type="vertical" />
               创建时间:{formatTime(record.createTime)}
+              <Divider type="vertical" />
+              推荐指数：
+              <Rate
+                count={10}
+                allowClear
+                allowHalf
+                value={record.index}
+                style={{ fontSize: 16 }}
+                onChange={v =>
+                  dispatch({
+                    type: "recommendLineAnswer",
+                    payload: {
+                      answerId: record.answerId,
+                      index: v
+                    }
+                  })
+                }
+              />
             </div>
             <div>{record.content}</div>
           </div>

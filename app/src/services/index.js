@@ -110,6 +110,13 @@ export const deleteLineAnswer = payload =>
     data: payload
   });
 
+export const recommendLineAnswer = payload =>
+  request({
+    url: `${FUYE}/answers/recommendAnswer`,
+    method: "put",
+    data: payload
+  });
+
 export const updateLineAnswer = payload =>
   request({
     url: `${FUYE}/answers/updateLineAnswer`,

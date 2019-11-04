@@ -43,7 +43,7 @@ class IdeaTable extends TableSearch {
         )
       },
       {
-        title: "title",
+        title: "标题",
         dataIndex: "title",
         key: "title",
         ...this.getColumnSearchProps("title"),
@@ -65,13 +65,19 @@ class IdeaTable extends TableSearch {
         )
       },
       {
-        title: "createTime",
+        title: "创建时间",
         dataIndex: "createTime",
         key: "createTime",
         render: v => <TimeBefore time={v} />
       },
       {
-        title: "computed",
+        title: "更新时间",
+        dataIndex: "updateTime",
+        key: "updateTime",
+        render: v => (v ? <TimeBefore time={v} /> : "暂无更新")
+      },
+      {
+        title: "评论与关注",
         dataIndex: "computed",
         key: "computed",
         render: (v, record) => {
@@ -158,7 +164,12 @@ class IdeaTable extends TableSearch {
       <Table
         expandedRowRender={record => (
           <div>
-            <div>创建时间：{formatTime(record.createTime)}</div>
+            <div>
+              创建时间：{formatTime(record.createTime)}
+              <Divider type="vertical" />
+              更新时间：
+              {record.updateTime ? formatTime(record.updateTime) : "暂无更新"}
+            </div>
             {record.brief}
           </div>
         )}
