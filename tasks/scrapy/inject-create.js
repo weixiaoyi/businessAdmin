@@ -130,6 +130,7 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
           answerType,
           content: richText.innerHTML
             .replace(/<noscript>.*?<\/noscript>/g, "")
+            .replace(/<svg>.*?<\/svg>/g, "")
             .replace(/href=".*?"/g, "")
             .replace(/rel=".*?"/g, "")
             .replace(/data-za-detail-view-id=".*?"/g, ""),
