@@ -148,23 +148,17 @@ window.ipc.on("scrapy.createUtils", (e, args) => {
       const scrollAuto = () => {
         // const t = document.body.clientHeight;
         clearTimeout(window.interval);
-        let time = "";
         const lists = getList();
         const len = lists.length;
-
-        if (len && len % 10 === 0) {
-          time = random(1 * 60, 3 * 60);
-        } else {
-          time = random(1, 3);
-        }
+        const time = random(1, 3);
 
         haveGet.innerHTML = `已经获取${len}个答案`;
         window.scrollBy({
-          top: random(50, 100),
-          left: random(0, 50),
+          top: random(50, 200),
+          left: random(-50, 50),
           behavior: "smooth"
         });
-        window.interval = setTimeout(scrollAuto, time * 1000);
+        window.interval = setTimeout(scrollAuto, time * 1000 + random(0, 900));
       };
 
       scrollAuto();
