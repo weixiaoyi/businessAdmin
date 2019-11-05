@@ -313,6 +313,17 @@ export default class ScrapyStore extends ModelExtend {
       });
   };
 
+  "ipc-open-fullPath" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        dbName: this.dbName,
+        data: {
+          type: "scrapy.ipc-openPath"
+        }
+      });
+  };
+
   uploadAnswer = async payload => {
     const res = await uploadAnswer({
       ...payload,

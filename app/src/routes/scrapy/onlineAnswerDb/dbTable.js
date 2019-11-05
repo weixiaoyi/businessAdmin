@@ -1,16 +1,26 @@
 import React, { Component } from "react";
-import { Button, Table, Divider, Icon, Popconfirm } from "antd";
+import {
+  Button,
+  Table,
+  Divider,
+  Icon,
+  Popconfirm,
+  InputNumber,
+  Form,
+  Input
+} from "antd";
 import _ from "lodash";
 import { Inject } from "../../../utils";
 import * as styles from "./dbTable.module.scss";
 
+@Form.create()
 @Inject(({ onlineStore: model, scrapyStore }) => ({
   model,
   scrapyStore
 }))
 class DbTable extends Component {
   state = {
-    selectOne: {}
+    expandedRowKeys: []
   };
   componentDidMount() {
     this.getOnlineDbs();
@@ -29,28 +39,41 @@ class DbTable extends Component {
     });
   };
 
+  handleSubmit = (e, record) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const {
+          model: { dispatch }
+        } = this.props;
+        const { name, desc } = record;
+        dispatch({
+          type: "updateLineDb",
+          payload: {
+            name,
+            desc,
+            title: values.title,
+            intro: values.intro,
+            member: {
+              limit: values.limit,
+              price: values.price
+            }
+          }
+        });
+      }
+    });
+  };
+
   render() {
     const {
       model: { dispatch, localDbs, dbPagination, loading },
       scrapyStore: { dbName }
     } = this.props;
-    const { selectOne } = this.state;
     const columns = [
       {
         title: "数据库名称（对内）",
         dataIndex: "name",
-        key: "name",
-        render: (v, record) => (
-          <a
-            onClick={() => {
-              this.setState({
-                selectOne: record
-              });
-            }}
-          >
-            {v}
-          </a>
-        )
+        key: "name"
       },
       {
         title: "简短描述（对内）",
@@ -60,24 +83,34 @@ class DbTable extends Component {
       {
         title: "title(对外)",
         dataIndex: "title",
-        key: "title"
+        key: "title",
+        render: (v, record) => (
+          <div style={{ width: 80 }} className={styles.limitContent}>
+            {_.get(record, "onlineData.title")}
+          </div>
+        )
       },
       {
         title: "intro(对外)",
         dataIndex: "intro",
-        key: "intro"
+        key: "intro",
+        render: (v, record) => (
+          <div style={{ width: 80 }} className={styles.limitContent}>
+            {_.get(record, "onlineData.intro")}
+          </div>
+        )
       },
       {
         title: "limit",
         dataIndex: "limit",
         key: "limit",
-        render: (v, record) => record.member && record.member.limit
+        render: (v, record) => _.get(record, "onlineData.member.limit")
       },
       {
         title: "价格",
         dataIndex: "price",
         key: "price",
-        render: (v, record) => record.member && record.member.price
+        render: (v, record) => _.get(record, "onlineData.member.price")
       },
       {
         title: "是否上线",
@@ -143,41 +176,6 @@ class DbTable extends Component {
               </Popconfirm>
             )}
 
-            {(record.online === "on" || record.online === "off") &&
-              record.onlineData &&
-              (record.name !== _.get(record, "onlineData.name") ||
-                record.desc !== _.get(record, "onlineData.desc") ||
-                record.title !== _.get(record, "onlineData.title") ||
-                record.intro !== _.get(record, "onlineData.intro") ||
-                record.member.limit !==
-                  _.get(record, "onlineData.member.limit") ||
-                record.member.price !==
-                  _.get(record, "onlineData.member.price")) && (
-                <Popconfirm
-                  title="确认更新线上数据库?"
-                  onConfirm={() => {
-                    dispatch({
-                      type: "updateLineDb",
-                      payload: {
-                        name: record.name,
-                        desc: record.desc,
-                        title: record.title,
-                        intro: record.intro,
-                        member: {
-                          limit: record.member.limit,
-                          price: record.member.price
-                        }
-                      }
-                    });
-                  }}
-                >
-                  <a>
-                    <span>更新</span>
-                  </a>
-                  <Divider type="vertical" />
-                </Popconfirm>
-              )}
-
             {(record.online === "on" || record.online === "off") && (
               <Popconfirm
                 title="确认删除?"
@@ -198,9 +196,89 @@ class DbTable extends Component {
       }
     ];
 
+    const { getFieldDecorator } = this.props.form;
+    const { expandedRowKeys } = this.state;
+
     return (
       <div>
         <Table
+          expandedRowKeys={expandedRowKeys}
+          onExpand={(expanded, record) =>
+            this.setState({
+              expandedRowKeys:
+                record.name === expandedRowKeys[0] ? [] : [record.name]
+            })
+          }
+          expandedRowRender={record => (
+            <div>
+              {record.name && expandedRowKeys[0] === record.name && (
+                <Form onSubmit={e => this.handleSubmit(e, record)}>
+                  <ul className={styles.info}>
+                    <li>
+                      <span>数据库名称：</span>
+                      {record.name}
+                    </li>
+                    <li>
+                      <span>简短描述（对内）：</span>
+                      {record.desc}
+                    </li>
+                  </ul>
+                  <Form.Item label="title（对外）：">
+                    {getFieldDecorator("title", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "必填"
+                        }
+                      ],
+                      initialValue: _.get(record, "onlineData.title")
+                    })(<Input placeholder="title" />)}
+                  </Form.Item>
+                  <Form.Item label="一句话介绍（对外）：">
+                    {getFieldDecorator("intro", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "必填"
+                        }
+                      ],
+                      initialValue: _.get(record, "onlineData.intro")
+                    })(<Input placeholder="intro" />)}
+                  </Form.Item>
+                  <Form.Item label="非会员用户限制页数：">
+                    {getFieldDecorator("limit", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "必填"
+                        }
+                      ],
+                      initialValue: _.get(record, "onlineData.member.limit")
+                    })(<InputNumber placeholder="limit" />)}
+                  </Form.Item>
+                  <Form.Item label="价格：">
+                    {getFieldDecorator("price", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "必填"
+                        }
+                      ],
+                      initialValue: _.get(record, "onlineData.member.price")
+                    })(<InputNumber placeholder="price" />)}
+                  </Form.Item>
+
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={loading.updateLineDb}
+                  >
+                    更新
+                  </Button>
+                </Form>
+              )}
+            </div>
+          )}
           loading={loading.getOnlineDbs}
           rowClassName={record =>
             record.name === dbName ? styles.currentDb : null
@@ -219,32 +297,6 @@ class DbTable extends Component {
           columns={columns}
           dataSource={localDbs}
         />
-        <ul className={styles.info}>
-          <li>
-            <span>数据库名称：</span>
-            {selectOne.name}
-          </li>
-          <li>
-            <span>简短描述（对内）：</span>
-            {selectOne.desc}
-          </li>
-          <li>
-            <span>title（对外）：</span>
-            {selectOne.title}
-          </li>
-          <li>
-            <span>intro（对外）：</span>
-            {selectOne.intro}
-          </li>
-          <li>
-            <span>limit：</span>
-            {selectOne.member && selectOne.member.limit}
-          </li>
-          <li>
-            <span>价格：</span>
-            {selectOne.member && selectOne.member.price}
-          </li>
-        </ul>
       </div>
     );
   }

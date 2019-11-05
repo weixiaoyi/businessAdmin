@@ -2,23 +2,11 @@ export const db = {
   scrapy: [
     {
       name: "scrapy-fuye-db.json",
-      desc: "副业数据库",
-      title: "1000个副业",
-      intro: "适合现代人的副业思维",
-      member: {
-        limit: 10,
-        price: 50
-      }
+      desc: "副业数据库"
     },
     {
       name: "scrapy-example-db.json",
-      desc: "example数据库",
-      title: "example",
-      intro: "example",
-      member: {
-        limit: 2,
-        price: 50
-      }
+      desc: "example数据库"
     }
   ]
 };

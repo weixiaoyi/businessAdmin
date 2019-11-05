@@ -105,6 +105,15 @@ class Answer extends Component {
     });
   };
 
+  openFullPath = () => {
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-open-fullPath"
+    });
+  };
+
   setSelectRows = answerIds => {
     this.setState({
       selectAnswerIds: answerIds
@@ -167,6 +176,9 @@ class Answer extends Component {
                 onClick={this.massDelete}
               >
                 批量删除
+              </Button>
+              <Button disabled={!answers.length} onClick={this.openFullPath}>
+                数据文件
               </Button>
             </div>
           </div>

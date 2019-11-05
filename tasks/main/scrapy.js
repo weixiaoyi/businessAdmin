@@ -1,4 +1,5 @@
 const path = require("path");
+const { shell } = require("electron");
 const {
   getScrapyDb,
   parseDataUrl2Image,
@@ -12,6 +13,12 @@ exports.get_appPath = async ({ args, win }) => {
   win.webContents.send("scrapy.get-appPath", {
     imagesPath: path.join(setDataPath(), PATH.scrapyImageDir)
   });
+};
+
+exports.openPath = async ({ args }) => {
+  const {} = args;
+  const dir = path.join(setDataPath(), PATH.scrapyDb);
+  shell.openItem(dir);
 };
 
 // 分页获取answer

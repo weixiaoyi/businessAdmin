@@ -11,6 +11,8 @@ exports.messageTasks = async (args, app) => {
   } = args;
   if (type === "scrapy.ipc-get-appPath") {
     await scrapy.get_appPath({ args, win, app });
+  } else if (type === "scrapy.ipc-openPath") {
+    await scrapy.openPath({ args, win, app });
   } else if (type === "scrapy.get-answers") {
     await scrapy.get_answers({ args, win, app });
   } else if (type === "scrapy.get-all-answers") {
