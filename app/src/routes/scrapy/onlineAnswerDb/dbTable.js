@@ -143,13 +143,13 @@ class DbTable extends Component {
                   dispatch({
                     type: "onlineDb",
                     payload: {
-                      name: record.name,
-                      desc: record.desc,
-                      title: record.title,
-                      intro: record.intro,
+                      name: _.get(record, "onlineData.name"),
+                      desc: _.get(record, "onlineData.desc"),
+                      title: _.get(record, "onlineData.title"),
+                      intro: _.get(record, "onlineData.intro"),
                       member: {
-                        limit: record.member.limit,
-                        price: record.member.price
+                        limit: _.get(record, "onlineData.member.limit"),
+                        price: _.get(record, "onlineData.member.price")
                       }
                     }
                   });
