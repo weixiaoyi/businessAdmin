@@ -109,8 +109,10 @@ class IdeaTable extends TableSearch {
         title: "操作",
         dataIndex: "operation",
         key: "operation",
+        fixed: "right",
+        width: 160,
         render: (v, record) => (
-          <div>
+          <div style={{ paddingLeft: 10 }}>
             <Popconfirm
               title="确认拒绝?"
               onConfirm={() => {
@@ -162,6 +164,7 @@ class IdeaTable extends TableSearch {
     ];
     return (
       <Table
+        scroll={{ x: 800 }}
         expandedRowRender={record => (
           <div>
             <div>

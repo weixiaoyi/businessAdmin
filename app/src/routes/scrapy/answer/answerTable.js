@@ -112,9 +112,11 @@ class AnswerTable extends TableSearch {
       {
         title: "本地操作",
         dataIndex: "operation",
+        fixed: "right",
+        width: 150,
         key: "operation",
         render: (v, record) => (
-          <span>
+          <span style={{ paddingLeft: 10 }}>
             {!record.online && (
               <>
                 <Popconfirm
@@ -170,6 +172,8 @@ class AnswerTable extends TableSearch {
       {
         title: "同步服务器",
         dataIndex: "server",
+        fixed: "right",
+        width: 100,
         key: "server",
         render: (v, record) => (
           <span>

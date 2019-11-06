@@ -98,8 +98,9 @@ class UserTable extends TableSearch {
         title: "操作",
         dataIndex: "operation",
         key: "operation",
+        fixed: "right",
         render: (v, record) => (
-          <div>
+          <div style={{ paddingLeft: 10 }}>
             <Popconfirm
               title="确认考察?"
               onConfirm={() => {
@@ -173,6 +174,7 @@ class UserTable extends TableSearch {
           </Form.Item>
         </Form>
         <Table
+          scroll={{ x: 800 }}
           rowKey="_id"
           loading={loading.getUsers}
           onChange={({ current, pageSize }) => {

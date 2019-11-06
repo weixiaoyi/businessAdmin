@@ -157,6 +157,7 @@ class AnswerTable extends TableSearch {
         rowKey={"answerId"}
         columns={columns}
         dataSource={onlineAnswers}
+        scroll={{ x: 800 }}
       />
     );
   }

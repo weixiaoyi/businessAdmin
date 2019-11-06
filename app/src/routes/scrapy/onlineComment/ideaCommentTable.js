@@ -128,6 +128,7 @@ class IdeaCommentTable extends TableSearch {
     ];
     return (
       <Table
+        scroll={{ x: 800 }}
         expandedRowRender={record => (
           <div>
             <div>创建时间：{formatTime(record.createTime)}</div>

@@ -122,6 +122,7 @@ class AnswerCommentTable extends TableSearch {
     ];
     return (
       <Table
+        scroll={{ x: 1200 }}
         expandedRowRender={record => (
           <div>
             <div>创建时间：{formatTime(record.createTime)}</div>
