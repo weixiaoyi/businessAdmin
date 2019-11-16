@@ -173,7 +173,7 @@ class AnswerTable extends TableSearch {
         title: "同步服务器",
         dataIndex: "server",
         fixed: "right",
-        width: 100,
+        width: 170,
         key: "server",
         render: (v, record) => (
           <span>

@@ -69,13 +69,25 @@ exports.delete_answers = async ({ args, win }) => {
 exports.update_answers = async ({ args, win }) => {
   const {
     dbName,
-    data: { answerId, ...rest }
+    data: { answerId, content, ...rest }
   } = args;
+
   const scrapyDb = await getScrapyDb(dbName);
   const findOne = await scrapyDb
     .get("answers")
     .find({ answerId })
-    .assign({ ...rest, type: undefined })
+    .assign({
+      ...(content
+        ? {
+            content: content.replace(
+              /src="[^>]*\\(.*?)\.(jpg|png).*?"/g,
+              `src="http://$1.jpg"`
+            )
+          }
+        : {}),
+      ...rest,
+      type: undefined
+    })
     .write()
     .catch(() => null);
   win.webContents.send(
