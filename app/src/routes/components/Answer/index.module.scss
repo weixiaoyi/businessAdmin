@@ -46,8 +46,10 @@
   figcaption + figcaption {
     margin-top: 10px;
   }
-  figcaption,
   figure {
+    text-align: center;
+  }
+  figcaption {
     text-align: center;
     display: flex;
     justify-content: center;
