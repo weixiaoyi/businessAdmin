@@ -1834,6 +1834,11 @@ electron-publish@22.1.0:
     lazy-val "^1.0.4"
     mime "^2.4.4"
 
+electron-tabs@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.npmjs.org/electron-tabs/-/electron-tabs-0.11.0.tgz#ecd0e4754e3b0a24b64b0135147a72962ca8fa92"
+  integrity sha512-nFOhocyMMALBGCJNCQlmSslSTiUanb1mLC0itds2xn7fQa+h5jKSS/pkdHC8dm/dPPjELn/omdzGhMhWbLAl8Q==
+
 electron-to-chromium@^1.3.191:
   version "1.3.244"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.244.tgz#7ba5461fa320ab16540a31b1d0defb7ec29b16e4"

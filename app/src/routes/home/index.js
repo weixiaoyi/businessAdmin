@@ -19,6 +19,13 @@ class Home extends Component {
             >
               知乎爬虫
             </Card>
+            <Card
+              size="small"
+              title="咸鱼监控"
+              extra={<Link to={PATH.xianyu}>More</Link>}
+            >
+              知乎爬虫
+            </Card>
           </div>
         </div>
       </LayOut>
