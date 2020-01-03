@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Inject, parseString, parseImage } from "../../utils";
-import { Answer } from "../components";
+import Answer from "../scrapy/components/Answer";
 import * as styles from "./index.module.scss";
 
 @Inject(({ pdfStore: model }) => ({

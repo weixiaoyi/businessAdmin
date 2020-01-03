@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { Inject } from "../../../utils";
 import * as styles from "./preview.module.scss";
 import { Clipboard, Editor } from "../../../components";
-import { Answer } from "../../components";
+import Answer from "../components/Answer";
 
 @Form.create()
 @Inject(({ scrapyStore: model }) => ({

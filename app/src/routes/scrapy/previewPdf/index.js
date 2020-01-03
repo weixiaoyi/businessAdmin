@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button } from "antd";
 import classNames from "classnames";
 import { Inject, parseImage } from "../../../utils";
-import { Answer } from "../../components";
+import Answer from "../components/Answer";
 import * as styles from "./index.module.scss";
 
 @Inject(({ pdfStore: model, scrapyStore }) => ({
