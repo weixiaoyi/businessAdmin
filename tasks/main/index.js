@@ -1,4 +1,5 @@
 const scrapy = require("./scrapy");
+const xianyu = require("./xianyu");
 let win;
 
 exports.default = window => {
@@ -9,7 +10,10 @@ exports.messageTasks = async (args, app) => {
   const {
     data: { type }
   } = args;
-  if (type === "scrapy.ipc-get-appPath") {
+
+  if (type === "xianyu.test") {
+    await xianyu.test({ args, win, app });
+  } else if (type === "scrapy.ipc-get-appPath") {
     await scrapy.get_appPath({ args, win, app });
   } else if (type === "scrapy.ipc-openPath") {
     await scrapy.openPath({ args, win, app });
