@@ -1,5 +1,6 @@
-const { ensureDir, outputFile } = require("fs-extra");
+const { ensureDir, outputFile, pathExists } = require("fs-extra");
 module.exports = {
   ensureDir,
-  outputFile
+  outputFile,
+  pathExists
 };

@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import _ from "lodash";
+import { Inject } from "../../utils";
 
+@Inject(({ globalStore: model }) => ({
+  model
+}))
 class Webview extends Component {
   constructor(props) {
     super(props);
@@ -8,11 +12,46 @@ class Webview extends Component {
       id: _.uniqueId("webview_")
     };
   }
+
+  componentDidMount() {
+    const { id } = this.state;
+    const { domReady, executeJavaScript } = this.props;
+    const webview = document.querySelector(`#${id}`);
+
+    webview.addEventListener("dom-ready", () => {
+      this.webview = webview;
+      webview.openDevTools();
+      if (_.isFunction(domReady)) {
+        domReady();
+      }
+
+      if (executeJavaScript && _.isString(executeJavaScript)) {
+        webview.executeJavaScript(executeJavaScript);
+      }
+    });
+  }
+
+  componentWillMount() {
+    if (this.webview && this.webview.removeEventListener) {
+      this.webview.removeEventListener();
+    }
+  }
+
   render() {
     const { id } = this.state;
-    const { className, src, style } = this.props;
+    const {
+      className,
+      src,
+      style,
+      model: {
+        globalConfigs: { preloadJsPath }
+      }
+    } = this.props;
     return (
       <webview
+        preload={`file://${preloadJsPath}`}
+        nodeintegration={"true"}
+        webpreferences="allowRunningInsecureContent, javascript=yes"
         id={id}
         style={style}
         allowpopups={"true"}

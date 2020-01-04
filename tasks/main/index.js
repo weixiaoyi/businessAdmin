@@ -1,3 +1,4 @@
+const globalConfig = require("./global");
 const scrapy = require("./scrapy");
 const xianyu = require("./xianyu");
 let win;
@@ -11,9 +12,17 @@ exports.messageTasks = async (args, app) => {
     data: { type }
   } = args;
 
+  if (type === "global.config") {
+    await globalConfig.config({ args, win, app });
+  }
+
   if (type === "xianyu.test") {
     await xianyu.test({ args, win, app });
-  } else if (type === "scrapy.ipc-get-appPath") {
+  } else if (type === "xianyu.get-product") {
+    await xianyu.get_product({ args, win, app });
+  }
+
+  if (type === "scrapy.ipc-get-appPath") {
     await scrapy.get_appPath({ args, win, app });
   } else if (type === "scrapy.ipc-openPath") {
     await scrapy.openPath({ args, win, app });

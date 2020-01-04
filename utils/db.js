@@ -2,7 +2,7 @@ const path = require("path");
 const low = require("lowdb");
 const FileAsync = require("lowdb/adapters/FileAsync");
 const { PATH } = require("../constants");
-const { ensureDir } = require("./fsExtra");
+const { ensureDir, pathExists, outputFile } = require("./fsExtra");
 const { setDataPath } = require("./helper");
 
 exports.getScrapyDb = async dbName => {
@@ -15,4 +15,21 @@ exports.getScrapyDb = async dbName => {
     deserialize: string => JSON.parse(string)
   });
   return low(adapter);
+};
+
+exports.setPreloadFile = async () => {
+  const dir = path.join(setDataPath(), PATH.globalConfigs);
+  const filePath = path.join(dir, "preload.js");
+  const exists = await pathExists(filePath);
+  if (!exists) {
+    const str = `
+    const { ipcRenderer } = require("electron");
+    const path = require("path");
+    if (!window.ipc) {
+      window.ipc = ipcRenderer;
+      window.path = path;
+     }`;
+    await outputFile(filePath, str);
+  }
+  return filePath;
 };

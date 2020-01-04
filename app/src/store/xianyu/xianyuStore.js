@@ -13,7 +13,7 @@ export default class XianyuStore extends ModelExtend {
   listenIpc = () => {
     window.ipc &&
       window.ipc.on("xianyu.test", (e, args) => {
-        console.log(args, "---args");
+        console.log(args, "---闲鱼");
       });
   };
 

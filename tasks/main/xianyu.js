@@ -14,3 +14,7 @@ exports.test = async ({ args, win }) => {
     result: "OK"
   });
 };
+
+exports.get_product = async ({ args, win }) => {
+  console.log(args, "----args");
+};
