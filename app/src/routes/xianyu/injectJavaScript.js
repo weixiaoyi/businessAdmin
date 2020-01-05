@@ -52,7 +52,14 @@ const injectJavaScript = () => {
         fromWhere,
         wangwangAddress,
         emailPrice,
-        images: Array.prototype.map.call(images, item => item.src),
+        images: Array.from(
+          new Set(
+            Array.prototype.map.call(
+              images,
+              item => item.getAttribute("lazyload-img") || item.src
+            )
+          )
+        ),
         desc
       }
     }

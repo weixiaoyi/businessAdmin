@@ -16,5 +16,10 @@ exports.test = async ({ args, win }) => {
 };
 
 exports.get_product = async ({ args, win }) => {
-  console.log(args, "----args");
+  const {
+    data: { message }
+  } = args;
+  win.webContents.send("xianyu.get_product", {
+    data: message
+  });
 };
