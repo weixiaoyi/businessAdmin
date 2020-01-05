@@ -1,0 +1,17 @@
+.img {
+  position: relative;
+  .utils {
+    position: absolute;
+    top: 0;
+    i {
+      cursor: pointer;
+      background: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

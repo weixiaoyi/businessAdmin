@@ -40,3 +40,5 @@ export const parseImage = (content, dbName, appPath) =>
         )
       )
     : content;
+
+export const getFilename = src => src.replace(/.*\/(.*)\.jpg|png/g, "$1");
