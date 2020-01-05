@@ -94,7 +94,7 @@ class DragFix extends Component {
                   <Slider
                     {...sliderProps}
                     value={height}
-                    min={50}
+                    min={70}
                     onChange={v => this.onSliderChange("height", v)}
                   />
                 </div>
