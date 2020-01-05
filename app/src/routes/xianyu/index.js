@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Inject } from "../../utils";
 import * as styles from "./index.module.scss";
-import { Webview } from "../../components";
+import { Webview, DragFix } from "../../components";
 import injectJavaScript from "./injectJavaScript";
 
 @Inject(({ xianyuStore: model }) => ({
@@ -21,6 +21,7 @@ class XianYu extends Component {
     return (
       <div className={styles.xianyu}>
         咸鱼
+        <DragFix name="xianyu" />
         <div>
           <Webview
             executeJavaScript={injectJavaScript}
