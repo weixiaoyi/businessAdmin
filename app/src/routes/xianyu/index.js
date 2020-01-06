@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Collapse } from "antd";
+import { Collapse, Button } from "antd";
 import { Inject, getFilename } from "../../utils";
 import * as styles from "./index.module.scss";
 import { Webview, DragFix, Image } from "../../components";
@@ -13,13 +13,17 @@ const { Panel } = Collapse;
 }))
 class XianYu extends Component {
   componentDidMount() {
+    this.getImageDb();
+  }
+
+  getImageDb = () => {
     const {
       model: { dispatch }
     } = this.props;
     dispatch({
-      type: "ipc-xianyu-test"
+      type: "ipc-get-imageDb"
     });
-  }
+  };
 
   downloadImage = (dataUrl, filename, productId) => {
     const {
@@ -35,9 +39,21 @@ class XianYu extends Component {
     });
   };
 
+  openProductIdPath = productId => {
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-open-productIdPath",
+      payload: {
+        productId
+      }
+    });
+  };
+
   render() {
     const {
-      model: { products }
+      model: { products, images }
     } = this.props;
 
     return (
@@ -47,68 +63,91 @@ class XianYu extends Component {
           <DragFix name="xianyu" title="商品监控">
             {JSON.stringify(products)}
             <Collapse>
-              {products.map(item => (
-                <Panel
-                  header={
-                    <div>
+              {products.map(item => {
+                const id = item.url.replace(/.*id=(.*)$/g, "$1");
+                const productImages = images.filter(
+                  one => one.productId === id
+                );
+                return (
+                  <Panel
+                    header={
                       <div>
-                        <strong>{item.title}</strong>
+                        <div>
+                          <strong>{item.title}</strong>
+                          <Button
+                            style={{ marginLeft: 20 }}
+                            onClick={e => {
+                              this.openProductIdPath(id);
+                              e.stopPropagation();
+                            }}
+                          >
+                            本地商品{id}图片
+                          </Button>
+                        </div>
+                        <ul className={styles.short}>
+                          {[
+                            { name: "售价", value: "sellPrice" },
+                            { name: "原价", value: "prevPrice" },
+                            { name: "编辑时间", value: "editTime" },
+                            { name: "浏览", value: "hot" },
+                            { name: "成色", value: "quality" }
+                          ].map(one => (
+                            <li key={one.name}>
+                              <span>{one.name}:</span>
+                              {item[one.value]}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <ul className={styles.short}>
-                        {[
-                          { name: "售价", value: "sellPrice" },
-                          { name: "原价", value: "prevPrice" },
-                          { name: "编辑时间", value: "editTime" },
-                          { name: "浏览", value: "hot" },
-                          { name: "成色", value: "quality" }
-                        ].map(one => (
-                          <li key={one.name}>
-                            <span>{one.name}:</span>
-                            {item[one.value]}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  }
-                  key={item.url}
-                >
-                  <ul className={styles.short}>
-                    {[
-                      { name: "旺旺", value: "wangwang" },
-                      { name: "vip", value: "vip" },
-                      { name: "实名认证", value: "userVertify" }
-                    ].map(one => (
-                      <li key={one.name}>
-                        <span>{one.name}:</span>
-                        {item[one.value]}
-                      </li>
-                    ))}
-                  </ul>
-                  {item.desc}
-                  <Collapse defaultActiveKey="1" style={{ marginTop: 10 }}>
-                    <Panel header="闲鱼图片" key="1">
-                      <ul className={styles.imagesList}>
-                        {item.images.map(one => (
-                          <li key={one}>
-                            <Image
-                              download={(dataUrl, filename) => {
-                                const id = item.url.replace(
-                                  /.*id=(.*)$/g,
-                                  "$1"
-                                );
-                                this.downloadImage(dataUrl, filename, id);
-                              }}
-                              src={one}
-                              filename={getFilename(one)}
-                              className={styles.linkimg}
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    </Panel>
-                  </Collapse>
-                </Panel>
-              ))}
+                    }
+                    key={item.url}
+                  >
+                    <ul className={styles.short}>
+                      {[
+                        { name: "旺旺", value: "wangwang" },
+                        { name: "vip", value: "vip" },
+                        { name: "实名认证", value: "userVertify" }
+                      ].map(one => (
+                        <li key={one.name}>
+                          <span>{one.name}:</span>
+                          {item[one.value]}
+                        </li>
+                      ))}
+                    </ul>
+                    {item.desc}
+                    <Collapse defaultActiveKey="1" style={{ marginTop: 10 }}>
+                      {productImages.length > 0 && (
+                        <Panel header="本地图片" key="1">
+                          <ul className={styles.imagesList}>
+                            {productImages.map(one => (
+                              <li key={one.filename}>
+                                <Image src={one} />
+                              </li>
+                            ))}
+                          </ul>
+                        </Panel>
+                      )}
+
+                      <Panel header="闲鱼图片" key="2">
+                        <ul className={styles.imagesList}>
+                          {item.images.map(one => (
+                            <li key={one}>
+                              <Image
+                                download={(dataUrl, filename) =>
+                                  this.downloadImage(dataUrl, filename, id)
+                                }
+                                src={one}
+                                filename={getFilename(one)}
+                                className={styles.linkimg}
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      </Panel>
+                    </Collapse>
+                  </Panel>
+                );
+              })}
             </Collapse>
           </DragFix>
           <div>
@@ -116,7 +155,7 @@ class XianYu extends Component {
               executeJavaScript={injectJavaScript}
               style={{ height: 1000 }}
               src={
-                "https://2.taobao.com/item.htm?spm=2007.1000261.0.0.6f1834f16hrC3I&id=604685713430"
+                "https://2.taobao.com/item.htm?spm=2007.1000261.0.0.7e7b34f1C9apOj&id=606530665113"
               }
             />
           </div>

@@ -5,16 +5,43 @@ const { PATH } = require("../constants");
 const { ensureDir, pathExists, outputFile } = require("./fsExtra");
 const { setDataPath } = require("./helper");
 
-exports.getScrapyDb = async dbName => {
+const getDb = async ({ dir, dbName, defaultValue }) => {
   if (!dbName) return console.log("dbName必填参数");
-  const dir = path.join(setDataPath(), PATH.scrapyDb);
   await ensureDir(dir);
   const adapter = new FileAsync(path.join(dir, dbName), {
-    defaultValue: { answers: [] },
+    defaultValue,
     serialize: array => JSON.stringify(array),
     deserialize: string => JSON.parse(string)
   });
   return low(adapter);
+};
+
+// exports.getScrapyDb = async dbName => {
+//   if (!dbName) return console.log("dbName必填参数");
+//   const dir = path.join(setDataPath(), PATH.scrapyDb);
+//   await ensureDir(dir);
+//   const adapter = new FileAsync(path.join(dir, dbName), {
+//     defaultValue: { answers: [] },
+//     serialize: array => JSON.stringify(array),
+//     deserialize: string => JSON.parse(string)
+//   });
+//   return low(adapter);
+// };
+
+exports.getScrapyDb = async dbName => {
+  return getDb({
+    dir: path.join(setDataPath(), PATH.scrapyDb),
+    dbName,
+    defaultValue: { answers: [] }
+  });
+};
+
+exports.getXianyuImageDb = async dbName => {
+  return getDb({
+    dir: path.join(setDataPath(), PATH.xianyuImageDb),
+    dbName,
+    defaultValue: { images: [] }
+  });
 };
 
 exports.setPreloadFile = async () => {

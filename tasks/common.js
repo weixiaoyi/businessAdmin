@@ -18,3 +18,7 @@ exports.download_image = async ({ dataUrl, filename, dir, success }) => {
   ).catch(() => null);
   success && success(result);
 };
+
+exports.openPath = async ({ dir }) => {
+  shell.openItem(dir);
+};

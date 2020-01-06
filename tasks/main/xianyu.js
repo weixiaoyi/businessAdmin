@@ -1,13 +1,15 @@
 const path = require("path");
 const { shell } = require("electron");
 const {
-  getScrapyDb,
+  getXianyuImageDb,
   ensureDir,
   outputFile,
   setDataPath
 } = require("../../utils");
 const { PATH } = require("../../constants");
-const { download_image } = require("../common");
+const { download_image, openPath } = require("../common");
+
+const xianyuImageDb = "imagesDb";
 
 exports.test = async ({ args, win }) => {
   win.webContents.send("xianyu.test", {
@@ -24,6 +26,14 @@ exports.get_product = async ({ args, win }) => {
   });
 };
 
+exports.get_imageDb = async ({ args, win }) => {
+  const xianyuDb = await getXianyuImageDb(xianyuImageDb);
+  const result = xianyuDb.get("images").value();
+  win.webContents.send("xianyu.get_imageDb", {
+    data: result
+  });
+};
+
 // 下载图片
 exports.download_image = async ({ args, win }) => {
   const {
@@ -34,6 +44,33 @@ exports.download_image = async ({ args, win }) => {
     dataUrl,
     dir,
     filename,
-    success: result => win.webContents.send("xianyu.download-image", result)
+    success: async result => {
+      const xianyuDb = await getXianyuImageDb(xianyuImageDb);
+      const findOne = xianyuDb
+        .get("images")
+        .find({ productId, filename })
+        .value();
+      if (!findOne) {
+        const result = await xianyuDb
+          .get("images")
+          .unshift({
+            productId,
+            filename,
+            createTime: Date.now()
+          })
+          .write()
+          .catch(() => null);
+        win.webContents.send("xianyu.update-imageDb", { data: result });
+      }
+      win.webContents.send("xianyu.download-image", result);
+    }
   });
+};
+
+exports.open_productIdPath = async ({ args, win }) => {
+  const {
+    data: { productId }
+  } = args;
+  const dir = path.join(setDataPath(), PATH.xianyuImageDir, productId);
+  openPath({ dir });
 };
