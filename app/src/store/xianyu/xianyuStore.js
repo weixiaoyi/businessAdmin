@@ -11,8 +11,10 @@ export default class XianyuStore extends ModelExtend {
   }
   @observable products = [];
   @observable images = [];
+  @observable imagePath = "";
 
   listenIpc = () => {
+    const sortImage = data => data.sort((a, b) => a.index - b.index);
     window.ipc &&
       window.ipc.on("xianyu.test", (e, args) => {
         console.log(args, "---闲鱼");
@@ -21,7 +23,13 @@ export default class XianyuStore extends ModelExtend {
     window.ipc &&
       window.ipc.on("xianyu.get_imageDb", (e, args) => {
         const { data } = args;
-        this.commit("images", data);
+        this.commit("images", sortImage(data));
+      });
+
+    window.ipc &&
+      window.ipc.on("xianyu.get_imagePath", (e, args) => {
+        const { dir } = args;
+        this.commit("imagePath", dir);
       });
 
     window.ipc &&
@@ -44,7 +52,7 @@ export default class XianyuStore extends ModelExtend {
     window.ipc &&
       window.ipc.on("xianyu.update-imageDb", (e, args) => {
         const { data } = args;
-        this.commit("images", data);
+        this.commit("images", sortImage(data));
         notification.success({
           message: "图片数据更新",
           description: `图片数据更新`
@@ -79,6 +87,16 @@ export default class XianyuStore extends ModelExtend {
       });
   };
 
+  "ipc-get-imagePath" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "xianyu.get-imagePath"
+        }
+      });
+  };
+
   "ipc-get-imageDb" = ({}) => {
     window.ipc &&
       window.ipc.send("ipc", {
@@ -89,7 +107,7 @@ export default class XianyuStore extends ModelExtend {
       });
   };
 
-  "ipc-download-image" = ({ dataUrl, filename, productId }) => {
+  "ipc-download-image" = ({ dataUrl, filename, productId, index }) => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
@@ -97,7 +115,8 @@ export default class XianyuStore extends ModelExtend {
           type: "xianyu.download-image",
           dataUrl,
           filename,
-          productId
+          productId,
+          index
         }
       });
   };

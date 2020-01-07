@@ -37,7 +37,7 @@ exports.get_imageDb = async ({ args, win }) => {
 // 下载图片
 exports.download_image = async ({ args, win }) => {
   const {
-    data: { dataUrl, filename, productId }
+    data: { dataUrl, filename, productId, index }
   } = args;
   const dir = path.join(setDataPath(), PATH.xianyuImageDir, productId);
   download_image({
@@ -56,6 +56,7 @@ exports.download_image = async ({ args, win }) => {
           .unshift({
             productId,
             filename,
+            index,
             createTime: Date.now()
           })
           .write()
@@ -73,4 +74,9 @@ exports.open_productIdPath = async ({ args, win }) => {
   } = args;
   const dir = path.join(setDataPath(), PATH.xianyuImageDir, productId);
   openPath({ dir });
+};
+
+exports.get_imagePath = async ({ args, win }) => {
+  const dir = path.join(setDataPath(), PATH.xianyuImageDir);
+  win.webContents.send("xianyu.get_imagePath", { dir });
 };

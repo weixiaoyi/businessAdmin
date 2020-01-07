@@ -14,7 +14,17 @@ const { Panel } = Collapse;
 class XianYu extends Component {
   componentDidMount() {
     this.getImageDb();
+    this.getImagePath();
   }
+
+  getImagePath = () => {
+    const {
+      model: { dispatch }
+    } = this.props;
+    dispatch({
+      type: "ipc-get-imagePath"
+    });
+  };
 
   getImageDb = () => {
     const {
@@ -25,7 +35,7 @@ class XianYu extends Component {
     });
   };
 
-  downloadImage = (dataUrl, filename, productId) => {
+  downloadImage = (dataUrl, filename, productId, index) => {
     const {
       model: { dispatch }
     } = this.props;
@@ -34,7 +44,8 @@ class XianYu extends Component {
       payload: {
         dataUrl,
         filename,
-        productId
+        productId,
+        index
       }
     });
   };
@@ -53,7 +64,7 @@ class XianYu extends Component {
 
   render() {
     const {
-      model: { products, images }
+      model: { products, images, imagePath }
     } = this.props;
 
     return (
@@ -121,7 +132,17 @@ class XianYu extends Component {
                           <ul className={styles.imagesList}>
                             {productImages.map(one => (
                               <li key={one.filename}>
-                                <Image src={one} />
+                                <Image
+                                  className={styles.linkimg}
+                                  src={
+                                    window.path.join(
+                                      `file://`,
+                                      imagePath,
+                                      one.productId,
+                                      one.filename
+                                    ) + ".jpg"
+                                  }
+                                />
                               </li>
                             ))}
                           </ul>
@@ -130,11 +151,16 @@ class XianYu extends Component {
 
                       <Panel header="闲鱼图片" key="2">
                         <ul className={styles.imagesList}>
-                          {item.images.map(one => (
+                          {item.images.map((one, index) => (
                             <li key={one}>
                               <Image
                                 download={(dataUrl, filename) =>
-                                  this.downloadImage(dataUrl, filename, id)
+                                  this.downloadImage(
+                                    dataUrl,
+                                    `${index}_${filename}`,
+                                    id,
+                                    index
+                                  )
                                 }
                                 src={one}
                                 filename={getFilename(one)}

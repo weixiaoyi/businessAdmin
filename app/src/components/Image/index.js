@@ -21,10 +21,16 @@ class Image extends Component {
   };
 
   render() {
-    const { src, filename, className, download } = this.props;
+    const { src, filename, className, download, width, height } = this.props;
     return (
       <div className={styles.img}>
-        <img src={src} className={className} alt={filename} />
+        <img
+          src={src}
+          className={className}
+          alt={filename}
+          width={width}
+          height={height}
+        />
         <div className={styles.utils}>
           {download && (
             <Icon

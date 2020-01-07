@@ -26,6 +26,8 @@ exports.messageTasks = async (args, app) => {
     await xianyu.open_productIdPath({ args, win, app });
   } else if (type === "xianyu.get-imageDb") {
     await xianyu.get_imageDb({ args, win, app });
+  } else if (type === "xianyu.get-imagePath") {
+    await xianyu.get_imagePath({ args, win, app });
   }
 
   if (type === "scrapy.ipc-get-appPath") {
