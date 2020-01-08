@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Icon } from "antd";
+import Viewer from "viewerjs";
 import _ from "lodash";
 import * as styles from "./index.module.scss";
 
@@ -9,6 +10,13 @@ class Image extends Component {
     this.state = {
       id: _.uniqueId("img_")
     };
+  }
+
+  componentDidMount() {
+    const { viewer = true } = this.props;
+    if (viewer) {
+      new Viewer(document.getElementById(this.state.id));
+    }
   }
 
   downloadImage = async (url, filename) => {
@@ -21,10 +29,12 @@ class Image extends Component {
   };
 
   render() {
+    const { id } = this.state;
     const { src, filename, className, download, width, height } = this.props;
     return (
       <div className={styles.img}>
         <img
+          id={id}
           src={src}
           className={className}
           alt={filename}

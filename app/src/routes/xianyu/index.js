@@ -72,7 +72,7 @@ class XianYu extends Component {
         <div className={styles.xianyu}>
           咸鱼
           <DragFix name="xianyu" title="商品监控">
-            {JSON.stringify(products)}
+            {/*{JSON.stringify(products)}*/}
             <Collapse>
               {products.map(item => {
                 const id = item.url.replace(/.*id=(.*)$/g, "$1");
@@ -101,7 +101,9 @@ class XianYu extends Component {
                             { name: "原价", value: "prevPrice" },
                             { name: "编辑时间", value: "editTime" },
                             { name: "浏览", value: "hot" },
-                            { name: "成色", value: "quality" }
+                            { name: "成色", value: "quality" },
+                            { name: "vip", value: "vip" },
+                            { name: "实名认证", value: "userVertify" }
                           ].map(one => (
                             <li key={one.name}>
                               <span>{one.name}:</span>
@@ -109,16 +111,31 @@ class XianYu extends Component {
                             </li>
                           ))}
                         </ul>
+                        <div className={styles.versionManage}>
+                          <span style={{ marginRight: 10 }}>版本管理</span>
+                          <div>
+                            <span>(自动):</span>
+                            <ul>
+                              <li>1</li>
+                              <li>2</li>
+                              <li>3</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <span>(手动):</span>
+                            <ul>
+                              <li>1</li>
+                              <li>2</li>
+                              <li>3</li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     }
                     key={item.url}
                   >
                     <ul className={styles.short}>
-                      {[
-                        { name: "旺旺", value: "wangwang" },
-                        { name: "vip", value: "vip" },
-                        { name: "实名认证", value: "userVertify" }
-                      ].map(one => (
+                      {[{ name: "旺旺", value: "wangwang" }].map(one => (
                         <li key={one.name}>
                           <span>{one.name}:</span>
                           {item[one.value]}

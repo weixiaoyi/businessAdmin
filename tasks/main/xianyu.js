@@ -1,7 +1,7 @@
 const path = require("path");
 const { shell } = require("electron");
 const {
-  getXianyuImageDb,
+  getXianyuDb,
   ensureDir,
   outputFile,
   setDataPath
@@ -24,10 +24,12 @@ exports.get_product = async ({ args, win }) => {
   win.webContents.send("xianyu.get_product", {
     data: message
   });
+  const productId = message.url.replace(/.*id=(.*)$/g, "$1");
+  const dir = path.join(setDataPath(), PATH.xianyuImageDir, productId);
 };
 
 exports.get_imageDb = async ({ args, win }) => {
-  const xianyuDb = await getXianyuImageDb(xianyuImageDb);
+  const xianyuDb = await getXianyuDb(xianyuImageDb);
   const result = xianyuDb.get("images").value();
   win.webContents.send("xianyu.get_imageDb", {
     data: result
@@ -45,7 +47,7 @@ exports.download_image = async ({ args, win }) => {
     dir,
     filename,
     success: async result => {
-      const xianyuDb = await getXianyuImageDb(xianyuImageDb);
+      const xianyuDb = await getXianyuDb(xianyuImageDb);
       const findOne = xianyuDb
         .get("images")
         .find({ productId, filename })

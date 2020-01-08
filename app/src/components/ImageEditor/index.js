@@ -9,8 +9,7 @@ import * as styles from "./index.module.scss";
 
 class ImageEditor extends Component {
   state = {
-    url:
-      "http://47.104.71.141/pic.yijianxiazai.com.thumb/高清风景壁纸358P/118203.jpg",
+    url: "https://1000fuye.oss-cn-beijing.aliyuncs.com/weixiaoyi.png",
     dataUrl: ""
   };
 

@@ -19,4 +19,22 @@
   .linkimg {
     max-height: 100px;
   }
+  .versionManage {
+    display: flex;
+    > div + div {
+      margin-left: 10px;
+    }
+    > div {
+      display: flex;
+      > span {
+        margin-right: 3px;
+      }
+      ul {
+        display: flex;
+        li + li {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
 }

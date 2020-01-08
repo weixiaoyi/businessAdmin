@@ -15,7 +15,7 @@ exports.PATH = {
     process.env.NODE_ENV === "development"
       ? "/fuyeAssets/dev/xianyu/image"
       : "/fuyeAssets/prod/xianyu/image",
-  xianyuImageDb:
+  xianyuDb:
     process.env.NODE_ENV === "development"
       ? "/fuyeAssets/dev/xianyu/db"
       : "/fuyeAssets/prod/xianyu/db"
