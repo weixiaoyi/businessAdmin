@@ -36,11 +36,19 @@ exports.getScrapyDb = async dbName => {
   });
 };
 
-exports.getXianyuDb = async dbName => {
+exports.getXianyuImageDb = async dbName => {
   return getDb({
     dir: path.join(setDataPath(), PATH.xianyuDb),
     dbName,
     defaultValue: { images: [] }
+  });
+};
+
+exports.getXianyuVersionDb = async dbName => {
+  return getDb({
+    dir: path.join(setDataPath(), PATH.xianyuDb),
+    dbName,
+    defaultValue: { versions: {} }
   });
 };
 

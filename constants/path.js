@@ -11,6 +11,7 @@ exports.PATH = {
     process.env.NODE_ENV === "development"
       ? "/fuyeAssets/dev/globalConfigs"
       : "/fuyeAssets/prod/globalConfigs",
+
   xianyuImageDir:
     process.env.NODE_ENV === "development"
       ? "/fuyeAssets/dev/xianyu/image"

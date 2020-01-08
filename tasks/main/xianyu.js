@@ -1,7 +1,8 @@
 const path = require("path");
 const { shell } = require("electron");
 const {
-  getXianyuDb,
+  getXianyuImageDb,
+  getXianyuVersionDb,
   ensureDir,
   outputFile,
   setDataPath
@@ -10,6 +11,7 @@ const { PATH } = require("../../constants");
 const { download_image, openPath } = require("../common");
 
 const xianyuImageDb = "imagesDb";
+const xianyuVersionDb = "versionDb";
 
 exports.test = async ({ args, win }) => {
   win.webContents.send("xianyu.test", {
@@ -25,12 +27,14 @@ exports.get_product = async ({ args, win }) => {
     data: message
   });
   const productId = message.url.replace(/.*id=(.*)$/g, "$1");
-  const dir = path.join(setDataPath(), PATH.xianyuImageDir, productId);
+  const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
+  const values = xianyuDb.get("versions").value();
+  // console.log(await getXianyuVersionDb(), "-----");
 };
 
 exports.get_imageDb = async ({ args, win }) => {
-  const xianyuDb = await getXianyuDb(xianyuImageDb);
-  const result = xianyuDb.get("images").value();
+  const xianyuDb = await getXianyuImageDb(xianyuImageDb);
+  const result = await xianyuDb.get("images").value();
   win.webContents.send("xianyu.get_imageDb", {
     data: result
   });
@@ -47,7 +51,7 @@ exports.download_image = async ({ args, win }) => {
     dir,
     filename,
     success: async result => {
-      const xianyuDb = await getXianyuDb(xianyuImageDb);
+      const xianyuDb = await getXianyuImageDb(xianyuImageDb);
       const findOne = xianyuDb
         .get("images")
         .find({ productId, filename })
