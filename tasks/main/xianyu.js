@@ -19,6 +19,42 @@ exports.test = async ({ args, win }) => {
   });
 };
 
+exports.getVersionDb = async ({ args, win }) => {
+  const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
+  const results = xianyuDb.get("versions").value();
+  win.webContents.send("xianyu.get_versionDb", {
+    data: results
+  });
+};
+
+exports.snapVersion = async ({ args, win }) => {
+  const {
+    data: { product }
+  } = args;
+  const productId = product.url.replace(/.*id=(.*)$/g, "$1");
+  const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
+  const snaps = xianyuDb.get("versions").value().snaps || [];
+  const results = await xianyuDb
+    .get("versions")
+    .set(
+      "snaps",
+      [
+        {
+          ...product,
+          productId,
+          createTime: Date.now()
+        }
+      ]
+        .concat(snaps)
+        .slice(0, 3)
+    )
+    .write()
+    .catch(() => null);
+  win.webContents.send("xianyu.update_version", {
+    data: results
+  });
+};
+
 exports.get_product = async ({ args, win }) => {
   const {
     data: { message }
@@ -28,8 +64,39 @@ exports.get_product = async ({ args, win }) => {
   });
   const productId = message.url.replace(/.*id=(.*)$/g, "$1");
   const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
-  const values = xianyuDb.get("versions").value();
-  // console.log(await getXianyuVersionDb(), "-----");
+  const autoSnaps = xianyuDb.get("versions").value().autoSnaps || [];
+  const findOne = autoSnaps.find(item => item.productId === productId);
+  if (
+    !findOne ||
+    (findOne &&
+      (findOne.title !== message.title ||
+        findOne.sellPrice !== message.sellPrice ||
+        findOne.prevPrice !== message.prevPrice ||
+        findOne.quality !== message.quality ||
+        findOne.fromWhere !== message.fromWhere ||
+        findOne.emailPrice !== message.emailPrice ||
+        findOne.desc !== message.desc))
+  ) {
+    const results = await xianyuDb
+      .get("versions")
+      .set(
+        "autoSnaps",
+        [
+          {
+            ...message,
+            productId,
+            createTime: Date.now()
+          }
+        ]
+          .concat(autoSnaps)
+          .slice(0, 3)
+      )
+      .write()
+      .catch(() => null);
+    win.webContents.send("xianyu.update_version", {
+      data: results
+    });
+  }
 };
 
 exports.get_imageDb = async ({ args, win }) => {

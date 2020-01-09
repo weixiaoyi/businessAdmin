@@ -11,6 +11,7 @@ export default class XianyuStore extends ModelExtend {
   }
   @observable products = [];
   @observable images = [];
+  @observable versions = {};
   @observable imagePath = "";
 
   listenIpc = () => {
@@ -18,6 +19,22 @@ export default class XianyuStore extends ModelExtend {
     window.ipc &&
       window.ipc.on("xianyu.test", (e, args) => {
         console.log(args, "---闲鱼");
+      });
+
+    window.ipc &&
+      window.ipc.on("xianyu.update_version", (e, args) => {
+        const { data } = args;
+        this.commit("versions", data);
+        notification.success({
+          message: "版本数据更新了",
+          description: `版本数据更新了`
+        });
+      });
+
+    window.ipc &&
+      window.ipc.on("xianyu.get_versionDb", (e, args) => {
+        const { data } = args;
+        this.commit("versions", data);
       });
 
     window.ipc &&
@@ -87,6 +104,16 @@ export default class XianyuStore extends ModelExtend {
       });
   };
 
+  "ipc-get-versionDb" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "xianyu.get-versionDb"
+        }
+      });
+  };
+
   "ipc-get-imagePath" = () => {
     window.ipc &&
       window.ipc.send("ipc", {
@@ -128,6 +155,17 @@ export default class XianyuStore extends ModelExtend {
         data: {
           type: "xianyu.open-productIdPath",
           productId
+        }
+      });
+  };
+
+  "ipc-snap-version" = ({ product }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "xianyu.snap-version",
+          product
         }
       });
   };

@@ -10,6 +10,7 @@ export const Inject = func => {
 };
 
 export const formatTime = time => dayjs(time).format("YYYY-MM-DD HH:mm:ss");
+export const formatMonthTime = time => dayjs(time).format("MM/DD HH:mm:ss");
 
 export const localSave = {
   get: (key, defaultValue) => {
