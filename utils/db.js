@@ -52,6 +52,14 @@ exports.getXianyuVersionDb = async dbName => {
   });
 };
 
+exports.getXianyuProductDb = async dbName => {
+  return getDb({
+    dir: path.join(setDataPath(), PATH.xianyuDb),
+    dbName,
+    defaultValue: { products: [] }
+  });
+};
+
 exports.setPreloadFile = async () => {
   const dir = path.join(setDataPath(), PATH.globalConfigs);
   const filePath = path.join(dir, "preload.js");

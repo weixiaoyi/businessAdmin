@@ -4,7 +4,8 @@ const {
   getScrapyDb,
   setPreloadFile,
   getXianyuImageDb,
-  getXianyuVersionDb
+  getXianyuVersionDb,
+  getXianyuProductDb
 } = require("./db");
 const { ensureDir, outputFile } = require("./fsExtra");
 
@@ -15,6 +16,7 @@ module.exports = {
   getScrapyDb,
   getXianyuImageDb,
   getXianyuVersionDb,
+  getXianyuProductDb,
   setPreloadFile,
   ensureDir,
   outputFile

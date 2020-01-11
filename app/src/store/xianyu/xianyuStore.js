@@ -13,12 +13,29 @@ export default class XianyuStore extends ModelExtend {
   @observable images = [];
   @observable versions = {};
   @observable imagePath = "";
+  @observable productUrls = [];
 
   listenIpc = () => {
     const sortImage = data => data.sort((a, b) => a.index - b.index);
     window.ipc &&
       window.ipc.on("xianyu.test", (e, args) => {
         console.log(args, "---闲鱼");
+      });
+
+    window.ipc &&
+      window.ipc.on("xianyu.get_productUrls", (e, args) => {
+        const { data } = args;
+        this.commit("productUrls", data);
+      });
+
+    window.ipc &&
+      window.ipc.on("xianyu.add_productsUrl", (e, args) => {
+        const { data } = args;
+        this.commit("productUrls", data);
+        notification.success({
+          message: "商品Url数据更新了",
+          description: `商品Url数据更新了`
+        });
       });
 
     window.ipc &&
@@ -100,6 +117,33 @@ export default class XianyuStore extends ModelExtend {
         from: "app.wins.main.render",
         data: {
           type: "xianyu.test"
+        }
+      });
+  };
+
+  "ipc-get-productUrls" = () => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "xianyu.get-productUrls"
+        }
+      });
+  };
+
+  "ipc-add-productUrl" = ({ url }) => {
+    if (this.productUrls.find(item => item.url === url)) {
+      return notification.success({
+        message: "url已经存在",
+        description: `url已经存在`
+      });
+    }
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "xianyu.add-productUrl",
+          url
         }
       });
   };

@@ -32,6 +32,10 @@ exports.messageTasks = async (args, app) => {
     await xianyu.snapVersion({ args, win, app });
   } else if (type === "xianyu.get-versionDb") {
     await xianyu.getVersionDb({ args, win, app });
+  } else if (type === "xianyu.add-productUrl") {
+    await xianyu.addProductUrl({ args, win, app });
+  } else if (type === "xianyu.get-productUrls") {
+    await xianyu.getProductUrls({ args, win, app });
   }
 
   if (type === "scrapy.ipc-get-appPath") {

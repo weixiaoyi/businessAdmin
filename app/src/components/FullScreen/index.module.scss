@@ -1,0 +1,8 @@
+.fullScreen {
+  :global {
+    .ant-card,
+    .ant-card-body {
+      height: 100%;
+    }
+  }
+}

@@ -3,6 +3,7 @@ const { shell } = require("electron");
 const {
   getXianyuImageDb,
   getXianyuVersionDb,
+  getXianyuProductDb,
   ensureDir,
   outputFile,
   setDataPath
@@ -12,10 +13,41 @@ const { download_image, openPath } = require("../common");
 
 const xianyuImageDb = "imagesDb";
 const xianyuVersionDb = "versionDb";
+const xianyuProductUrlDb = "productDb";
 
 exports.test = async ({ args, win }) => {
   win.webContents.send("xianyu.test", {
     result: "OK"
+  });
+};
+
+exports.getProductUrls = async ({ args, win }) => {
+  const db = await getXianyuProductDb(xianyuProductUrlDb);
+  const results = await db.get("products").value();
+  win.webContents.send("xianyu.get_productUrls", {
+    data: results
+  });
+};
+
+exports.addProductUrl = async ({ args, win }) => {
+  const {
+    data: { url }
+  } = args;
+  const productId = url.replace(/.*id=(.*)$/g, "$1");
+  const db = await getXianyuProductDb(xianyuProductUrlDb);
+  const values = db.get("products").value();
+  if (values.find(item => item.productId === productId) || !productId) return;
+  const results = await db
+    .get("products")
+    .unshift({
+      productId,
+      url,
+      createTime: Date.now()
+    })
+    .write()
+    .catch(() => null);
+  win.webContents.send("xianyu.add_productsUrl", {
+    data: results
   });
 };
 

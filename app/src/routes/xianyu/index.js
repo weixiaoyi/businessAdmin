@@ -1,8 +1,22 @@
 import React, { Component } from "react";
-import { Collapse, Button, Icon, Tooltip } from "antd";
-import { Inject, getFilename, formatMonthTime } from "../../utils";
+import { Collapse, Button, Icon, Tooltip, Table } from "antd";
+import {
+  Inject,
+  getFilename,
+  formatMonthTime,
+  formatTime,
+  toJS
+} from "../../utils";
 import * as styles from "./index.module.scss";
-import { Webview, DragFix, Image, Clipboard } from "../../components";
+import {
+  Webview,
+  DragFix,
+  Image,
+  Clipboard,
+  FullScreen,
+  Drawer,
+  Form
+} from "../../components";
 import injectJavaScript from "./injectJavaScript";
 import { LayOut } from "../components";
 
@@ -12,10 +26,15 @@ const { Panel } = Collapse;
   model
 }))
 class XianYu extends Component {
+  constructor(props) {
+    super(props);
+    this.dispatch = props.model.dispatch;
+  }
   componentDidMount() {
     this.getImageDb();
     this.getImagePath();
     this.getVersionDb();
+    this.getProductUrl();
   }
 
   getVersionDb = () => {
@@ -84,6 +103,30 @@ class XianYu extends Component {
     });
   };
 
+  addProductModal = () => {
+    const {
+      model: { openModal }
+    } = this.props;
+    openModal({
+      name: "drawer"
+    });
+  };
+
+  addProductUrl = values => {
+    this.dispatch({
+      type: "ipc-add-productUrl",
+      payload: {
+        ...values
+      }
+    });
+  };
+
+  getProductUrl = () => {
+    this.dispatch({
+      type: "ipc-get-productUrls"
+    });
+  };
+
   renderInfo = (item, isVersion = false) => {
     let infos = [
       { name: "售价", value: "sellPrice" },
@@ -119,15 +162,21 @@ class XianYu extends Component {
 
   render() {
     const {
-      model: { products, images, imagePath, versions }
+      model: { products, images, imagePath, versions, productUrls }
     } = this.props;
+
+    console.log(toJS(versions), "------------------versions");
 
     return (
       <LayOut>
         <div className={styles.xianyu}>
-          咸鱼
+          <div className={styles.title}>
+            <div>咸鱼</div>
+            <div>
+              <Button onClick={this.addProductModal}>商品列表</Button>
+            </div>
+          </div>
           <DragFix name="xianyu" title="商品监控">
-            {/*{JSON.stringify(products)}*/}
             <Collapse>
               {products.map(item => {
                 const id = item.url.replace(/.*id=(.*)$/g, "$1");
@@ -164,11 +213,15 @@ class XianYu extends Component {
                           {[
                             {
                               name: "自动",
-                              value: versions.autoSnaps
+                              value: versions.autoSnaps.filter(
+                                one => one.productId === id
+                              )
                             },
                             {
                               name: "手动",
-                              value: versions.snaps,
+                              value: versions.snaps.filter(
+                                one => one.productId === id
+                              ),
                               icon: (
                                 <Icon
                                   type="camera"
@@ -264,16 +317,74 @@ class XianYu extends Component {
               })}
             </Collapse>
           </DragFix>
-          <div>
-            <Webview
-              executeJavaScript={injectJavaScript}
-              style={{ height: 1000 }}
-              src={
-                "https://2.taobao.com/item.htm?spm=2007.1000261.0.0.7e7b34f1C9apOj&id=606530665113"
-              }
-            />
+          <div className={styles.productList}>
+            {productUrls.map(item => (
+              <FullScreen key={item.url}>
+                <Webview
+                  style={{ height: "100%" }}
+                  executeJavaScript={injectJavaScript}
+                  src={item.url}
+                />
+              </FullScreen>
+            ))}
           </div>
         </div>
+        <Drawer
+          title="商品列表"
+          child={{
+            title: "添加商品",
+            entry: "添加商品",
+            children: (
+              <div>
+                <Form
+                  submit={values => {
+                    this.addProductUrl({
+                      ...values
+                    });
+                  }}
+                  configs={{
+                    components: [
+                      {
+                        field: "url",
+                        type: "input",
+                        label: "商品地址",
+                        rules: [
+                          {
+                            required: true,
+                            message: "必填"
+                          }
+                        ]
+                      }
+                    ]
+                  }}
+                />
+              </div>
+            )
+          }}
+        >
+          <Table
+            rowKey="productId"
+            columns={[
+              {
+                title: "productId",
+                dataIndex: "productId",
+                key: "productId"
+              },
+              {
+                title: "url",
+                dataIndex: "url",
+                key: "url"
+              },
+              {
+                title: "createTime",
+                dataIndex: "createTime",
+                key: "createTime",
+                render: v => formatTime(v)
+              }
+            ]}
+            dataSource={productUrls}
+          />
+        </Drawer>
       </LayOut>
     );
   }

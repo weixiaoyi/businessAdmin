@@ -1,11 +1,26 @@
 .xianyu {
+  padding: 5px;
   width: 100%;
+  > .title {
+    padding: 10px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+  }
+  .productList {
+    display: flex;
+    flex-wrap: wrap;
+    > div {
+      width: 20%;
+    }
+  }
   .errMsgPannel {
     background: red;
-    .header {
-      display: flex;
-      align-items: center;
-    }
+  }
+  .header {
+    display: flex;
+    align-items: center;
   }
   .short {
     display: flex;

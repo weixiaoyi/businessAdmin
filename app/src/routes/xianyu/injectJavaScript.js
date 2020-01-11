@@ -24,9 +24,13 @@ const injectJavaScript = () => {
     sellPrice = product.querySelector(
       ".price-info>li:nth-of-type(1) .price.big em"
     ).innerText;
-    prevPrice = product.querySelector(
-      ".price-info>li:nth-of-type(2) span:last-child"
-    ).innerText;
+
+    prevPrice = (() => {
+      const prev = product.querySelector(
+        ".price-info>li:nth-of-type(2) span:last-child"
+      );
+      return prev ? prev.innerText : "";
+    })();
 
     const quality = product.querySelector(".idle-info>li:nth-of-type(1)>em")
       .innerText;
@@ -73,6 +77,7 @@ const injectJavaScript = () => {
       }
     });
   } catch (e) {
+    console.log(e, url, "-------------------e");
     let offSell = "";
     try {
       offSell = document.querySelector("#J_Property>.off-sell>h4").innerText;
