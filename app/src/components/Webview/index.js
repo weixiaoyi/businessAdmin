@@ -15,7 +15,7 @@ class Webview extends Component {
 
   componentDidMount() {
     const { id } = this.state;
-    const { domReady, executeJavaScript } = this.props;
+    const { domReady, executeJavaScript, src } = this.props;
     const webview = document.querySelector(`#${id}`);
 
     webview.addEventListener("dom-ready", () => {
@@ -25,8 +25,8 @@ class Webview extends Component {
         domReady();
       }
 
-      if (executeJavaScript && _.isString(executeJavaScript)) {
-        webview.executeJavaScript(executeJavaScript);
+      if (executeJavaScript && _.isFunction(executeJavaScript)) {
+        webview.executeJavaScript(executeJavaScript(src));
       }
     });
   }

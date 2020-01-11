@@ -26,12 +26,13 @@ class Clipboard extends Component {
 
   render() {
     const { id } = this.state;
-    const { text, className, width = 100 } = this.props;
+    const { text, className, width = 100, style } = this.props;
     return (
       <span
         id={id}
         data-clipboard-text={text}
         className={classNames(styles.copy, className)}
+        style={style}
       >
         <span className={styles.text} style={{ maxWidth: width }}>
           {text.slice(-100)}

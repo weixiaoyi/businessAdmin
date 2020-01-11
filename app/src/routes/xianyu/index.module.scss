@@ -1,5 +1,12 @@
 .xianyu {
   width: 100%;
+  .errMsgPannel {
+    background: red;
+    .header {
+      display: flex;
+      align-items: center;
+    }
+  }
   .short {
     display: flex;
     li + li {

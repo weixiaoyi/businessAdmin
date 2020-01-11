@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Collapse, Button, Icon, Tooltip } from "antd";
 import { Inject, getFilename, formatMonthTime } from "../../utils";
 import * as styles from "./index.module.scss";
-import { Webview, DragFix, Image } from "../../components";
+import { Webview, DragFix, Image, Clipboard } from "../../components";
 import injectJavaScript from "./injectJavaScript";
 import { LayOut } from "../components";
 
@@ -84,24 +84,38 @@ class XianYu extends Component {
     });
   };
 
-  renderInfo = item => (
-    <ul className={styles.short}>
-      {[
-        { name: "售价", value: "sellPrice" },
-        { name: "原价", value: "prevPrice" },
-        { name: "编辑时间", value: "editTime" },
-        { name: "浏览", value: "hot" },
-        { name: "成色", value: "quality" },
-        { name: "vip", value: "vip" },
-        { name: "实名认证", value: "userVertify" }
-      ].map(one => (
-        <li key={one.name}>
-          <span>{one.name}:</span>
-          {item[one.value]}
-        </li>
-      ))}
-    </ul>
-  );
+  renderInfo = (item, isVersion = false) => {
+    let infos = [
+      { name: "售价", value: "sellPrice" },
+      { name: "原价", value: "prevPrice" },
+      { name: "编辑时间", value: "editTime" },
+      { name: "浏览", value: "hot" },
+      { name: "成色", value: "quality" },
+      { name: "vip", value: "vip" },
+      { name: "实名认证", value: "userVertify" }
+    ];
+    if (isVersion) {
+      infos = [
+        { name: "title", value: "title" },
+        { name: "productId", value: "productId" }
+      ]
+        .concat(infos)
+        .concat(
+          { name: "desc", value: "desc" },
+          { name: "wangwang", value: "wangwang" }
+        );
+    }
+    return (
+      <ul className={styles.short}>
+        {infos.map(one => (
+          <li key={one.name}>
+            <span>{one.name}:</span>
+            {item[one.value]}
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   render() {
     const {
@@ -122,11 +136,14 @@ class XianYu extends Component {
                 );
                 return (
                   <Panel
+                    className={item.errMsg && styles.errMsgPannel}
                     header={
                       <div>
-                        <div>
+                        <div className={styles.header}>
                           <strong>{item.title}</strong>
+                          {item.errMsg && <span>({item.errMsg})</span>}
                           <Button
+                            disabled={!productImages.length > 0}
                             style={{ marginLeft: 20 }}
                             onClick={e => {
                               this.openProductIdPath(id);
@@ -134,7 +151,12 @@ class XianYu extends Component {
                             }}
                           >
                             本地商品{id}图片
+                            {!productImages.length > 0 && <span>(暂无)</span>}
                           </Button>
+                          <Clipboard
+                            text={item.url}
+                            style={{ marginLeft: 20 }}
+                          />
                         </div>
                         {this.renderInfo(item)}
                         <div className={styles.versionManage}>
@@ -150,7 +172,13 @@ class XianYu extends Component {
                               icon: (
                                 <Icon
                                   type="camera"
-                                  onClick={() => this.snapVersion(item)}
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    if (item.errMsg) {
+                                      return alert(item.errMsg);
+                                    }
+                                    this.snapVersion(item);
+                                  }}
                                 />
                               )
                             }
@@ -162,7 +190,7 @@ class XianYu extends Component {
                               <ul>
                                 {(i.value || []).map(one => (
                                   <li key={one.createTime}>
-                                    <Tooltip title={this.renderInfo(one)}>
+                                    <Tooltip title={this.renderInfo(one, true)}>
                                       {formatMonthTime(one.createTime)}
                                     </Tooltip>
                                   </li>
@@ -207,27 +235,29 @@ class XianYu extends Component {
                         </Panel>
                       )}
 
-                      <Panel header="闲鱼图片" key="2">
-                        <ul className={styles.imagesList}>
-                          {item.images.map((one, index) => (
-                            <li key={one}>
-                              <Image
-                                download={(dataUrl, filename) =>
-                                  this.downloadImage(
-                                    dataUrl,
-                                    `${index}_${filename}`,
-                                    id,
-                                    index
-                                  )
-                                }
-                                src={one}
-                                filename={getFilename(one)}
-                                className={styles.linkimg}
-                              />
-                            </li>
-                          ))}
-                        </ul>
-                      </Panel>
+                      {item.images && item.images.length > 0 && (
+                        <Panel header="闲鱼图片" key="2">
+                          <ul className={styles.imagesList}>
+                            {item.images.map((one, index) => (
+                              <li key={one}>
+                                <Image
+                                  download={(dataUrl, filename) =>
+                                    this.downloadImage(
+                                      dataUrl,
+                                      `${index}_${filename}`,
+                                      id,
+                                      index
+                                    )
+                                  }
+                                  src={one}
+                                  filename={getFilename(one)}
+                                  className={styles.linkimg}
+                                />
+                              </li>
+                            ))}
+                          </ul>
+                        </Panel>
+                      )}
                     </Collapse>
                   </Panel>
                 );

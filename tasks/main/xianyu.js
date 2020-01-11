@@ -62,6 +62,7 @@ exports.get_product = async ({ args, win }) => {
   win.webContents.send("xianyu.get_product", {
     data: message
   });
+  if (message.errMsg) return;
   const productId = message.url.replace(/.*id=(.*)$/g, "$1");
   const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
   const autoSnaps = xianyuDb.get("versions").value().autoSnaps || [];
