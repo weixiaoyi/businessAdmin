@@ -53,6 +53,7 @@
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
     "node-base64-image": "^1.0.6",
+    "nodemailer": "^6.4.2",
     "prettier": "^1.18.2",
     "react-highlight-words": "^0.16.0"
   },

@@ -10,6 +10,7 @@ const {
 } = require("../../utils");
 const { PATH } = require("../../constants");
 const { download_image, openPath } = require("../common");
+const { Mail } = require("../../components");
 
 const xianyuImageDb = "imagesDb";
 const xianyuVersionDb = "versionDb";
@@ -141,7 +142,14 @@ exports.get_product = async ({ args, win }) => {
       productId
     }
   });
-  if (message.errMsg) return;
+
+  if (message.errMsg) {
+    Mail.send({
+      title: `${productId},${message.errMsg}`,
+      text: JSON.stringify(message)
+    });
+    return;
+  }
 
   const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
   const autoSnaps = xianyuDb.get("versions").value().autoSnaps[productId] || [];
