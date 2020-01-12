@@ -52,13 +52,15 @@ class FullScreen extends Component {
       title = "title",
       width = 300,
       height,
-      children
+      children,
+      onClick
     } = this.props;
     return (
       <div
         style={{ width, height: fullScreen ? "100%" : height }}
         className={classNames(fullScreen && styles.fullScreen, className)}
         id={id}
+        onClick={onClick}
       >
         <Card
           title={title}

@@ -36,6 +36,8 @@ exports.messageTasks = async (args, app) => {
     await xianyu.addProductUrl({ args, win, app });
   } else if (type === "xianyu.get-productUrls") {
     await xianyu.getProductUrls({ args, win, app });
+  } else if (type === "xianyu.remove-productUrl") {
+    await xianyu.removeProductUrl({ args, win, app });
   }
 
   if (type === "scrapy.ipc-get-appPath") {

@@ -14,18 +14,18 @@ export default class XianyuStore extends ModelExtend {
   @observable versions = {};
   @observable imagePath = "";
   @observable productUrls = [];
+  @observable selectProductId = "";
 
-  @computed get productsSort() {
-    const products = this.products.map(item => {
-      const findOne = this.productUrls.find(
-        one => one.productId === item.productId
-      );
+  @computed get normalizedProductUrls() {
+    const productUrls = this.productUrls.map(item => {
+      const findOne =
+        this.products.find(one => one.productId === item.productId) || {};
       return {
         ...item,
-        createTime: findOne.createTime
+        ...findOne
       };
     });
-    return products.sort((a, b) => b.createTime - a.createTime);
+    return productUrls.sort((a, b) => b.createTime - a.createTime);
   }
 
   listenIpc = () => {
@@ -39,6 +39,17 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.on("xianyu.get_productUrls", (e, args) => {
         const { data } = args;
         this.commit("productUrls", data);
+      });
+
+    window.ipc &&
+      window.ipc.on("xianyu.remove_productUrl", () => {
+        notification.success({
+          message: "商品Url删除成功",
+          description: `商品Url删除成功`
+        });
+        this.dispatch({
+          type: "ipc-get-productUrls"
+        });
       });
 
     window.ipc &&
@@ -134,6 +145,17 @@ export default class XianyuStore extends ModelExtend {
       });
   };
 
+  "ipc-remove-productUrl" = ({ productId }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "xianyu.remove-productUrl",
+          productId
+        }
+      });
+  };
+
   "ipc-get-productUrls" = () => {
     window.ipc &&
       window.ipc.send("ipc", {
@@ -225,5 +247,9 @@ export default class XianyuStore extends ModelExtend {
           product
         }
       });
+  };
+
+  selectOneProduct = ({ productId }) => {
+    this.commit("selectProductId", productId);
   };
 }

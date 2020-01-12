@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Collapse, Button, Icon, Tooltip, Table } from "antd";
+import classNames from "classnames";
 import {
   Inject,
   getFilename,
@@ -121,6 +122,15 @@ class XianYu extends Component {
     });
   };
 
+  removeProductUrl = productId => {
+    this.dispatch({
+      type: "ipc-remove-productUrl",
+      payload: {
+        productId
+      }
+    });
+  };
+
   getProductUrl = () => {
     this.dispatch({
       type: "ipc-get-productUrls"
@@ -160,9 +170,24 @@ class XianYu extends Component {
     );
   };
 
+  selectOneProduct = productId => {
+    this.dispatch({
+      type: "selectOneProduct",
+      payload: {
+        productId
+      }
+    });
+  };
+
   render() {
     const {
-      model: { productsSort, images, imagePath, versions, productUrls }
+      model: {
+        images,
+        imagePath,
+        versions,
+        normalizedProductUrls,
+        selectProductId
+      }
     } = this.props;
 
     return (
@@ -176,16 +201,22 @@ class XianYu extends Component {
           </div>
           <DragFix name="xianyu" title="商品监控">
             <Collapse>
-              {productsSort.map(item => {
+              {normalizedProductUrls.map(item => {
                 const id = item.url.replace(/.*id=(.*)$/g, "$1");
                 const productImages = images.filter(
                   one => one.productId === id
                 );
                 return (
                   <Panel
-                    className={item.errMsg && styles.errMsgPannel}
+                    className={classNames(
+                      item.errMsg && styles.errMsgPannel,
+                      selectProductId === item.productId &&
+                        styles.selectProductId
+                    )}
                     header={
-                      <div>
+                      <div
+                        onClick={() => this.selectOneProduct(item.productId)}
+                      >
                         <div className={styles.header}>
                           <strong>{item.title}</strong>
                           {item.errMsg && <span>({item.errMsg})</span>}
@@ -211,11 +242,13 @@ class XianYu extends Component {
                           {[
                             {
                               name: "自动",
-                              value: versions.autoSnaps[id]
+                              value: versions.autoSnaps
+                                ? versions.autoSnaps[id]
+                                : []
                             },
                             {
                               name: "手动",
-                              value: versions.snaps[id],
+                              value: versions.snaps ? versions.snaps[id] : [],
                               icon: (
                                 <Icon
                                   type="camera"
@@ -248,7 +281,7 @@ class XianYu extends Component {
                         </div>
                       </div>
                     }
-                    key={item.url}
+                    key={item.productId}
                   >
                     <ul className={styles.short}>
                       {[{ name: "旺旺", value: "wangwang" }].map(one => (
@@ -312,8 +345,15 @@ class XianYu extends Component {
             </Collapse>
           </DragFix>
           <div className={styles.productList}>
-            {productUrls.map(item => (
-              <FullScreen key={item.url}>
+            {normalizedProductUrls.map(item => (
+              <FullScreen
+                className={
+                  selectProductId === item.productId && styles.selectProductId
+                }
+                key={item.url}
+                title={item.title || item.productId}
+                onClick={() => this.selectOneProduct(item.productId)}
+              >
                 <Webview
                   style={{ height: "100%" }}
                   executeJavaScript={injectJavaScript}
@@ -357,8 +397,20 @@ class XianYu extends Component {
           }}
         >
           <Table
+            scroll={{ x: 800 }}
+            rowClassName={record =>
+              selectProductId === record.productId ? styles.selectProductId : ""
+            }
+            onRow={record => ({
+              onClick: () => this.selectOneProduct(record.productId)
+            })}
             rowKey="productId"
             columns={[
+              {
+                title: "title",
+                dataIndex: "title",
+                key: "title"
+              },
               {
                 title: "productId",
                 dataIndex: "productId",
@@ -374,9 +426,27 @@ class XianYu extends Component {
                 dataIndex: "createTime",
                 key: "createTime",
                 render: v => formatTime(v)
+              },
+              {
+                title: "操作",
+                width: 50,
+                dataIndex: "operation",
+                key: "operation",
+                fixed: "right",
+                render: (v, record) => {
+                  return (
+                    <span>
+                      <a
+                        onClick={() => this.removeProductUrl(record.productId)}
+                      >
+                        删除
+                      </a>
+                    </span>
+                  );
+                }
               }
             ]}
-            dataSource={productUrls}
+            dataSource={normalizedProductUrls}
           />
         </Drawer>
       </LayOut>

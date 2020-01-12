@@ -1,6 +1,12 @@
+@import "src/styles/index.scss";
+.selectProductId {
+  border: 2px solid $green;
+  color: $green;
+}
 .xianyu {
   padding: 5px;
   width: 100%;
+
   > .title {
     padding: 10px 5px;
     display: flex;

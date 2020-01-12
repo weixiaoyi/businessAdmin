@@ -29,6 +29,21 @@ exports.getProductUrls = async ({ args, win }) => {
   });
 };
 
+exports.removeProductUrl = async ({ args, win }) => {
+  const {
+    data: { productId }
+  } = args;
+  const db = await getXianyuProductDb(xianyuProductUrlDb);
+  const results = await db
+    .get("products")
+    .remove({ productId })
+    .write()
+    .catch(() => null);
+  win.webContents.send("xianyu.remove_productUrl", {
+    data: results
+  });
+};
+
 exports.addProductUrl = async ({ args, win }) => {
   const {
     data: { url }
