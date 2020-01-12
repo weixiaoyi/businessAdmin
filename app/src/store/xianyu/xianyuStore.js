@@ -15,6 +15,19 @@ export default class XianyuStore extends ModelExtend {
   @observable imagePath = "";
   @observable productUrls = [];
 
+  @computed get productsSort() {
+    const products = this.products.map(item => {
+      const findOne = this.productUrls.find(
+        one => one.productId === item.productId
+      );
+      return {
+        ...item,
+        createTime: findOne.createTime
+      };
+    });
+    return products.sort((a, b) => b.createTime - a.createTime);
+  }
+
   listenIpc = () => {
     const sortImage = data => data.sort((a, b) => a.index - b.index);
     window.ipc &&

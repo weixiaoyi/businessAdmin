@@ -65,11 +65,11 @@ exports.snapVersion = async ({ args, win }) => {
   } = args;
   const productId = product.url.replace(/.*id=(.*)$/g, "$1");
   const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
-  const snaps = xianyuDb.get("versions").value().snaps || [];
+  const snaps = xianyuDb.get("versions").value().snaps[productId] || [];
   const results = await xianyuDb
     .get("versions")
     .set(
-      "snaps",
+      `snaps.${productId}`,
       [
         {
           ...product,
@@ -91,15 +91,19 @@ exports.get_product = async ({ args, win }) => {
   const {
     data: { message }
   } = args;
+  const productId = message.url.replace(/.*id=(.*)$/g, "$1");
   win.webContents.send("xianyu.get_product", {
-    data: message
+    data: {
+      ...message,
+      productId
+    }
   });
   if (message.errMsg) return;
-  const productId = message.url.replace(/.*id=(.*)$/g, "$1");
+
   const xianyuDb = await getXianyuVersionDb(xianyuVersionDb);
-  const autoSnaps = xianyuDb.get("versions").value().autoSnaps || [];
-  const findOne = autoSnaps.find(item => item.productId === productId);
-  if (
+  const autoSnaps = xianyuDb.get("versions").value().autoSnaps[productId] || [];
+  const findOne = autoSnaps[0];
+  const isChange =
     !findOne ||
     (findOne &&
       (findOne.title !== message.title ||
@@ -108,12 +112,12 @@ exports.get_product = async ({ args, win }) => {
         findOne.quality !== message.quality ||
         findOne.fromWhere !== message.fromWhere ||
         findOne.emailPrice !== message.emailPrice ||
-        findOne.desc !== message.desc))
-  ) {
+        findOne.desc !== message.desc));
+  if (isChange) {
     const results = await xianyuDb
       .get("versions")
       .set(
-        "autoSnaps",
+        `autoSnaps.${productId}`,
         [
           {
             ...message,

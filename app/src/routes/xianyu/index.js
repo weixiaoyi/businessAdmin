@@ -162,10 +162,8 @@ class XianYu extends Component {
 
   render() {
     const {
-      model: { products, images, imagePath, versions, productUrls }
+      model: { productsSort, images, imagePath, versions, productUrls }
     } = this.props;
-
-    console.log(toJS(versions), "------------------versions");
 
     return (
       <LayOut>
@@ -178,7 +176,7 @@ class XianYu extends Component {
           </div>
           <DragFix name="xianyu" title="商品监控">
             <Collapse>
-              {products.map(item => {
+              {productsSort.map(item => {
                 const id = item.url.replace(/.*id=(.*)$/g, "$1");
                 const productImages = images.filter(
                   one => one.productId === id
@@ -213,15 +211,11 @@ class XianYu extends Component {
                           {[
                             {
                               name: "自动",
-                              value: versions.autoSnaps.filter(
-                                one => one.productId === id
-                              )
+                              value: versions.autoSnaps[id]
                             },
                             {
                               name: "手动",
-                              value: versions.snaps.filter(
-                                one => one.productId === id
-                              ),
+                              value: versions.snaps[id],
                               icon: (
                                 <Icon
                                   type="camera"

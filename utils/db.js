@@ -48,7 +48,12 @@ exports.getXianyuVersionDb = async dbName => {
   return getDb({
     dir: path.join(setDataPath(), PATH.xianyuDb),
     dbName,
-    defaultValue: { versions: {} }
+    defaultValue: {
+      versions: {
+        autoSnaps: {},
+        snaps: {}
+      }
+    }
   });
 };
 
