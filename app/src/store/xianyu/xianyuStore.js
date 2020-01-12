@@ -42,14 +42,22 @@ export default class XianyuStore extends ModelExtend {
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.remove_productUrl", () => {
-        notification.success({
-          message: "商品Url删除成功",
-          description: `商品Url删除成功`
-        });
-        this.dispatch({
-          type: "ipc-get-productUrls"
-        });
+      window.ipc.on("xianyu.remove_productUrl", (e, args) => {
+        const { data } = args;
+        if (data) {
+          notification.success({
+            message: "商品Url删除成功",
+            description: `商品Url删除成功`
+          });
+          this.dispatch({
+            type: "ipc-get-productUrls"
+          });
+        } else {
+          notification.error({
+            message: "商品Url删除失败",
+            description: `商品Url删除失败`
+          });
+        }
       });
 
     window.ipc &&

@@ -33,14 +33,42 @@ exports.removeProductUrl = async ({ args, win }) => {
   const {
     data: { productId }
   } = args;
-  const db = await getXianyuProductDb(xianyuProductUrlDb);
-  const results = await db
+
+  const imageDb = await getXianyuImageDb(xianyuImageDb);
+  const images = await imageDb
+    .get("images")
+    .remove({ productId })
+    .write()
+    .catch(() => null);
+
+  const versionDb = await getXianyuVersionDb(xianyuVersionDb);
+  const versions = await Promise.all([
+    versionDb
+      .get("versions")
+      .unset(`autoSnaps.${productId}`)
+      .write(),
+    versionDb
+      .get("versions")
+      .unset(`snaps.${productId}`)
+      .write()
+  ]).catch(() => null);
+
+  const productsDb = await getXianyuProductDb(xianyuProductUrlDb);
+  const products = await productsDb
     .get("products")
     .remove({ productId })
     .write()
     .catch(() => null);
+
+  let result;
+  if (images && versions && products) {
+    result = true;
+  } else {
+    result = false;
+  }
+
   win.webContents.send("xianyu.remove_productUrl", {
-    data: results
+    data: result
   });
 };
 

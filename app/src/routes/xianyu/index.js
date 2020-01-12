@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Collapse, Button, Icon, Tooltip, Table } from "antd";
+import { Collapse, Button, Icon, Tooltip, Table, Popconfirm } from "antd";
 import classNames from "classnames";
 import {
   Inject,
@@ -16,13 +16,16 @@ import {
   Clipboard,
   FullScreen,
   Drawer,
-  Form
+  Form,
+  QrCode
 } from "../../components";
 import injectJavaScript from "./injectJavaScript";
 import { LayOut } from "../components";
+import { tableFilter } from "../../hoc";
 
 const { Panel } = Collapse;
 
+@tableFilter
 @Inject(({ xianyuStore: model }) => ({
   model
 }))
@@ -235,6 +238,9 @@ class XianYu extends Component {
                             text={item.url}
                             style={{ marginLeft: 20 }}
                           />
+                          <span style={{ marginLeft: 20 }}>
+                            <QrCode url={item.url} />
+                          </span>
                         </div>
                         {this.renderInfo(item)}
                         <div className={styles.versionManage}>
@@ -347,9 +353,10 @@ class XianYu extends Component {
           <div className={styles.productList}>
             {normalizedProductUrls.map(item => (
               <FullScreen
-                className={
-                  selectProductId === item.productId && styles.selectProductId
-                }
+                className={classNames(
+                  selectProductId === item.productId && styles.selectProductId,
+                  styles.productItem
+                )}
                 key={item.url}
                 title={item.title || item.productId}
                 onClick={() => this.selectOneProduct(item.productId)}
@@ -409,12 +416,14 @@ class XianYu extends Component {
               {
                 title: "title",
                 dataIndex: "title",
-                key: "title"
+                key: "title",
+                ...this.props.getColumnSearchProps("title")
               },
               {
                 title: "productId",
                 dataIndex: "productId",
-                key: "productId"
+                key: "productId",
+                ...this.props.getColumnSearchProps("productId")
               },
               {
                 title: "url",
@@ -435,13 +444,12 @@ class XianYu extends Component {
                 fixed: "right",
                 render: (v, record) => {
                   return (
-                    <span>
-                      <a
-                        onClick={() => this.removeProductUrl(record.productId)}
-                      >
-                        删除
-                      </a>
-                    </span>
+                    <Popconfirm
+                      title="确认删除该商品?该操作务必谨慎！"
+                      onConfirm={() => this.removeProductUrl(record.productId)}
+                    >
+                      <a>删除</a>
+                    </Popconfirm>
                   );
                 }
               }

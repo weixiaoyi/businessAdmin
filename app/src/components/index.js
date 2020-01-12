@@ -8,3 +8,4 @@ export { default as Image } from "./Image";
 export { default as FullScreen } from "./FullScreen";
 export { default as Drawer } from "./Drawer";
 export { default as Form } from "./Form";
+export { default as QrCode } from "./QrCode";
