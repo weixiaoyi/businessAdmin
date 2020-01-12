@@ -27,7 +27,7 @@ class Mail {
     }
     this.transporter = nodemailer.createTransport(this.trans);
   }
-  send = ({ from, to, title, text }) => {
+  send({ from, to, title, text }) {
     return this.transporter.sendMail({
       from: this.trans.auth.user,
       to: this.trans.auth.user,
@@ -35,7 +35,7 @@ class Mail {
       text: text
       // html: "<b>北京欢迎你</b>"
     });
-  };
+  }
 }
 
 module.exports = new Mail({ proxy: "qq" });
