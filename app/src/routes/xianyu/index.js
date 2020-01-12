@@ -182,6 +182,12 @@ class XianYu extends Component {
     });
   };
 
+  autoRefresh = () => {
+    this.dispatch({
+      type: "autoRefresh"
+    });
+  };
+
   render() {
     const {
       model: {
@@ -189,7 +195,8 @@ class XianYu extends Component {
         imagePath,
         versions,
         normalizedProductUrls,
-        selectProductId
+        selectProductId,
+        refresh
       }
     } = this.props;
 
@@ -199,7 +206,15 @@ class XianYu extends Component {
           <div className={styles.title}>
             <div>咸鱼</div>
             <div>
-              <Button onClick={this.addProductModal}>商品列表</Button>
+              <Button
+                onClick={this.autoRefresh}
+                type={refresh ? "danger" : "default"}
+              >
+                {refresh ? "监控中" : "启动监控"}
+              </Button>
+              <Button onClick={this.addProductModal} style={{ marginLeft: 20 }}>
+                商品列表
+              </Button>
             </div>
           </div>
           <DragFix name="xianyu" title="商品监控">
@@ -362,6 +377,7 @@ class XianYu extends Component {
                 onClick={() => this.selectOneProduct(item.productId)}
               >
                 <Webview
+                  auto={refresh}
                   style={{ height: "100%" }}
                   executeJavaScript={injectJavaScript}
                   src={item.url}
@@ -404,6 +420,7 @@ class XianYu extends Component {
           }}
         >
           <Table
+            pagination={false}
             scroll={{ x: 800 }}
             rowClassName={record =>
               selectProductId === record.productId ? styles.selectProductId : ""
@@ -442,6 +459,7 @@ class XianYu extends Component {
                 dataIndex: "operation",
                 key: "operation",
                 fixed: "right",
+                align: "center",
                 render: (v, record) => {
                   return (
                     <Popconfirm

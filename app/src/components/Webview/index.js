@@ -14,15 +14,22 @@ class Webview extends Component {
       id: _.uniqueId("webview_")
     };
     this.reloadTimes = 0;
+    this.interval = null;
   }
 
   componentDidMount() {
     const { id } = this.state;
-    const { domReady, executeJavaScript, src } = this.props;
+    const {
+      domReady,
+      executeJavaScript,
+      src,
+      auto,
+      interval = 30 * 60 * 1000
+    } = this.props;
     const webview = document.querySelector(`#${id}`);
     this.webview = webview;
     webview.addEventListener("dom-ready", () => {
-      webview.openDevTools();
+      // webview.openDevTools();
       if (_.isFunction(domReady)) {
         domReady();
       }
@@ -38,12 +45,18 @@ class Webview extends Component {
         this.reloadTimes++;
       }
     });
+
+    if (auto && interval) {
+      clearInterval(this.interval);
+      this.interval = setInterval(this.reload, interval);
+    }
   }
 
   componentWillMount() {
     if (this.webview && this.webview.removeEventListener) {
       this.webview.removeEventListener();
     }
+    clearInterval(this.interval);
   }
 
   reload = () => {

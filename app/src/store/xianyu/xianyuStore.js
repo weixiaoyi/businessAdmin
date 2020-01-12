@@ -2,12 +2,16 @@ import { autorun, computed, observable } from "mobx";
 import ModelExtend from "../modelExtend";
 import { notification, message } from "antd";
 import _ from "lodash";
+import { localSave } from "../../utils";
 
 export default class XianyuStore extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;
     this.listenIpc();
+    autorun(() => {
+      localSave.set("refresh_xianyu", this.refresh);
+    });
   }
   @observable products = [];
   @observable images = [];
@@ -15,6 +19,7 @@ export default class XianyuStore extends ModelExtend {
   @observable imagePath = "";
   @observable productUrls = [];
   @observable selectProductId = "";
+  @observable refresh = localSave.get("refresh_xianyu") || false;
 
   @computed get normalizedProductUrls() {
     const productUrls = this.productUrls.map(item => {
@@ -259,5 +264,10 @@ export default class XianyuStore extends ModelExtend {
 
   selectOneProduct = ({ productId }) => {
     this.commit("selectProductId", productId);
+  };
+
+  autoRefresh = () => {
+    this.commit("refresh", !this.refresh);
+    window.location.reload();
   };
 }
