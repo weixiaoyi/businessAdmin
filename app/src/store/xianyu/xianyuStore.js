@@ -117,6 +117,7 @@ export default class XianyuStore extends ModelExtend {
         } else {
           products.unshift(data);
         }
+        console.log(products, "---------------");
         this.commit("products", products);
       });
 

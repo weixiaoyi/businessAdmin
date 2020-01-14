@@ -29,7 +29,6 @@ class Webview extends Component {
     const webview = document.querySelector(`#${id}`);
     this.webview = webview;
     webview.addEventListener("dom-ready", () => {
-      // webview.openDevTools();
       if (_.isFunction(domReady)) {
         domReady();
       }
@@ -63,6 +62,10 @@ class Webview extends Component {
     this.webview && this.webview.reloadIgnoringCache();
   };
 
+  openDevTools = () => {
+    this.webview && this.webview.openDevTools();
+  };
+
   render() {
     const { id } = this.state;
     const {
@@ -77,6 +80,7 @@ class Webview extends Component {
       <div style={style} className={styles.webview}>
         <div className={styles.utils}>
           <Icon type="reload" onClick={this.reload} />
+          <Icon type="security-scan" onClick={this.openDevTools} />
         </div>
         <webview
           preload={`file://${preloadJsPath}`}

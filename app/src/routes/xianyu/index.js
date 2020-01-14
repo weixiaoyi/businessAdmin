@@ -17,7 +17,8 @@ import {
   FullScreen,
   Drawer,
   Form,
-  QrCode
+  QrCode,
+  OpenExternal
 } from "../../components";
 import injectJavaScript from "./injectJavaScript";
 import { LayOut } from "../components";
@@ -158,7 +159,14 @@ class XianYu extends Component {
         .concat(infos)
         .concat(
           { name: "desc", value: "desc" },
-          { name: "wangwang", value: "wangwang" }
+          { name: "wangwang", value: "wangwang" },
+          {
+            name: "wangwangPersonCenter",
+            value: "wangwangPersonCenter",
+            render: (name, value) => (
+              <OpenExternal href={value}>个人中心</OpenExternal>
+            )
+          }
         );
     }
     return (
@@ -166,7 +174,9 @@ class XianYu extends Component {
         {infos.map(one => (
           <li key={one.name}>
             <span>{one.name}:</span>
-            {item[one.value]}
+            {one.render
+              ? one.render(one.name, item[one.value])
+              : item[one.value]}
           </li>
         ))}
       </ul>

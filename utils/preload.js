@@ -1,9 +1,10 @@
-const { ipcRenderer } = require("electron");
+const electron = require("electron");
 const path = require("path");
 
 if (!window.ipc) {
-  window.ipc = ipcRenderer;
+  window.ipc = electron.ipcRenderer;
   window.path = path;
+  window.electron = electron;
 }
 if (!window.preloadUtils) {
   window.preloadUtils = {
