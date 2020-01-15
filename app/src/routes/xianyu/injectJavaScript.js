@@ -97,10 +97,19 @@ const injectJavaScript = () => {
           images: images
             ? Array.from(
                 new Set(
-                  Array.prototype.map.call(
-                    images,
-                    item => item.getAttribute("lazyload-img") || item.src
-                  )
+                  Array.prototype.map.call(images, item => {
+                    let url = item.getAttribute("lazyload-img") || item.src;
+                    if (
+                      url &&
+                      !(
+                        url.substr(0, 7).toLowerCase() === "http://" ||
+                        url.substr(0, 8).toLowerCase() === "https://"
+                      )
+                    ) {
+                      url = "https://" + url;
+                    }
+                    return url;
+                  })
                 )
               )
             : [],
