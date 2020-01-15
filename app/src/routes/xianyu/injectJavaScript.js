@@ -10,6 +10,18 @@ const injectJavaScript = () => {
     }
     return "";
   };
+  const getUrl = url => {
+    if (
+      url &&
+      !(
+        url.substr(0, 7).toLowerCase() === "http://" ||
+        url.substr(0, 8).toLowerCase() === "https://"
+      )
+    ) {
+      return "https://" + url;
+    }
+    return url;
+  };
   const url = window.injectSrc;
   let title = "";
   let sellPrice = "";
@@ -34,8 +46,8 @@ const injectJavaScript = () => {
     wangwang = tryFind(
       () => sellerInfo.getElementsByClassName("wangwang")[0].innerText
     );
-    wangwangPersonCenter = tryFind(
-      () => sellerInfo.querySelector(".wangwang>a").href
+    wangwangPersonCenter = tryFind(() =>
+      getUrl(sellerInfo.querySelector(".wangwang>a").href)
     );
     const userVertify = tryFind(
       () => sellerInfo.getElementsByClassName("user-verify")[0].title
@@ -70,9 +82,10 @@ const injectJavaScript = () => {
       () => document.querySelectorAll("#J_Slider>ul.album>li img.big-img") || []
     );
     desc = tryFind(() => document.querySelector("#J_DescContent").innerText);
-    wangwangAddress = tryFind(
-      () =>
+    wangwangAddress = tryFind(() =>
+      getUrl(
         product.querySelector(".idle-info>li:nth-of-type(3) a.ww-online").href
+      )
     );
 
     window.ipc.send("ipc", {
@@ -98,17 +111,8 @@ const injectJavaScript = () => {
             ? Array.from(
                 new Set(
                   Array.prototype.map.call(images, item => {
-                    let url = item.getAttribute("lazyload-img") || item.src;
-                    if (
-                      url &&
-                      !(
-                        url.substr(0, 7).toLowerCase() === "http://" ||
-                        url.substr(0, 8).toLowerCase() === "https://"
-                      )
-                    ) {
-                      url = "https://" + url;
-                    }
-                    return url;
+                    const url = item.getAttribute("lazyload-img") || item.src;
+                    return getUrl(url);
                   })
                 )
               )

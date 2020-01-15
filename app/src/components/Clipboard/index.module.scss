@@ -2,7 +2,15 @@
 .copy {
   display: flex;
   align-items: center;
-  .text {
+  .short {
     @include ellipse();
+  }
+  .normal {
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+  .icon {
+    line-height: 1;
+    margin-left: 3px;
   }
 }

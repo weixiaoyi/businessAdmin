@@ -268,7 +268,9 @@ class XianYu extends Component {
                         onClick={() => this.selectOneProduct(item.productId)}
                       >
                         <div className={styles.header}>
-                          <strong>{item.title}</strong>
+                          <strong>
+                            <Clipboard short={false} text={item.title} />
+                          </strong>
                           {item.errMsg && <span>({item.errMsg})</span>}
                           <Button
                             disabled={!productImages.length > 0}
@@ -344,7 +346,7 @@ class XianYu extends Component {
                         </li>
                       ))}
                     </ul>
-                    {item.desc}
+                    <Clipboard text={item.desc} short={false} />
                     <Collapse defaultActiveKey="1" style={{ marginTop: 10 }}>
                       {productImages.length > 0 && (
                         <Panel header="本地图片" key="1">

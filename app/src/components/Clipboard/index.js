@@ -26,20 +26,29 @@ class Clipboard extends Component {
 
   render() {
     const { id } = this.state;
-    const { text, className, width = 100, style } = this.props;
-    return (
+    const { text, className, width = 100, style, short = true } = this.props;
+    return text ? (
       <span
         id={id}
         data-clipboard-text={text}
         className={classNames(styles.copy, className)}
         style={style}
       >
-        <span className={styles.text} style={{ maxWidth: width }}>
-          {text.slice(-100)}
-        </span>
-        {copyIcon}
+        {short ? (
+          <>
+            <span className={styles.short} style={{ maxWidth: width }}>
+              {text.slice(-100)}
+            </span>
+            <span className={styles.icon}>{copyIcon}</span>
+          </>
+        ) : (
+          <span className={styles.normal}>
+            {text}
+            <span className={styles.icon}>{copyIcon}</span>
+          </span>
+        )}
       </span>
-    );
+    ) : null;
   }
 }
 
