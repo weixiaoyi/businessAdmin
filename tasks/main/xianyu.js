@@ -165,24 +165,19 @@ exports.get_product = async ({ args, win }) => {
         findOne.emailPrice !== message.emailPrice ||
         findOne.desc !== message.desc));
   if (isChange) {
+    const newSnap = {
+      ...message,
+      productId,
+      createTime: Date.now()
+    };
     const results = await xianyuDb
       .get("versions")
-      .set(
-        `autoSnaps.${productId}`,
-        [
-          {
-            ...message,
-            productId,
-            createTime: Date.now()
-          }
-        ]
-          .concat(autoSnaps)
-          .slice(0, 3)
-      )
+      .set(`autoSnaps.${productId}`, [newSnap].concat(autoSnaps).slice(0, 3))
       .write()
       .catch(() => null);
     win.webContents.send("xianyu.update_version", {
-      data: results
+      data: results,
+      updateInfo: newSnap
     });
   }
 };

@@ -41,10 +41,7 @@ class MyDrawer extends Component {
       title = "title",
       width = "60%",
       children,
-      child = {},
-      model: {
-        modal: { name }
-      }
+      child = {}
     } = this.props;
     const propsChild = {
       width: "40%",
@@ -53,37 +50,35 @@ class MyDrawer extends Component {
       ...child
     };
     return (
-      name === "drawer" && (
+      <Drawer
+        className={className}
+        id={id}
+        title={
+          <div className={styles.header}>
+            {title}
+            {propsChild.entry && (
+              <Button type="primary" onClick={this.showChildrenDrawer}>
+                {propsChild.entry}
+              </Button>
+            )}
+          </div>
+        }
+        width={width}
+        closable={true}
+        onClose={this.onClose}
+        visible={true}
+      >
+        {children}
         <Drawer
-          className={className}
-          id={id}
-          title={
-            <div className={styles.header}>
-              {title}
-              {propsChild.entry && (
-                <Button type="primary" onClick={this.showChildrenDrawer}>
-                  {propsChild.entry}
-                </Button>
-              )}
-            </div>
-          }
-          width={width}
+          title={propsChild.title}
+          width={propsChild.width}
           closable={true}
-          onClose={this.onClose}
-          visible={true}
+          onClose={this.onChildrenDrawerClose}
+          visible={this.state.childrenDrawer}
         >
-          {children}
-          <Drawer
-            title={propsChild.title}
-            width={propsChild.width}
-            closable={true}
-            onClose={this.onChildrenDrawerClose}
-            visible={this.state.childrenDrawer}
-          >
-            {propsChild.children}
-          </Drawer>
+          {propsChild.children}
         </Drawer>
-      )
+      </Drawer>
     );
   }
 }

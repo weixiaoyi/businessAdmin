@@ -11,6 +11,7 @@ export default class XianyuStore extends ModelExtend {
     this.listenIpc();
     autorun(() => {
       localSave.set("refresh_xianyu", this.refresh);
+      localSave.set("updateVersionRecords_xianyu", this.updateVersionRecords);
     });
   }
   @observable products = [];
@@ -20,6 +21,8 @@ export default class XianyuStore extends ModelExtend {
   @observable productUrls = [];
   @observable selectProductId = "";
   @observable refresh = localSave.get("refresh_xianyu") || false;
+  @observable updateVersionRecords =
+    localSave.get("updateVersionRecords_xianyu") || [];
 
   @computed get normalizedProductUrls() {
     const productUrls = this.productUrls.map(item => {
@@ -31,6 +34,12 @@ export default class XianyuStore extends ModelExtend {
       };
     });
     return productUrls.sort((a, b) => b.createTime - a.createTime);
+  }
+
+  @computed get normalizedUpdateVersionRecords() {
+    return this.updateVersionRecords.filter(item => {
+      return this.productUrls.find(one => one.productId === item.productId);
+    });
   }
 
   listenIpc = () => {
@@ -77,12 +86,19 @@ export default class XianyuStore extends ModelExtend {
 
     window.ipc &&
       window.ipc.on("xianyu.update_version", (e, args) => {
-        const { data } = args;
+        const { data, updateInfo } = args;
         this.commit("versions", data);
         notification.success({
           message: "版本数据更新了",
-          description: `版本数据更新了`
+          description: updateInfo
+            ? `productId:${updateInfo.productId};title:${updateInfo.title}`
+            : `版本数据更新了`
         });
+        if (updateInfo) {
+          const records = _.cloneDeep(this.updateVersionRecords);
+          records.unshift(updateInfo);
+          this.commit("updateVersionRecords", records.slice(0, 10));
+        }
       });
 
     window.ipc &&
@@ -117,7 +133,6 @@ export default class XianyuStore extends ModelExtend {
         } else {
           products.unshift(data);
         }
-        console.log(products, "---------------");
         this.commit("products", products);
       });
 

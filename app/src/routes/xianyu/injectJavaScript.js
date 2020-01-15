@@ -19,6 +19,8 @@ const injectJavaScript = () => {
   let wangwangPersonCenter = "";
   let wangwangAddress = "";
   let desc = "";
+  let hot = "";
+  let images = "";
   try {
     const div = document.createElement("div");
     div.innerHTML = `test`;
@@ -41,9 +43,7 @@ const injectJavaScript = () => {
     const vip = tryFind(
       () => sellerInfo.getElementsByClassName("vip-level")[0].title
     );
-    const hot = tryFind(
-      () => document.querySelector("#J_Browse>span").innerText
-    );
+    hot = tryFind(() => document.querySelector("#J_Browse>span").innerText);
     editTime = tryFind(
       () => otherWrap.querySelector("li:nth-of-type(2)>span").innerText
     );
@@ -66,7 +66,7 @@ const injectJavaScript = () => {
     const emailPrice = tryFind(
       () => document.querySelector("#J_Carriage").innerText
     );
-    const images = tryFind(
+    images = tryFind(
       () => document.querySelectorAll("#J_Slider>ul.album>li img.big-img") || []
     );
     desc = tryFind(() => document.querySelector("#J_DescContent").innerText);
@@ -109,9 +109,12 @@ const injectJavaScript = () => {
       }
     });
   } catch (e) {
-    const offSell = tryFind(
+    let offSell = tryFind(
       () => document.querySelector("#J_Property>.off-sell>h4").innerText
     );
+    if (!offSell && (!title || !sellPrice || !editTime || !hot || !wangwang)) {
+      offSell = "未获取到必要信息";
+    }
     window.ipc.send("ipc", {
       from: "app.wins.main.render",
       data: {
@@ -122,6 +125,12 @@ const injectJavaScript = () => {
           sellPrice,
           prevPrice,
           editTime,
+          hot,
+          wangwang,
+          wangwangAddress,
+          wangwangPersonCenter,
+          desc,
+          images,
           errMsg: offSell || "获取信息错误"
         }
       }

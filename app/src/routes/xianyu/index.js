@@ -27,8 +27,9 @@ import { tableFilter } from "../../hoc";
 const { Panel } = Collapse;
 
 @tableFilter
-@Inject(({ xianyuStore: model }) => ({
-  model
+@Inject(({ xianyuStore: model, globalStore }) => ({
+  model,
+  globalStore
 }))
 class XianYu extends Component {
   constructor(props) {
@@ -113,7 +114,16 @@ class XianYu extends Component {
       model: { openModal }
     } = this.props;
     openModal({
-      name: "drawer"
+      name: "productList"
+    });
+  };
+
+  openUpdateVersionRecordModal = () => {
+    const {
+      model: { openModal }
+    } = this.props;
+    openModal({
+      name: "updateVersionRecords"
     });
   };
 
@@ -206,25 +216,37 @@ class XianYu extends Component {
         versions,
         normalizedProductUrls,
         selectProductId,
-        refresh
+        refresh,
+        normalizedUpdateVersionRecords
+      },
+      globalStore: {
+        modal: { name }
       }
     } = this.props;
 
     return (
       <LayOut>
         <div className={styles.xianyu}>
-          <div className={styles.title}>
-            <div>咸鱼</div>
-            <div>
-              <Button
-                onClick={this.autoRefresh}
-                type={refresh ? "danger" : "default"}
-              >
-                {refresh ? "监控中" : "启动监控"}
-              </Button>
-              <Button onClick={this.addProductModal} style={{ marginLeft: 20 }}>
-                商品列表
-              </Button>
+          <div className={styles.headerUtils}>
+            <div className={styles.title}>
+              <div>咸鱼</div>
+              <div>
+                <Button
+                  onClick={this.autoRefresh}
+                  type={refresh ? "danger" : "default"}
+                >
+                  {refresh ? "监控中" : "启动监控"}
+                </Button>
+                <Button
+                  onClick={this.addProductModal}
+                  style={{ marginLeft: 20 }}
+                >
+                  商品列表
+                </Button>
+              </div>
+            </div>
+            <div className={styles.utils}>
+              <a onClick={this.openUpdateVersionRecordModal}>版本更新历史</a>
             </div>
           </div>
           <DragFix name="xianyu" title="商品监控">
@@ -396,95 +418,123 @@ class XianYu extends Component {
             ))}
           </div>
         </div>
-        <Drawer
-          title="商品列表"
-          child={{
-            title: "添加商品",
-            entry: "添加商品",
-            children: (
-              <div>
-                <Form
-                  submit={values => {
-                    this.addProductUrl({
-                      ...values
-                    });
-                  }}
-                  configs={{
-                    components: [
-                      {
-                        field: "url",
-                        type: "input",
-                        label: "商品地址",
-                        rules: [
-                          {
-                            required: true,
-                            message: "必填"
-                          }
-                        ]
-                      }
-                    ]
-                  }}
-                />
-              </div>
-            )
-          }}
-        >
-          <Table
-            pagination={false}
-            scroll={{ x: 800 }}
-            rowClassName={record =>
-              selectProductId === record.productId ? styles.selectProductId : ""
-            }
-            onRow={record => ({
-              onClick: () => this.selectOneProduct(record.productId)
-            })}
-            rowKey="productId"
-            columns={[
-              {
-                title: "title",
-                dataIndex: "title",
-                key: "title",
-                ...this.props.getColumnSearchProps("title")
-              },
-              {
-                title: "productId",
-                dataIndex: "productId",
-                key: "productId",
-                ...this.props.getColumnSearchProps("productId")
-              },
-              {
-                title: "url",
-                dataIndex: "url",
-                key: "url"
-              },
-              {
-                title: "createTime",
-                dataIndex: "createTime",
-                key: "createTime",
-                render: v => formatTime(v)
-              },
-              {
-                title: "操作",
-                width: 50,
-                dataIndex: "operation",
-                key: "operation",
-                fixed: "right",
-                align: "center",
-                render: (v, record) => {
-                  return (
-                    <Popconfirm
-                      title="确认删除该商品?该操作务必谨慎！"
-                      onConfirm={() => this.removeProductUrl(record.productId)}
-                    >
-                      <a>删除</a>
-                    </Popconfirm>
-                  );
-                }
+        {name === "productList" && (
+          <Drawer
+            title="商品列表"
+            child={{
+              title: "添加商品",
+              entry: "添加商品",
+              children: (
+                <div>
+                  <Form
+                    submit={values => {
+                      this.addProductUrl({
+                        ...values
+                      });
+                    }}
+                    configs={{
+                      components: [
+                        {
+                          field: "url",
+                          type: "input",
+                          label: "商品地址",
+                          rules: [
+                            {
+                              required: true,
+                              message: "必填"
+                            }
+                          ]
+                        }
+                      ]
+                    }}
+                  />
+                </div>
+              )
+            }}
+          >
+            <Table
+              pagination={false}
+              scroll={{ x: 800 }}
+              rowClassName={record =>
+                selectProductId === record.productId
+                  ? styles.selectProductId
+                  : ""
               }
-            ]}
-            dataSource={normalizedProductUrls}
-          />
-        </Drawer>
+              onRow={record => ({
+                onClick: () => this.selectOneProduct(record.productId)
+              })}
+              rowKey="productId"
+              columns={[
+                {
+                  title: "title",
+                  dataIndex: "title",
+                  key: "title",
+                  ...this.props.getColumnSearchProps("title")
+                },
+                {
+                  title: "productId",
+                  dataIndex: "productId",
+                  key: "productId",
+                  ...this.props.getColumnSearchProps("productId")
+                },
+                {
+                  title: "url",
+                  dataIndex: "url",
+                  key: "url"
+                },
+                {
+                  title: "createTime",
+                  dataIndex: "createTime",
+                  key: "createTime",
+                  render: v => formatTime(v)
+                },
+                {
+                  title: "操作",
+                  width: 50,
+                  dataIndex: "operation",
+                  key: "operation",
+                  fixed: "right",
+                  align: "center",
+                  render: (v, record) => {
+                    return (
+                      <Popconfirm
+                        title="确认删除该商品?该操作务必谨慎！"
+                        onConfirm={() =>
+                          this.removeProductUrl(record.productId)
+                        }
+                      >
+                        <a>删除</a>
+                      </Popconfirm>
+                    );
+                  }
+                }
+              ]}
+              dataSource={normalizedProductUrls}
+            />
+          </Drawer>
+        )}
+        {name === "updateVersionRecords" && (
+          <Drawer title="版本更新历史">
+            <Table
+              pagination={false}
+              scroll={{ x: 800 }}
+              rowKey="productId"
+              columns={[
+                {
+                  title: "title",
+                  dataIndex: "title",
+                  key: "title"
+                },
+                {
+                  title: "productId",
+                  dataIndex: "productId",
+                  key: "productId"
+                }
+              ]}
+              dataSource={normalizedUpdateVersionRecords}
+            />
+          </Drawer>
+        )}
       </LayOut>
     );
   }

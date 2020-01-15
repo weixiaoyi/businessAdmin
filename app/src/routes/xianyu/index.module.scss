@@ -14,13 +14,24 @@
   padding: 5px;
   width: 100%;
 
-  > .title {
-    padding: 10px 5px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .headerUtils {
     background: white;
+    margin-bottom: 10px;
+    .title {
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .utils {
+      padding: 5px 10px;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1px;
+      background: white;
+    }
   }
+
   .productList {
     display: flex;
     flex-wrap: wrap;
