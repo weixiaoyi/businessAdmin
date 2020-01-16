@@ -12,7 +12,7 @@ function createMainWindow() {
         : path.join(__dirname, "./app/build/index.html"),
     width: 1000,
     height: 1000,
-    openDevTools: true,
+    openDevTools: process.env.NODE_ENV === "development",
     webPreferences: {
       nodeIntegration: true, // 解决require is not defined问题
       webviewTag: true // 解决webview无法显示问题
