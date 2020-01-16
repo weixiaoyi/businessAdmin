@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Icon } from "antd";
 import _ from "lodash";
-import { Inject } from "../../utils";
+import { Inject,formatMonthTime } from "../../utils";
 import * as styles from "./index.module.scss";
 
 @Inject(({ globalStore: model }) => ({
@@ -11,9 +11,11 @@ class Webview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: _.uniqueId("webview_")
+      id: _.uniqueId("webview_"),
+      refreshTime:'',
+      refreshTimeCount:0,
     };
-    this.reloadTimes = 0;
+    this.errReloadTimes = 0;
     this.interval = null;
   }
 
@@ -35,13 +37,17 @@ class Webview extends Component {
 
       if (executeJavaScript && _.isFunction(executeJavaScript)) {
         webview.executeJavaScript(executeJavaScript(src));
+        this.setState({
+          refreshTime:Date.now(),
+          refreshTimeCount:this.state.refreshTimeCount+1
+        })
       }
     });
 
     webview.addEventListener("did-fail-load", () => {
-      if (this.webview && this.reloadTimes < 3) {
+      if (this.webview && this.errReloadTimes < 3) {
         this.webview.reload();
-        this.reloadTimes++;
+        this.errReloadTimes++;
       }
     });
 
@@ -59,7 +65,7 @@ class Webview extends Component {
   }
 
   reload = () => {
-    this.webview && this.webview.reloadIgnoringCache();
+    this.webview && this.webview.reload();
   };
 
   openDevTools = () => {
@@ -67,7 +73,7 @@ class Webview extends Component {
   };
 
   render() {
-    const { id } = this.state;
+    const { id,refreshTime,refreshTimeCount } = this.state;
     const {
       className,
       src,
@@ -92,6 +98,9 @@ class Webview extends Component {
           className={className}
           src={src}
         />
+        {
+          refreshTime&&<div className={styles.refreshTime}>数据时间：{formatMonthTime(refreshTime)},第{refreshTimeCount}次</div>
+        }
       </div>
     );
   }
