@@ -14,6 +14,10 @@ class MyForm extends Component {
 
   componentDidMount() {}
 
+  componentWillUnmount() {
+    this.props.reset && this.props.reset();
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -35,15 +39,19 @@ class MyForm extends Component {
 
   render() {
     const { id } = this.state;
-    const { className, configs = {} } = this.props;
+    const { className, configs = {}, layout } = this.props;
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit} className="login-form">
+      <Form layout={layout} onSubmit={this.handleSubmit} className="login-form">
         {configs.components.map(item => (
           <Form.Item key={item.field} label={item.label}>
             {getFieldDecorator(item.field, {
               rules: item.rules
-            })(this.renderComponent(item))}
+            })(
+              this.renderComponent(item, {
+                placeholder: item.placeholder
+              })
+            )}
           </Form.Item>
         ))}
         <Form.Item key="submit">

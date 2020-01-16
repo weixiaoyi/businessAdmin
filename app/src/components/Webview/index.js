@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Icon } from "antd";
 import _ from "lodash";
-import { Inject,formatMonthTime } from "../../utils";
+import { Inject, formatMonthTime } from "../../utils";
 import * as styles from "./index.module.scss";
 
 @Inject(({ globalStore: model }) => ({
@@ -12,8 +12,8 @@ class Webview extends Component {
     super(props);
     this.state = {
       id: _.uniqueId("webview_"),
-      refreshTime:'',
-      refreshTimeCount:0,
+      refreshTime: "",
+      refreshTimeCount: 0
     };
     this.errReloadTimes = 0;
     this.interval = null;
@@ -38,9 +38,9 @@ class Webview extends Component {
       if (executeJavaScript && _.isFunction(executeJavaScript)) {
         webview.executeJavaScript(executeJavaScript(src));
         this.setState({
-          refreshTime:Date.now(),
-          refreshTimeCount:this.state.refreshTimeCount+1
-        })
+          refreshTime: Date.now(),
+          refreshTimeCount: this.state.refreshTimeCount + 1
+        });
       }
     });
 
@@ -73,7 +73,7 @@ class Webview extends Component {
   };
 
   render() {
-    const { id,refreshTime,refreshTimeCount } = this.state;
+    const { id, refreshTime, refreshTimeCount } = this.state;
     const {
       className,
       src,
@@ -98,9 +98,11 @@ class Webview extends Component {
           className={className}
           src={src}
         />
-        {
-          refreshTime&&<div className={styles.refreshTime}>数据时间：{formatMonthTime(refreshTime)},第{refreshTimeCount}次</div>
-        }
+        {refreshTime && (
+          <div className={styles.refreshTime}>
+            数据时间：{formatMonthTime(refreshTime)},第{refreshTimeCount}次
+          </div>
+        )}
       </div>
     );
   }
