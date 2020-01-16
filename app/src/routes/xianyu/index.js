@@ -96,7 +96,10 @@ class XianYu extends Component {
   };
 
   addProductModal = () => {
-    this.openModal({
+    const {
+      model: { openModal }
+    } = this.props;
+    openModal({
       name: "productList"
     });
   };
