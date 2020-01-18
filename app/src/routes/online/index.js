@@ -18,12 +18,12 @@ import {
   Drawer,
   Form,
   QrCode,
-  OpenExternal,
   Switch
 } from "../../components";
 import injectJavaScript from "./injectJavaScript";
 import { LayOut } from "../components";
 import { tableFilter } from "../../hoc";
+import configs from "./config";
 
 const { Panel } = Collapse;
 
@@ -137,51 +137,6 @@ class Online extends Component {
     });
   };
 
-  renderInfo = (item, isVersion = false) => {
-    let infos = [
-      { name: "售价", value: "sellPrice" },
-      { name: "原价", value: "prevPrice" },
-      { name: "编辑时间", value: "editTime" },
-      { name: "浏览", value: "hot" },
-      { name: "成色", value: "quality" },
-      { name: "vip", value: "vip" },
-      { name: "实名认证", value: "userVertify" }
-    ];
-    if (isVersion) {
-      infos = [
-        { name: "title", value: "title" },
-        { name: "productId", value: "productId" }
-      ]
-        .concat(infos)
-        .concat(
-          { name: "wangwang", value: "wangwang" },
-          {
-            name: "个人中心",
-            value: "wangwangPersonCenter",
-            render: (name, value) => (
-              <span>
-                <OpenExternal href={value}>前往</OpenExternal>
-                <Clipboard className={styles.personCenter} text={value} />
-              </span>
-            )
-          },
-          { name: "desc", value: "desc" }
-        );
-    }
-    return (
-      <ul className={styles.short}>
-        {infos.map(one => (
-          <li key={one.name}>
-            <span>{one.name}: </span>
-            {one.render
-              ? one.render(one.name, item[one.value])
-              : item[one.value]}
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
   selectOneProduct = productId => {
     this.dispatch({
       type: "selectOneProduct",
@@ -274,9 +229,12 @@ class Online extends Component {
                     : true
                 )
                 .map(item => {
-                  const id = item.url.replace(/.*id=(.*)$/g, "$1");
+                  const id = item.productId;
                   const productImages = images.filter(
                     one => one.productId === id
+                  );
+                  const findConfigs = configs.websites.find(
+                    one => one.text === item.website
                   );
                   return (
                     <Panel
@@ -313,7 +271,7 @@ class Online extends Component {
                               <QrCode url={item.url} />
                             </span>
                           </div>
-                          {this.renderInfo(item)}
+                          {findConfigs.renderInfo(item)}
                           <div className={styles.versionManage}>
                             <span style={{ marginRight: 10 }}>版本管理</span>
                             {[
@@ -334,7 +292,10 @@ class Online extends Component {
                                       if (item.errMsg) {
                                         return alert(item.errMsg);
                                       }
-                                      this.snapVersion(item);
+                                      this.snapVersion({
+                                        ...item,
+                                        productId: id
+                                      });
                                     }}
                                   />
                                 )
@@ -348,7 +309,10 @@ class Online extends Component {
                                   {(i.value || []).map(one => (
                                     <li key={one.createTime}>
                                       <Tooltip
-                                        title={this.renderInfo(one, true)}
+                                        title={findConfigs.renderInfo(
+                                          one,
+                                          true
+                                        )}
                                       >
                                         {formatMonthTime(one.createTime)}
                                       </Tooltip>
@@ -362,15 +326,7 @@ class Online extends Component {
                       }
                       key={item.productId}
                     >
-                      <ul className={styles.short}>
-                        {[{ name: "旺旺", value: "wangwang" }].map(one => (
-                          <li key={one.name}>
-                            <span>{one.name}:</span>
-                            {item[one.value]}
-                          </li>
-                        ))}
-                      </ul>
-                      <Clipboard text={item.desc} short={false} />
+                      {findConfigs.renderDetail(item)}
                       <Collapse defaultActiveKey="1" style={{ marginTop: 10 }}>
                         {productImages.length > 0 && (
                           <Panel header="本地图片" key="1">
@@ -446,6 +402,7 @@ class Online extends Component {
         </div>
         {name === "productList" && (
           <Drawer
+            width={"80%"}
             title="商品列表"
             child={{
               title: "添加商品",
@@ -460,6 +417,18 @@ class Online extends Component {
                     }}
                     configs={{
                       components: [
+                        {
+                          field: "website",
+                          type: "select",
+                          label: "来源站点",
+                          rules: [
+                            {
+                              required: true,
+                              message: "必填"
+                            }
+                          ],
+                          options: configs.websites
+                        },
                         {
                           field: "url",
                           type: "input",
@@ -492,6 +461,12 @@ class Online extends Component {
               rowKey="productId"
               columns={[
                 {
+                  title: "来源站点",
+                  dataIndex: "website",
+                  key: "website",
+                  width: 80
+                },
+                {
                   title: "title",
                   dataIndex: "title",
                   key: "title",
@@ -501,12 +476,15 @@ class Online extends Component {
                   title: "productId",
                   dataIndex: "productId",
                   key: "productId",
+                  width: 150,
                   ...this.props.getColumnSearchProps("productId")
                 },
+
                 {
                   title: "url",
                   dataIndex: "url",
-                  key: "url"
+                  key: "url",
+                  render: v => <Clipboard text={v} />
                 },
                 {
                   title: "createTime",

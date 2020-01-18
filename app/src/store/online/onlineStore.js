@@ -195,21 +195,24 @@ export default class OnlineStore extends ModelExtend {
       });
   };
 
-  "ipc-add-productUrl" = ({ url }) => {
+  "ipc-add-productUrl" = ({ url, website }) => {
     if (this.productUrls.find(item => item.url === url)) {
       return notification.success({
         message: "url已经存在",
         description: `url已经存在`
       });
     }
-    window.ipc &&
-      window.ipc.send("ipc", {
-        from: "app.wins.main.render",
-        data: {
-          type: "online.add-productUrl",
-          url
-        }
-      });
+    if (url && website) {
+      window.ipc &&
+        window.ipc.send("ipc", {
+          from: "app.wins.main.render",
+          data: {
+            type: "online.add-productUrl",
+            url,
+            website
+          }
+        });
+    }
   };
 
   "ipc-get-versionDb" = () => {

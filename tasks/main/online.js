@@ -75,24 +75,31 @@ exports.removeProductUrl = async ({ args, win }) => {
 
 exports.addProductUrl = async ({ args, win }) => {
   const {
-    data: { url }
+    data: { url, website }
   } = args;
-  const productId = url.replace(/.*id=(.*)$/g, "$1");
-  const db = await getOnlineProductDb(onlineProductUrlDb);
-  const values = db.get("products").value();
-  if (values.find(item => item.productId === productId) || !productId) return;
-  const results = await db
-    .get("products")
-    .unshift({
-      productId,
-      url,
-      createTime: Date.now()
-    })
-    .write()
-    .catch(() => null);
-  win.webContents.send("online.add_productsUrl", {
-    data: results
-  });
+  let productId = "";
+  if (website === "咸鱼") {
+    productId = url.replace(/.*id=(.*)$/g, "$1");
+  }
+
+  if (productId) {
+    const db = await getOnlineProductDb(onlineProductUrlDb);
+    const values = db.get("products").value();
+    if (values.find(item => item.productId === productId) || !productId) return;
+    const results = await db
+      .get("products")
+      .unshift({
+        productId,
+        url,
+        website,
+        createTime: Date.now()
+      })
+      .write()
+      .catch(() => null);
+    win.webContents.send("online.add_productsUrl", {
+      data: results
+    });
+  }
 };
 
 exports.getVersionDb = async ({ args, win }) => {
@@ -107,7 +114,7 @@ exports.snapVersion = async ({ args, win }) => {
   const {
     data: { product }
   } = args;
-  const productId = product.url.replace(/.*id=(.*)$/g, "$1");
+  const productId = product.productId;
   const onlineDb = await getOnlineVersionDb(onlineVersionDb);
   const snaps = onlineDb.get("versions").value().snaps[productId] || [];
   const results = await onlineDb
@@ -117,7 +124,6 @@ exports.snapVersion = async ({ args, win }) => {
       [
         {
           ...product,
-          productId,
           createTime: Date.now()
         }
       ]
@@ -135,11 +141,10 @@ exports.get_product = async ({ args, win }) => {
   const {
     data: { message }
   } = args;
-  const productId = message.url.replace(/.*id=(.*)$/g, "$1");
+  const productId = message.productId;
   win.webContents.send("online.get_product", {
     data: {
-      ...message,
-      productId
+      ...message
     }
   });
 

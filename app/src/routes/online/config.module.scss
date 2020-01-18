@@ -1,0 +1,20 @@
+.personCenter {
+  color: white;
+  background: darkblue;
+}
+
+.short {
+  display: flex;
+  li + li {
+    margin-left: 10px;
+    span {
+      margin-right: 2px;
+    }
+  }
+  &.showVersion {
+    display: block;
+    li + li {
+      margin-left: unset;
+    }
+  }
+}

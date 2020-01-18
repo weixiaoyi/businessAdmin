@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import _ from "lodash";
 import * as styles from "./index.module.scss";
+
+const { Option } = Select;
 
 @Form.create({})
 class MyForm extends Component {
@@ -30,6 +32,19 @@ class MyForm extends Component {
   renderComponent = (item, props) => {
     let FormComponent;
     switch (item.type) {
+      case "select":
+        {
+          FormComponent = (
+            <Select {...props}>
+              {item.options.map(one => (
+                <Option key={one.value} value={one.value}>
+                  {one.text}
+                </Option>
+              ))}
+            </Select>
+          );
+        }
+        break;
       case "input": {
         FormComponent = <Input {...props} />;
       }

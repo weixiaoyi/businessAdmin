@@ -23,6 +23,7 @@ const injectJavaScript = () => {
     return url;
   };
   const url = window.injectSrc;
+  const productId = url.replace(/.*id=(.*)$/g, "$1");
   let title = "";
   let sellPrice = "";
   let prevPrice = "";
@@ -94,6 +95,7 @@ const injectJavaScript = () => {
         type: "online.get-product",
         message: {
           url,
+          productId,
           wangwang,
           wangwangPersonCenter,
           userVertify,
@@ -134,6 +136,7 @@ const injectJavaScript = () => {
         type: "online.get-product",
         message: {
           url,
+          productId,
           title,
           sellPrice,
           prevPrice,

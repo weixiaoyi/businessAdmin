@@ -15,4 +15,16 @@
     font-size: 12px;
     color: #c9c9c9;
   }
+  .webviewCenter {
+    position: relative;
+    .loading {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+
+      transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
+
+      color: #008dff;
+    }
+  }
 }
