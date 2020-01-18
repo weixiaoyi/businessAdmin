@@ -43,6 +43,9 @@
     background: red;
   }
   .header {
+    img {
+      margin-right: 2px;
+    }
     display: flex;
     align-items: center;
   }

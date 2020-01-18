@@ -57,8 +57,8 @@ class Webview extends Component {
         domReady();
       }
 
-      if (executeJavaScript && _.isFunction(executeJavaScript)) {
-        webview.executeJavaScript(executeJavaScript(src));
+      if (executeJavaScript && _.isString(executeJavaScript)) {
+        webview.executeJavaScript(executeJavaScript);
         this.setState({
           refreshTime: Date.now(),
           refreshTimeCount: this.state.refreshTimeCount + 1,

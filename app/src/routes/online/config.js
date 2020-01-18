@@ -11,14 +11,22 @@ export default {
     {
       text: "淘宝",
       value: "淘宝",
-      icon: ""
+      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/taobao.png"
     },
-    { text: "京东", value: "京东", icon: "" },
-    { text: "1688", value: "1688", icon: "" },
+    {
+      text: "京东",
+      value: "京东",
+      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/jingdong.png"
+    },
+    {
+      text: "1688",
+      value: "1688",
+      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/1688.png"
+    },
     {
       text: "咸鱼",
       value: "咸鱼",
-      icon: "",
+      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/xianyu.png",
       renderInfo: (item, showVersion = false) => {
         let infos = [
           { name: "售价", value: "sellPrice" },

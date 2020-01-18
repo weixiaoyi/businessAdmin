@@ -248,6 +248,7 @@ class Online extends Component {
                           onClick={() => this.selectOneProduct(item.productId)}
                         >
                           <div className={styles.header}>
+                            <img width={40} src={findConfigs.icon} />
                             <strong>
                               <Clipboard short={false} text={item.title} />
                             </strong>
@@ -271,7 +272,8 @@ class Online extends Component {
                               <QrCode url={item.url} />
                             </span>
                           </div>
-                          {findConfigs.renderInfo(item)}
+                          {findConfigs.renderInfo &&
+                            findConfigs.renderInfo(item)}
                           <div className={styles.versionManage}>
                             <span style={{ marginRight: 10 }}>版本管理</span>
                             {[
@@ -284,7 +286,7 @@ class Online extends Component {
                               {
                                 name: "手动",
                                 value: versions.snaps ? versions.snaps[id] : [],
-                                icon: (
+                                icon: item.title && (
                                   <Icon
                                     type="camera"
                                     onClick={e => {
@@ -309,10 +311,10 @@ class Online extends Component {
                                   {(i.value || []).map(one => (
                                     <li key={one.createTime}>
                                       <Tooltip
-                                        title={findConfigs.renderInfo(
-                                          one,
-                                          true
-                                        )}
+                                        title={
+                                          findConfigs.renderInfo &&
+                                          findConfigs.renderInfo(one, true)
+                                        }
                                       >
                                         {formatMonthTime(one.createTime)}
                                       </Tooltip>
@@ -326,7 +328,8 @@ class Online extends Component {
                       }
                       key={item.productId}
                     >
-                      {findConfigs.renderDetail(item)}
+                      {findConfigs.renderDetail &&
+                        findConfigs.renderDetail(item)}
                       <Collapse defaultActiveKey="1" style={{ marginTop: 10 }}>
                         {productImages.length > 0 && (
                           <Panel header="本地图片" key="1">
@@ -393,7 +396,7 @@ class Online extends Component {
                 <Webview
                   auto={refresh}
                   style={{ height: "100%" }}
-                  executeJavaScript={injectJavaScript}
+                  executeJavaScript={injectJavaScript(item.url, item.website)}
                   src={item.url}
                 />
               </FullScreen>

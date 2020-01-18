@@ -80,6 +80,8 @@ exports.addProductUrl = async ({ args, win }) => {
   let productId = "";
   if (website === "咸鱼") {
     productId = url.replace(/.*id=(.*)$/g, "$1");
+  } else if (website === "淘宝") {
+    productId = url.replace(/.*&id=(.*?)&.*/g, "$1");
   }
 
   if (productId) {
