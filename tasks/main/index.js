@@ -1,6 +1,6 @@
 const globalConfig = require("./global");
 const scrapy = require("./scrapy");
-const xianyu = require("./xianyu");
+const online = require("./online");
 let win;
 
 exports.default = window => {
@@ -16,28 +16,28 @@ exports.messageTasks = async (args, app) => {
     await globalConfig.config({ args, win, app });
   }
 
-  if (type === "xianyu.test") {
-    await xianyu.test({ args, win, app });
-  } else if (type === "xianyu.get-product") {
-    await xianyu.get_product({ args, win, app });
-  } else if (type === "xianyu.download-image") {
-    await xianyu.download_image({ args, win, app });
-  } else if (type === "xianyu.open-productIdPath") {
-    await xianyu.open_productIdPath({ args, win, app });
-  } else if (type === "xianyu.get-imageDb") {
-    await xianyu.get_imageDb({ args, win, app });
-  } else if (type === "xianyu.get-imagePath") {
-    await xianyu.get_imagePath({ args, win, app });
-  } else if (type === "xianyu.snap-version") {
-    await xianyu.snapVersion({ args, win, app });
-  } else if (type === "xianyu.get-versionDb") {
-    await xianyu.getVersionDb({ args, win, app });
-  } else if (type === "xianyu.add-productUrl") {
-    await xianyu.addProductUrl({ args, win, app });
-  } else if (type === "xianyu.get-productUrls") {
-    await xianyu.getProductUrls({ args, win, app });
-  } else if (type === "xianyu.remove-productUrl") {
-    await xianyu.removeProductUrl({ args, win, app });
+  if (type === "online.test") {
+    await online.test({ args, win, app });
+  } else if (type === "online.get-product") {
+    await online.get_product({ args, win, app });
+  } else if (type === "online.download-image") {
+    await online.download_image({ args, win, app });
+  } else if (type === "online.open-productIdPath") {
+    await online.open_productIdPath({ args, win, app });
+  } else if (type === "online.get-imageDb") {
+    await online.get_imageDb({ args, win, app });
+  } else if (type === "online.get-imagePath") {
+    await online.get_imagePath({ args, win, app });
+  } else if (type === "online.snap-version") {
+    await online.snapVersion({ args, win, app });
+  } else if (type === "online.get-versionDb") {
+    await online.getVersionDb({ args, win, app });
+  } else if (type === "online.add-productUrl") {
+    await online.addProductUrl({ args, win, app });
+  } else if (type === "online.get-productUrls") {
+    await online.getProductUrls({ args, win, app });
+  } else if (type === "online.remove-productUrl") {
+    await online.removeProductUrl({ args, win, app });
   }
 
   if (type === "scrapy.ipc-get-appPath") {

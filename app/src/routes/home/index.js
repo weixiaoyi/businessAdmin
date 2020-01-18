@@ -21,10 +21,10 @@ class Home extends Component {
             </Card>
             <Card
               size="small"
-              title="咸鱼监控"
-              extra={<Link to={PATH.xianyu}>More</Link>}
+              title="电商平台"
+              extra={<Link to={PATH.online}>More</Link>}
             >
-              知乎爬虫
+              电商平台
             </Card>
           </div>
         </div>

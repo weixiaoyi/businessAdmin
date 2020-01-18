@@ -4,14 +4,14 @@ import { notification, message } from "antd";
 import _ from "lodash";
 import { localSave } from "../../utils";
 
-export default class XianyuStore extends ModelExtend {
+export default class OnlineStore extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
     this.rootStore = rootStore;
     this.listenIpc();
     autorun(() => {
-      localSave.set("refresh_xianyu", this.refresh);
-      localSave.set("updateVersionRecords_xianyu", this.updateVersionRecords);
+      localSave.set("refresh_online", this.refresh);
+      localSave.set("updateVersionRecords_online", this.updateVersionRecords);
     });
   }
   @observable products = [];
@@ -20,9 +20,9 @@ export default class XianyuStore extends ModelExtend {
   @observable imagePath = "";
   @observable productUrls = [];
   @observable selectProductId = "";
-  @observable refresh = localSave.get("refresh_xianyu") || false;
+  @observable refresh = localSave.get("refresh_online") || false;
   @observable updateVersionRecords =
-    localSave.get("updateVersionRecords_xianyu") || [];
+    localSave.get("updateVersionRecords_online") || [];
 
   @computed get normalizedProductUrls() {
     const productUrls = this.productUrls.map(item => {
@@ -45,18 +45,18 @@ export default class XianyuStore extends ModelExtend {
   listenIpc = () => {
     const sortImage = data => data.sort((a, b) => a.index - b.index);
     window.ipc &&
-      window.ipc.on("xianyu.test", (e, args) => {
-        console.log(args, "---闲鱼");
+      window.ipc.on("online.test", (e, args) => {
+        console.log(args, "---online电商");
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.get_productUrls", (e, args) => {
+      window.ipc.on("online.get_productUrls", (e, args) => {
         const { data } = args;
         this.commit("productUrls", data);
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.remove_productUrl", (e, args) => {
+      window.ipc.on("online.remove_productUrl", (e, args) => {
         const { data } = args;
         if (data) {
           notification.success({
@@ -75,7 +75,7 @@ export default class XianyuStore extends ModelExtend {
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.add_productsUrl", (e, args) => {
+      window.ipc.on("online.add_productsUrl", (e, args) => {
         const { data } = args;
         this.commit("productUrls", data);
         notification.success({
@@ -85,7 +85,7 @@ export default class XianyuStore extends ModelExtend {
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.update_version", (e, args) => {
+      window.ipc.on("online.update_version", (e, args) => {
         const { data, updateInfo } = args;
         this.commit("versions", data);
         notification.success({
@@ -102,25 +102,25 @@ export default class XianyuStore extends ModelExtend {
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.get_versionDb", (e, args) => {
+      window.ipc.on("online.get_versionDb", (e, args) => {
         const { data } = args;
         this.commit("versions", data);
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.get_imageDb", (e, args) => {
+      window.ipc.on("online.get_imageDb", (e, args) => {
         const { data } = args;
         this.commit("images", sortImage(data));
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.get_imagePath", (e, args) => {
+      window.ipc.on("online.get_imagePath", (e, args) => {
         const { dir } = args;
         this.commit("imagePath", dir);
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.get_product", (e, args) => {
+      window.ipc.on("online.get_product", (e, args) => {
         const { data } = args;
         let products = _.cloneDeep(this.products);
         if (products.find(one => one.url === data.url)) {
@@ -137,7 +137,7 @@ export default class XianyuStore extends ModelExtend {
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.update-imageDb", (e, args) => {
+      window.ipc.on("online.update-imageDb", (e, args) => {
         const { data } = args;
         this.commit("images", sortImage(data));
         notification.success({
@@ -147,7 +147,7 @@ export default class XianyuStore extends ModelExtend {
       });
 
     window.ipc &&
-      window.ipc.on("xianyu.download-image", (e, args) => {
+      window.ipc.on("online.download-image", (e, args) => {
         if (args) {
           if (args) {
             notification.success({
@@ -164,12 +164,12 @@ export default class XianyuStore extends ModelExtend {
       });
   };
 
-  "ipc-xianyu-test" = ({}) => {
+  "ipc-online-test" = ({}) => {
     window.ipc &&
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.test"
+          type: "online.test"
         }
       });
   };
@@ -179,7 +179,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.remove-productUrl",
+          type: "online.remove-productUrl",
           productId
         }
       });
@@ -190,7 +190,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.get-productUrls"
+          type: "online.get-productUrls"
         }
       });
   };
@@ -206,7 +206,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.add-productUrl",
+          type: "online.add-productUrl",
           url
         }
       });
@@ -217,7 +217,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.get-versionDb"
+          type: "online.get-versionDb"
         }
       });
   };
@@ -227,7 +227,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.get-imagePath"
+          type: "online.get-imagePath"
         }
       });
   };
@@ -237,7 +237,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.get-imageDb"
+          type: "online.get-imageDb"
         }
       });
   };
@@ -247,7 +247,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.download-image",
+          type: "online.download-image",
           dataUrl,
           filename,
           productId,
@@ -261,7 +261,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.open-productIdPath",
+          type: "online.open-productIdPath",
           productId
         }
       });
@@ -272,7 +272,7 @@ export default class XianyuStore extends ModelExtend {
       window.ipc.send("ipc", {
         from: "app.wins.main.render",
         data: {
-          type: "xianyu.snap-version",
+          type: "online.snap-version",
           product
         }
       });

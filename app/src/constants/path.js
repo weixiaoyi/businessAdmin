@@ -3,5 +3,6 @@ export const PATH = {
   home: "/",
   scrapy: "/scrapy",
   scrapyPdf: "/blank/scrapy/pdf",
-  xianyu: "/xianyu"
+  xianyu: "/xianyu",
+  online: "/online"
 };

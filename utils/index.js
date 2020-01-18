@@ -3,9 +3,9 @@ const { parseDataUrl2Image, setDataPath } = require("./helper");
 const {
   getScrapyDb,
   setPreloadFile,
-  getXianyuImageDb,
-  getXianyuVersionDb,
-  getXianyuProductDb
+  getOnlineImageDb,
+  getOnlineVersionDb,
+  getOnlineProductDb
 } = require("./db");
 const { ensureDir, outputFile } = require("./fsExtra");
 
@@ -14,9 +14,9 @@ module.exports = {
   parseDataUrl2Image,
   setDataPath,
   getScrapyDb,
-  getXianyuImageDb,
-  getXianyuVersionDb,
-  getXianyuProductDb,
+  getOnlineImageDb,
+  getOnlineVersionDb,
+  getOnlineProductDb,
   setPreloadFile,
   ensureDir,
   outputFile

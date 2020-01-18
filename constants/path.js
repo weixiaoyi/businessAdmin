@@ -12,12 +12,12 @@ exports.PATH = {
       ? "/fuyeAssets/dev/globalConfigs"
       : "/fuyeAssets/prod/globalConfigs",
 
-  xianyuImageDir:
+  onlineImageDir:
     process.env.NODE_ENV === "development"
-      ? "/fuyeAssets/dev/xianyu/image"
-      : "/fuyeAssets/prod/xianyu/image",
-  xianyuDb:
+      ? "/fuyeAssets/dev/online/image"
+      : "/fuyeAssets/prod/online/image",
+  onlineDb:
     process.env.NODE_ENV === "development"
-      ? "/fuyeAssets/dev/xianyu/db"
-      : "/fuyeAssets/prod/xianyu/db"
+      ? "/fuyeAssets/dev/online/db"
+      : "/fuyeAssets/prod/online/db"
 };

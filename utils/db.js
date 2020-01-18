@@ -36,17 +36,17 @@ exports.getScrapyDb = async dbName => {
   });
 };
 
-exports.getXianyuImageDb = async dbName => {
+exports.getOnlineImageDb = async dbName => {
   return getDb({
-    dir: path.join(setDataPath(), PATH.xianyuDb),
+    dir: path.join(setDataPath(), PATH.onlineDb),
     dbName,
     defaultValue: { images: [] }
   });
 };
 
-exports.getXianyuVersionDb = async dbName => {
+exports.getOnlineVersionDb = async dbName => {
   return getDb({
-    dir: path.join(setDataPath(), PATH.xianyuDb),
+    dir: path.join(setDataPath(), PATH.onlineDb),
     dbName,
     defaultValue: {
       versions: {
@@ -57,9 +57,9 @@ exports.getXianyuVersionDb = async dbName => {
   });
 };
 
-exports.getXianyuProductDb = async dbName => {
+exports.getOnlineProductDb = async dbName => {
   return getDb({
-    dir: path.join(setDataPath(), PATH.xianyuDb),
+    dir: path.join(setDataPath(), PATH.onlineDb),
     dbName,
     defaultValue: { products: [] }
   });

@@ -1,7 +1,7 @@
 import Home from "../home";
 import Scrapy from "../scrapy";
 import ScrapyPdf from "../scrapyPdf";
-import XianYu from "../xianyu";
+import Online from "../online";
 import { PATH } from "../../constants";
 
 export default [
@@ -22,8 +22,8 @@ export default [
     blank: true
   },
   {
-    title: "xianyu",
-    component: XianYu,
-    path: PATH.xianyu
+    title: "Online",
+    component: Online,
+    path: PATH.online
   }
 ];

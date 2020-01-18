@@ -28,11 +28,11 @@ import { tableFilter } from "../../hoc";
 const { Panel } = Collapse;
 
 @tableFilter
-@Inject(({ xianyuStore: model, globalStore }) => ({
+@Inject(({ onlineStore: model, globalStore }) => ({
   model,
   globalStore
 }))
-class XianYu extends Component {
+class Online extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.model.dispatch;
@@ -216,10 +216,10 @@ class XianYu extends Component {
 
     return (
       <LayOut>
-        <div className={styles.xianyu}>
+        <div className={styles.online}>
           <div className={styles.headerUtils}>
             <div className={styles.title}>
-              <div>咸鱼</div>
+              <div>纵浪贸易管理端</div>
               <div>
                 <Button
                   onClick={this.autoRefresh}
@@ -239,7 +239,7 @@ class XianYu extends Component {
               <a onClick={this.openUpdateVersionRecordModal}>版本更新历史</a>
             </div>
           </div>
-          <DragFix name="xianyu" title="商品监控">
+          <DragFix name="online" title="商品监控">
             <Switch className={styles.search}>
               <Form
                 reset={() =>
@@ -566,4 +566,4 @@ class XianYu extends Component {
   }
 }
 
-export default XianYu;
+export default Online;

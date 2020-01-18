@@ -91,7 +91,7 @@ const injectJavaScript = () => {
     window.ipc.send("ipc", {
       from: "app.wins.main.render",
       data: {
-        type: "xianyu.get-product",
+        type: "online.get-product",
         message: {
           url,
           wangwang,
@@ -131,7 +131,7 @@ const injectJavaScript = () => {
     window.ipc.send("ipc", {
       from: "app.wins.main.render",
       data: {
-        type: "xianyu.get-product",
+        type: "online.get-product",
         message: {
           url,
           title,
