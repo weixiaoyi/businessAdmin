@@ -8,6 +8,7 @@ import "moment/locale/zh-cn";
 import { notification, ConfigProvider } from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import "antd/dist/antd.css";
+import "swiper/css/swiper.css";
 import "rc-slider/assets/index.css";
 import "viewerjs/dist/viewer.css";
 import "./index.css";

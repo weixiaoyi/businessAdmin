@@ -11,3 +11,4 @@ export { default as Form } from "./Form";
 export { default as QrCode } from "./QrCode";
 export { default as OpenExternal } from "./OpenExternal";
 export { default as Switch } from "./Switch";
+export { default as Swiper } from "./Swiper";

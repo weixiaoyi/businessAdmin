@@ -82,9 +82,11 @@ exports.addProductUrl = async ({ args, win }) => {
     productId = url.replace(/.*id=(.*)$/g, "$1");
   } else if (website === "淘宝") {
     productId = url.replace(/.*&id=(.*?)&.*/g, "$1");
+  } else if (website === "京东") {
+    productId = url.replace(/.*\/(.*?).html/g, "$1");
   }
 
-  if (productId) {
+  if (productId && isNaN(Number(productId))) {
     const db = await getOnlineProductDb(onlineProductUrlDb);
     const values = db.get("products").value();
     if (values.find(item => item.productId === productId) || !productId) return;
@@ -161,16 +163,21 @@ exports.get_product = async ({ args, win }) => {
   const onlineDb = await getOnlineVersionDb(onlineVersionDb);
   const autoSnaps = onlineDb.get("versions").value().autoSnaps[productId] || [];
   const findOne = autoSnaps[0];
-  const isChange =
+  let isChange =
     !findOne ||
     (findOne &&
       (findOne.title !== message.title ||
-        findOne.sellPrice !== message.sellPrice ||
-        findOne.prevPrice !== message.prevPrice ||
-        findOne.quality !== message.quality ||
-        findOne.fromWhere !== message.fromWhere ||
-        findOne.emailPrice !== message.emailPrice ||
-        findOne.desc !== message.desc));
+        findOne.sellPrice !== message.sellPrice));
+  if (!isChange && message.website === "咸鱼") {
+    isChange =
+      findOne.sellPrice !== message.sellPrice ||
+      findOne.prevPrice !== message.prevPrice ||
+      findOne.quality !== message.quality ||
+      findOne.fromWhere !== message.fromWhere ||
+      findOne.emailPrice !== message.emailPrice ||
+      findOne.desc !== message.desc;
+  }
+
   if (isChange) {
     const newSnap = {
       ...message,

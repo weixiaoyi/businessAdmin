@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Collapse, Button, Icon, Tooltip, Table, Popconfirm } from "antd";
 import classNames from "classnames";
+
 import {
   Inject,
   getFilename,
@@ -18,7 +19,8 @@ import {
   Drawer,
   Form,
   QrCode,
-  Switch
+  Switch,
+  Swiper
 } from "../../components";
 import injectJavaScript from "./injectJavaScript";
 import { LayOut } from "../components";
@@ -245,84 +247,103 @@ class Online extends Component {
                       )}
                       header={
                         <div
+                          className={styles.mainheader}
                           onClick={() => this.selectOneProduct(item.productId)}
                         >
-                          <div className={styles.header}>
-                            <img width={40} src={findConfigs.icon} />
-                            <strong>
-                              <Clipboard short={false} text={item.title} />
-                            </strong>
-                            {item.errMsg && <span>({item.errMsg})</span>}
-                            <Button
-                              disabled={!productImages.length > 0}
-                              style={{ marginLeft: 20 }}
-                              onClick={e => {
-                                this.openProductIdPath(id);
-                                e.stopPropagation();
-                              }}
-                            >
-                              本地商品{id}图片
-                              {!productImages.length > 0 && <span>(暂无)</span>}
-                            </Button>
-                            <Clipboard
-                              text={item.url}
-                              style={{ marginLeft: 20 }}
-                            />
-                            <span style={{ marginLeft: 20 }}>
-                              <QrCode url={item.url} />
-                            </span>
-                          </div>
-                          {findConfigs.renderInfo &&
-                            findConfigs.renderInfo(item)}
-                          <div className={styles.versionManage}>
-                            <span style={{ marginRight: 10 }}>版本管理</span>
-                            {[
-                              {
-                                name: "自动",
-                                value: versions.autoSnaps
-                                  ? versions.autoSnaps[id]
-                                  : []
-                              },
-                              {
-                                name: "手动",
-                                value: versions.snaps ? versions.snaps[id] : [],
-                                icon: item.title && (
-                                  <Icon
-                                    type="camera"
-                                    onClick={e => {
-                                      e.stopPropagation();
-                                      if (item.errMsg) {
-                                        return alert(item.errMsg);
-                                      }
-                                      this.snapVersion({
-                                        ...item,
-                                        productId: id
-                                      });
-                                    }}
-                                  />
-                                )
-                              }
-                            ].map(i => (
-                              <div key={i.name}>
-                                <span>
-                                  ({i.name} {i.icon}):
-                                </span>
-                                <ul>
-                                  {(i.value || []).map(one => (
-                                    <li key={one.createTime}>
-                                      <Tooltip
-                                        title={
-                                          findConfigs.renderInfo &&
-                                          findConfigs.renderInfo(one, true)
+                          <div>
+                            <div className={styles.header}>
+                              <img width={40} src={findConfigs.icon} />
+                              <strong style={{ maxWidth: 500 }}>
+                                <Clipboard short={false} text={item.title} />
+                              </strong>
+                              {item.errMsg && <span>({item.errMsg})</span>}
+                              <Button
+                                disabled={!productImages.length > 0}
+                                style={{ marginLeft: 20 }}
+                                onClick={e => {
+                                  this.openProductIdPath(id);
+                                  e.stopPropagation();
+                                }}
+                              >
+                                {id}
+                                {!productImages.length > 0 && (
+                                  <span>(暂无)</span>
+                                )}
+                              </Button>
+                              <Clipboard
+                                text={item.url}
+                                style={{ marginLeft: 20 }}
+                              />
+                              <span style={{ marginLeft: 20 }}>
+                                <QrCode url={item.url} />
+                              </span>
+                            </div>
+                            {findConfigs.renderInfo &&
+                              findConfigs.renderInfo(item)}
+                            <div className={styles.versionManage}>
+                              <span style={{ marginRight: 10 }}>版本管理</span>
+                              {[
+                                {
+                                  name: "自动",
+                                  value: versions.autoSnaps
+                                    ? versions.autoSnaps[id]
+                                    : []
+                                },
+                                {
+                                  name: "手动",
+                                  value: versions.snaps
+                                    ? versions.snaps[id]
+                                    : [],
+                                  icon: item.title && (
+                                    <Icon
+                                      type="camera"
+                                      onClick={e => {
+                                        e.stopPropagation();
+                                        if (item.errMsg) {
+                                          return alert(item.errMsg);
                                         }
-                                      >
-                                        {formatMonthTime(one.createTime)}
-                                      </Tooltip>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
+                                        this.snapVersion({
+                                          ...item,
+                                          productId: id
+                                        });
+                                      }}
+                                    />
+                                  )
+                                }
+                              ].map(i => (
+                                <div key={i.name}>
+                                  <span>
+                                    ({i.name} {i.icon}):
+                                  </span>
+                                  <ul>
+                                    {(i.value || []).map(one => (
+                                      <li key={one.createTime}>
+                                        <Tooltip
+                                          title={
+                                            findConfigs.renderInfo &&
+                                            findConfigs.renderInfo(one, true)
+                                          }
+                                        >
+                                          {formatMonthTime(one.createTime)}
+                                        </Tooltip>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            {((item.previews && item.previews.length > 0) ||
+                              (item.images && item.images.length > 0)) && (
+                              <Swiper
+                                className={styles.preview}
+                                data={(item.previews && item.previews.length > 0
+                                  ? item.previews
+                                  : item.images
+                                ).map(item => ({ src: item }))}
+                              />
+                            )}
                           </div>
                         </div>
                       }
@@ -354,7 +375,7 @@ class Online extends Component {
                         )}
 
                         {item.images && item.images.length > 0 && (
-                          <Panel header="闲鱼图片" key="2">
+                          <Panel header={`${item.website}图片`} key="2">
                             <ul className={styles.imagesList}>
                               {item.images.map((one, index) => (
                                 <li key={one}>
@@ -402,6 +423,13 @@ class Online extends Component {
               </FullScreen>
             ))}
           </div>
+          {/*<iframe*/}
+          {/*width={1900}*/}
+          {/*height={1000}*/}
+          {/*src={*/}
+          {/*"https://item.taobao.com/item.htm?spm=a217f.8051907.1329388-0.1.67ea33084eV9SU&id=607728735025"*/}
+          {/*}*/}
+          {/*/>*/}
         </div>
         {name === "productList" && (
           <Drawer

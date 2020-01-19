@@ -16,7 +16,41 @@ export default {
     {
       text: "京东",
       value: "京东",
-      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/jingdong.png"
+      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/jingdong.png",
+      renderInfo: (item, showVersion = false) => {
+        let infos = [
+          { name: "售价", value: "sellPrice" },
+          { name: "原价", value: "prevPrice" }
+          // { name: "编辑时间", value: "editTime" },
+          // { name: "浏览", value: "hot" },
+          // { name: "成色", value: "quality" },
+          // { name: "vip", value: "vip" },
+          // { name: "实名认证", value: "userVertify" }
+        ];
+        if (showVersion) {
+          infos = [
+            { name: "title", value: "title" },
+            { name: "productId", value: "productId" }
+          ].concat(infos);
+        }
+        return (
+          <ul
+            className={classNames(
+              styles.short,
+              showVersion ? styles.showVersion : ""
+            )}
+          >
+            {infos.map(one => (
+              <li key={one.name}>
+                <span>{one.name}: </span>
+                {one.render
+                  ? one.render(one.name, item[one.value])
+                  : item[one.value]}
+              </li>
+            ))}
+          </ul>
+        );
+      }
     },
     {
       text: "1688",

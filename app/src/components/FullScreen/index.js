@@ -65,21 +65,16 @@ class FullScreen extends Component {
         <Card
           title={title}
           extra={
-            fullScreen ? (
-              <Icon
-                type="fullscreen-exit"
-                onClick={() => {
+            <Icon
+              type={fullScreen ? "fullscreen-exit" : "fullscreen"}
+              onClick={() => {
+                if (document.fullscreenElement) {
                   this.closeFullScreen(document.getElementById(id));
-                }}
-              />
-            ) : (
-              <Icon
-                type="fullscreen"
-                onClick={() => {
+                } else {
                   this.fullScreen(document.getElementById(id));
-                }}
-              />
-            )
+                }
+              }}
+            />
           }
         >
           {children}

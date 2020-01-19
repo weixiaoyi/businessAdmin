@@ -42,6 +42,10 @@
   .errMsgPannel {
     background: red;
   }
+  .mainheader {
+    display: flex;
+    justify-content: space-between;
+  }
   .header {
     img {
       margin-right: 2px;
@@ -82,4 +86,12 @@
 
 .search {
   margin-bottom: 10px;
+}
+
+.preview {
+  width: 100px;
+  height: 100px;
+  img {
+    width: 100px;
+  }
 }

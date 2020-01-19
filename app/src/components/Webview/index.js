@@ -35,7 +35,6 @@ class Webview extends Component {
     const {
       domReady,
       executeJavaScript,
-      src,
       auto,
       interval = 30 * 60 * 1000
     } = this.props;
@@ -64,6 +63,17 @@ class Webview extends Component {
           refreshTimeCount: this.state.refreshTimeCount + 1,
           loading: false
         });
+
+        setTimeout(() => {
+          webview.getWebContents().capturePage(image => {
+            console.log(image, "---------------");
+          });
+          webview
+            .capturePage({ x: 0, y: 0, width: 1000, height: 1000 })
+            .then(image => {
+              console.log(image, "------------image");
+            });
+        }, 2000);
       }
     });
 

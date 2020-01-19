@@ -113,14 +113,10 @@ const injectJavaScript = () => {
             wangwangAddress,
             emailPrice,
             images: images
-              ? Array.from(
-                  new Set(
-                    Array.prototype.map.call(images, item => {
-                      const url = item.getAttribute("lazyload-img") || item.src;
-                      return getUrl(url);
-                    })
-                  )
-                )
+              ? Array.prototype.map.call(images, item => {
+                  const url = item.getAttribute("lazyload-img") || item.src;
+                  return getUrl(url);
+                })
               : [],
             desc
           }
@@ -162,6 +158,41 @@ const injectJavaScript = () => {
     return {
       url
     };
+  } else if (window.injectWebsite === "京东") {
+    const productId = url.replace(/.*\/(.*?).html/g, "$1");
+    const title = document.querySelector(".itemInfo-wrap .sku-name").innerText;
+    const sellPrice = document.querySelector(".summary-price .p-price>.price")
+      .innerText;
+    const prevPrice = tryFind(
+      () => document.querySelector("#page_hx_price").innerText
+    );
+    const images = document.querySelectorAll("#J-detail-content img");
+    const previews = document.querySelectorAll("#spec-list img");
+    window.ipc.send("ipc", {
+      from: "app.wins.main.render",
+      data: {
+        type: "online.get-product",
+        message: {
+          url,
+          productId,
+          title,
+          sellPrice,
+          prevPrice,
+          images: images
+            ? Array.prototype.map.call(images, item => {
+                const url = item.getAttribute("data-lazyload") || item.src;
+                return getUrl(url);
+              })
+            : [],
+          previews: previews
+            ? Array.prototype.map.call(previews, item => {
+                const url = item.src;
+                return getUrl(url);
+              })
+            : []
+        }
+      }
+    });
   }
 };
 
