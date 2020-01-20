@@ -163,6 +163,7 @@ exports.get_product = async ({ args, win }) => {
   const onlineDb = await getOnlineVersionDb(onlineVersionDb);
   const autoSnaps = onlineDb.get("versions").value().autoSnaps[productId] || [];
   const findOne = autoSnaps[0];
+
   let isChange =
     !findOne ||
     (findOne &&
@@ -176,6 +177,8 @@ exports.get_product = async ({ args, win }) => {
       findOne.fromWhere !== message.fromWhere ||
       findOne.emailPrice !== message.emailPrice ||
       findOne.desc !== message.desc;
+  } else if (!isChange && message.website === "京东") {
+    isChange = findOne.attrs !== message.attrs;
   }
 
   if (isChange) {

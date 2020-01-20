@@ -16,9 +16,11 @@ const create = options => {
   let win = new BrowserWindow({
     width,
     height,
+    "enable-larger-than-screen": true,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: false,
+      resizable: false,
       preload: path.join(__dirname, "preload.js"),
       ...webPreferences
     }

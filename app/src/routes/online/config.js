@@ -20,12 +20,8 @@ export default {
       renderInfo: (item, showVersion = false) => {
         let infos = [
           { name: "售价", value: "sellPrice" },
-          { name: "原价", value: "prevPrice" }
-          // { name: "编辑时间", value: "editTime" },
-          // { name: "浏览", value: "hot" },
-          // { name: "成色", value: "quality" },
-          // { name: "vip", value: "vip" },
-          // { name: "实名认证", value: "userVertify" }
+          { name: "原价", value: "prevPrice" },
+          { name: "属性", value: "attrs" }
         ];
         if (showVersion) {
           infos = [

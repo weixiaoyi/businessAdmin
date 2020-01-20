@@ -24,7 +24,8 @@ class Webview extends Component {
       id: _.uniqueId("webview_"),
       refreshTime: "",
       refreshTimeCount: 0,
-      loading: false
+      loading: false,
+      snap: ""
     };
     this.errReloadTimes = 0;
     this.interval = null;
@@ -40,6 +41,12 @@ class Webview extends Component {
     } = this.props;
     const webview = document.querySelector(`#${id}`);
     this.webview = webview;
+
+    webview.addEventListener("console-message", e => {
+      if (e && e.message && e.level !== 2) {
+        console.log("webview调试: " + e.message);
+      }
+    });
 
     webview.addEventListener("did-start-loading", () => {
       this.setState({
@@ -64,16 +71,13 @@ class Webview extends Component {
           loading: false
         });
 
-        setTimeout(() => {
-          webview.getWebContents().capturePage(image => {
-            console.log(image, "---------------");
-          });
-          webview
-            .capturePage({ x: 0, y: 0, width: 1000, height: 1000 })
-            .then(image => {
-              console.log(image, "------------image");
-            });
-        }, 2000);
+        // webview
+        //   .capturePage({ x: 0, y: 0, width: 1000, height: 1000 })
+        //   .then(image => {
+        //     this.setState({
+        //       snap: image.toDataURL()
+        //     });
+        //   });
       }
     });
 
@@ -106,7 +110,7 @@ class Webview extends Component {
   };
 
   render() {
-    const { id, refreshTime, refreshTimeCount, loading } = this.state;
+    const { id, refreshTime, refreshTimeCount, loading, snap } = this.state;
     const {
       className,
       src,

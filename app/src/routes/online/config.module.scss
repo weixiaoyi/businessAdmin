@@ -1,3 +1,5 @@
+@import "src/styles/index.scss";
+
 .personCenter {
   color: white;
   background: darkblue;
@@ -5,11 +7,15 @@
 
 .short {
   display: flex;
-  li + li {
-    margin-left: 10px;
+  flex-wrap: wrap;
+  li {
     span {
+      color: $green;
       margin-right: 2px;
     }
+  }
+  li + li {
+    margin-left: 10px;
   }
   &.showVersion {
     display: block;

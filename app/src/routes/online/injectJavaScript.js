@@ -24,7 +24,8 @@ const injectJavaScript = () => {
     return url;
   };
   const url = window.injectSrc;
-  if (window.injectWebsite === "咸鱼") {
+  const website = window.injectWebsite;
+  if (website === "咸鱼") {
     const productId = url.replace(/.*id=(.*)$/g, "$1");
     let title = "";
     let sellPrice = "";
@@ -98,6 +99,7 @@ const injectJavaScript = () => {
           type: "online.get-product",
           message: {
             url,
+            website,
             productId,
             wangwang,
             wangwangPersonCenter,
@@ -138,6 +140,7 @@ const injectJavaScript = () => {
           type: "online.get-product",
           message: {
             url,
+            website,
             productId,
             title,
             sellPrice,
@@ -154,11 +157,11 @@ const injectJavaScript = () => {
         }
       });
     }
-  } else if (window.injectWebsite === "淘宝") {
+  } else if (website === "淘宝") {
     return {
       url
     };
-  } else if (window.injectWebsite === "京东") {
+  } else if (website === "京东") {
     const productId = url.replace(/.*\/(.*?).html/g, "$1");
     const title = document.querySelector(".itemInfo-wrap .sku-name").innerText;
     const sellPrice = document.querySelector(".summary-price .p-price>.price")
@@ -168,12 +171,17 @@ const injectJavaScript = () => {
     );
     const images = document.querySelectorAll("#J-detail-content img");
     const previews = document.querySelectorAll("#spec-list img");
+    const attrs = tryFind(() =>
+      document.querySelectorAll("#choose-attrs .li.p-choose .item[data-value]")
+    );
+
     window.ipc.send("ipc", {
       from: "app.wins.main.render",
       data: {
         type: "online.get-product",
         message: {
           url,
+          website,
           productId,
           title,
           sellPrice,
@@ -189,6 +197,13 @@ const injectJavaScript = () => {
                 const url = item.src;
                 return getUrl(url);
               })
+            : [],
+          attrs: attrs
+            ? Array.prototype.map
+                .call(attrs, item => {
+                  return item.getAttribute("data-value");
+                })
+                .join(" | ")
             : []
         }
       }
