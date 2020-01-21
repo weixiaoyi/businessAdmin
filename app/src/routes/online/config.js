@@ -3,6 +3,24 @@ import classNames from "classnames";
 import { Clipboard, OpenExternal } from "../../components";
 import * as styles from "./config.module.scss";
 
+const renderInfos = (infos, item, showVersion) => {
+  return (
+    <ul
+      className={classNames(
+        styles.short,
+        showVersion ? styles.showVersion : ""
+      )}
+    >
+      {infos.map(one => (
+        <li key={one.name}>
+          <span>{one.name}: </span>
+          {one.render ? one.render(one.name, item[one.value]) : item[one.value]}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 export default {
   namespaces: {
     xianyu: "xianyu"
@@ -11,7 +29,21 @@ export default {
     {
       text: "淘宝",
       value: "淘宝",
-      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/taobao.png"
+      icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/taobao.png",
+      renderInfo: (item, showVersion = false) => {
+        let infos = [
+          { name: "售价", value: "sellPrice" },
+          { name: "原价", value: "prevPrice" },
+          { name: "属性", value: "attrs" }
+        ];
+        if (showVersion) {
+          infos = [
+            { name: "title", value: "title" },
+            { name: "productId", value: "productId" }
+          ].concat(infos);
+        }
+        return renderInfos(infos, item, showVersion);
+      }
     },
     {
       text: "京东",
@@ -29,23 +61,7 @@ export default {
             { name: "productId", value: "productId" }
           ].concat(infos);
         }
-        return (
-          <ul
-            className={classNames(
-              styles.short,
-              showVersion ? styles.showVersion : ""
-            )}
-          >
-            {infos.map(one => (
-              <li key={one.name}>
-                <span>{one.name}: </span>
-                {one.render
-                  ? one.render(one.name, item[one.value])
-                  : item[one.value]}
-              </li>
-            ))}
-          </ul>
-        );
+        return renderInfos(infos, item, showVersion);
       }
     },
     {
@@ -88,23 +104,7 @@ export default {
               { name: "desc", value: "desc" }
             );
         }
-        return (
-          <ul
-            className={classNames(
-              styles.short,
-              showVersion ? styles.showVersion : ""
-            )}
-          >
-            {infos.map(one => (
-              <li key={one.name}>
-                <span>{one.name}: </span>
-                {one.render
-                  ? one.render(one.name, item[one.value])
-                  : item[one.value]}
-              </li>
-            ))}
-          </ul>
-        );
+        return renderInfos(infos, item, showVersion);
       },
       renderDetail: item => {
         return <Clipboard text={item.desc} short={false} />;

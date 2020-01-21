@@ -129,7 +129,7 @@ class Webview extends Component {
           <webview
             preload={`file://${preloadJsPath}`}
             nodeintegration={"true"}
-            webpreferences="allowRunningInsecureContent, javascript=yes"
+            webpreferences="allowRunningInsecureContent, javascript=yes,webSecurity=false"
             id={id}
             style={style}
             allowpopups={"true"}

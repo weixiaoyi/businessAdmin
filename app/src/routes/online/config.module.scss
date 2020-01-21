@@ -9,14 +9,13 @@
   display: flex;
   flex-wrap: wrap;
   li {
+    margin-right: 10px;
     span {
       color: $green;
       margin-right: 2px;
     }
   }
-  li + li {
-    margin-left: 10px;
-  }
+
   &.showVersion {
     display: block;
     li + li {

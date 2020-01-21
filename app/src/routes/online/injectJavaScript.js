@@ -158,9 +158,54 @@ const injectJavaScript = () => {
       });
     }
   } else if (website === "淘宝") {
-    return {
-      url
-    };
+    const productId = url.replace(/.*?id=(.*?)&.*/g, "$1");
+    const title = document.querySelector(".module-title .share-warp .main.cell")
+      .innerText;
+    const sellPrice = document.querySelector(".module-price .real-price .price")
+      .innerText;
+    const previews = document.querySelectorAll(
+      ".module-preview .preview-slider a.item img"
+    );
+
+    const images = document.querySelectorAll(
+      "#modules-desc .module-content img"
+    );
+    const attrs = window._DATA_Mdskip.skuBase.props.reduce((sum, next) => {
+      return sum.concat(next.values);
+    }, []);
+
+    window.ipc.send("ipc", {
+      from: "app.wins.main.render",
+      data: {
+        type: "online.get-product",
+        message: {
+          url,
+          website,
+          productId,
+          sellPrice,
+          title,
+          previews: previews
+            ? Array.prototype.map.call(previews, item => {
+                const url = item.getAttribute("data-src") || item.src;
+                return getUrl(url);
+              })
+            : [],
+          images: images
+            ? Array.prototype.map.call(images, item => {
+                const url = item.getAttribute("data-ks-lazyload") || item.src;
+                return getUrl(url);
+              })
+            : [],
+          attrs: attrs
+            ? Array.prototype.map
+                .call(attrs, item => {
+                  return item.name;
+                })
+                .join(" | ")
+            : []
+        }
+      }
+    });
   } else if (website === "京东") {
     const productId = url.replace(/.*\/(.*?).html/g, "$1");
     const title = document.querySelector(".itemInfo-wrap .sku-name").innerText;

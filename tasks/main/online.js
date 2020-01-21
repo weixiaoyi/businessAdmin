@@ -74,19 +74,20 @@ exports.removeProductUrl = async ({ args, win }) => {
 };
 
 exports.addProductUrl = async ({ args, win }) => {
-  const {
+  let {
     data: { url, website }
   } = args;
   let productId = "";
   if (website === "咸鱼") {
     productId = url.replace(/.*id=(.*)$/g, "$1");
   } else if (website === "淘宝") {
-    productId = url.replace(/.*&id=(.*?)&.*/g, "$1");
+    url = url.replace("detail.tmall.com", "detail.m.tmall.com");
+    productId = url.replace(/.*?id=(.*?)&.*/g, "$1");
   } else if (website === "京东") {
     productId = url.replace(/.*\/(.*?).html/g, "$1");
   }
 
-  if (productId && isNaN(Number(productId))) {
+  if (productId && !isNaN(Number(productId))) {
     const db = await getOnlineProductDb(onlineProductUrlDb);
     const values = db.get("products").value();
     if (values.find(item => item.productId === productId) || !productId) return;
@@ -178,6 +179,8 @@ exports.get_product = async ({ args, win }) => {
       findOne.emailPrice !== message.emailPrice ||
       findOne.desc !== message.desc;
   } else if (!isChange && message.website === "京东") {
+    isChange = findOne.attrs !== message.attrs;
+  } else if (!isChange && message.website === "淘宝") {
     isChange = findOne.attrs !== message.attrs;
   }
 
