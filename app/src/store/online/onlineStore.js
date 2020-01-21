@@ -102,6 +102,20 @@ export default class OnlineStore extends ModelExtend {
       });
 
     window.ipc &&
+      window.ipc.on("online.add_ProductRemark", (e, args) => {
+        const { data } = args;
+        if (data && data.productId) {
+          notification.success({
+            message: `商品${data.productId}更新了描述`,
+            description: `${data.remark}`
+          });
+          this.dispatch({
+            type: "ipc-get-productUrls"
+          });
+        }
+      });
+
+    window.ipc &&
       window.ipc.on("online.update_version", (e, args) => {
         const { data, updateInfo } = args;
         this.commit("versions", data);
@@ -307,6 +321,18 @@ export default class OnlineStore extends ModelExtend {
           snapType,
           productId,
           createTime
+        }
+      });
+  };
+
+  "ipc-add-productRemark" = ({ productId, remark }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "online.add-productRemark",
+          productId,
+          remark
         }
       });
   };

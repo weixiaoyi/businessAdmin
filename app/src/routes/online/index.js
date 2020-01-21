@@ -7,7 +7,8 @@ import {
   Table,
   Popconfirm,
   InputNumber,
-  Tag
+  Tag,
+  Divider
 } from "antd";
 import classNames from "classnames";
 
@@ -145,6 +146,16 @@ class Online extends Component {
   getProductUrl = () => {
     this.dispatch({
       type: "ipc-get-productUrls"
+    });
+  };
+
+  addProductRemark = ({ productId, remark }) => {
+    this.dispatch({
+      type: "ipc-add-productRemark",
+      payload: {
+        productId,
+        remark
+      }
     });
   };
 
@@ -349,7 +360,7 @@ class Online extends Component {
                                   )
                                 }
                               ].map(i => (
-                                <div key={i.name}>
+                                <div key={i.name} style={{ marginBottom: 2 }}>
                                   <span className={styles.name}>
                                     ({i.name} {i.icon}):
                                   </span>
@@ -382,6 +393,7 @@ class Online extends Component {
                                 </div>
                               ))}
                             </div>
+                            {item.remark && <div>备注：{item.remark}</div>}
                           </div>
                           <div className={styles.swiperContainer}>
                             {((item.previews && item.previews.length > 0) ||
@@ -489,129 +501,164 @@ class Online extends Component {
               </FullScreen>
             ))}
           </div>
-          {/*<iframe*/}
-          {/*width={1900}*/}
-          {/*height={1000}*/}
-          {/*src={*/}
-          {/*"https://item.taobao.com/item.htm?spm=a217f.8051907.1329388-0.1.67ea33084eV9SU&id=607728735025"*/}
-          {/*}*/}
-          {/*/>*/}
         </div>
         {name === "productList" && (
           <Drawer
             width={"80%"}
             title="商品列表"
-            child={{
-              title: "添加商品",
-              entry: "添加商品",
-              children: (
-                <div>
-                  <Form
-                    submit={values => {
-                      this.addProductUrl({
-                        ...values
-                      });
-                    }}
-                    configs={{
-                      components: [
-                        {
-                          field: "website",
-                          type: "select",
-                          label: "来源站点",
-                          rules: [
-                            {
-                              required: true,
-                              message: "必填"
-                            }
-                          ],
-                          options: configs.websites
-                        },
-                        {
-                          field: "url",
-                          type: "input",
-                          label: "商品地址",
-                          rules: [
-                            {
-                              required: true,
-                              message: "必填"
-                            }
-                          ]
-                        }
-                      ]
-                    }}
-                  />
-                </div>
-              )
-            }}
-          >
-            <Table
-              pagination={false}
-              scroll={{ x: 800 }}
-              rowClassName={record =>
-                selectProductId === record.productId
-                  ? styles.selectProductId
-                  : ""
+            childs={[
+              {
+                title: "添加商品",
+                entry: "添加商品",
+                children: (
+                  <div>
+                    <Form
+                      submit={values => {
+                        this.addProductUrl({
+                          ...values
+                        });
+                      }}
+                      configs={{
+                        components: [
+                          {
+                            field: "website",
+                            type: "select",
+                            label: "来源站点",
+                            rules: [
+                              {
+                                required: true,
+                                message: "必填"
+                              }
+                            ],
+                            options: configs.websites
+                          },
+                          {
+                            field: "url",
+                            type: "input",
+                            label: "商品地址",
+                            rules: [
+                              {
+                                required: true,
+                                message: "必填"
+                              }
+                            ]
+                          }
+                        ]
+                      }}
+                    />
+                  </div>
+                )
+              },
+              {
+                title: "备注",
+                children: childrenDrawerData => (
+                  <div>
+                    <Form
+                      submit={values => {
+                        this.addProductRemark({
+                          ...values,
+                          productId: childrenDrawerData.productId
+                        });
+                      }}
+                      configs={{
+                        components: [
+                          {
+                            field: "remark",
+                            type: "textarea",
+                            label: `${childrenDrawerData.title}`,
+                            rules: [
+                              {
+                                required: true,
+                                message: "必填"
+                              }
+                            ]
+                          }
+                        ]
+                      }}
+                    />
+                  </div>
+                )
               }
-              onRow={record => ({
-                onClick: () => this.selectOneProduct(record.productId)
-              })}
-              rowKey="productId"
-              columns={[
-                {
-                  title: "来源站点",
-                  dataIndex: "website",
-                  key: "website",
-                  width: 80
-                },
-                {
-                  title: "title",
-                  dataIndex: "title",
-                  key: "title",
-                  ...this.props.getColumnSearchProps("title")
-                },
-                {
-                  title: "productId",
-                  dataIndex: "productId",
-                  key: "productId",
-                  width: 150,
-                  ...this.props.getColumnSearchProps("productId")
-                },
-
-                {
-                  title: "url",
-                  dataIndex: "url",
-                  key: "url",
-                  render: v => <Clipboard text={v} />
-                },
-                {
-                  title: "createTime",
-                  dataIndex: "createTime",
-                  key: "createTime",
-                  render: v => formatTime(v)
-                },
-                {
-                  title: "操作",
-                  width: 50,
-                  dataIndex: "operation",
-                  key: "operation",
-                  fixed: "right",
-                  align: "center",
-                  render: (v, record) => {
-                    return (
-                      <Popconfirm
-                        title="确认删除该商品?该操作务必谨慎！"
-                        onConfirm={() =>
-                          this.removeProductUrl(record.productId)
-                        }
-                      >
-                        <a>删除</a>
-                      </Popconfirm>
-                    );
-                  }
+            ]}
+          >
+            {showChildModal => (
+              <Table
+                expandedRowRender={record => <p>备注：{record.remark}</p>}
+                pagination={false}
+                scroll={{ x: 800 }}
+                rowClassName={record =>
+                  selectProductId === record.productId
+                    ? styles.selectProductId
+                    : ""
                 }
-              ]}
-              dataSource={normalizedProductUrls}
-            />
+                onRow={record => ({
+                  onClick: () => this.selectOneProduct(record.productId)
+                })}
+                rowKey="productId"
+                columns={[
+                  {
+                    title: "来源站点",
+                    dataIndex: "website",
+                    key: "website",
+                    width: 80
+                  },
+                  {
+                    title: "title",
+                    dataIndex: "title",
+                    key: "title",
+                    width: 300,
+                    ...this.props.getColumnSearchProps("title")
+                  },
+                  {
+                    title: "productId",
+                    dataIndex: "productId",
+                    key: "productId",
+                    width: 150,
+                    ...this.props.getColumnSearchProps("productId")
+                  },
+
+                  {
+                    title: "url",
+                    dataIndex: "url",
+                    key: "url",
+                    render: v => <Clipboard text={v} />
+                  },
+                  {
+                    title: "createTime",
+                    dataIndex: "createTime",
+                    key: "createTime",
+                    render: v => formatTime(v)
+                  },
+                  {
+                    title: "操作",
+                    width: 100,
+                    dataIndex: "operation",
+                    key: "operation",
+                    fixed: "right",
+                    align: "center",
+                    render: (v, record) => {
+                      return (
+                        <span>
+                          <Popconfirm
+                            title="确认删除该商品?该操作务必谨慎！"
+                            onConfirm={() =>
+                              this.removeProductUrl(record.productId)
+                            }
+                          >
+                            <a>删除</a>
+                          </Popconfirm>
+                          <Divider type="vertical" />
+                          <a onClick={() => showChildModal("备注", record)}>
+                            备注
+                          </a>
+                        </span>
+                      );
+                    }
+                  }
+                ]}
+                dataSource={normalizedProductUrls}
+              />
+            )}
           </Drawer>
         )}
         {name === "updateVersionRecords" && (

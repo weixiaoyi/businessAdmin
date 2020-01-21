@@ -12,7 +12,8 @@ class MyDrawer extends Component {
     super(props);
     this.state = {
       id: _.uniqueId("drawer_"),
-      childrenDrawer: false
+      childrenDrawer: false,
+      childrenDrawerData: {}
     };
   }
 
@@ -22,9 +23,10 @@ class MyDrawer extends Component {
     this.props.model.closeModal();
   };
 
-  showChildrenDrawer = () => {
+  showChildrenDrawer = (title, childrenDrawerData = {}) => {
     this.setState({
-      childrenDrawer: true
+      childrenDrawer: title,
+      childrenDrawerData
     });
   };
 
@@ -41,14 +43,9 @@ class MyDrawer extends Component {
       title = "title",
       width = "60%",
       children,
-      child = {}
+      childs = []
     } = this.props;
-    const propsChild = {
-      width: "40%",
-      title: "title",
-      entry: "",
-      ...child
-    };
+
     return (
       <Drawer
         className={className}
@@ -56,10 +53,17 @@ class MyDrawer extends Component {
         title={
           <div className={styles.header}>
             {title}
-            {propsChild.entry && (
-              <Button type="primary" onClick={this.showChildrenDrawer}>
-                {propsChild.entry}
-              </Button>
+            {childs.map(
+              item =>
+                item.entry && (
+                  <Button
+                    key={item.title}
+                    type="primary"
+                    onClick={() => this.showChildrenDrawer(item.title)}
+                  >
+                    {item.entry}
+                  </Button>
+                )
             )}
           </div>
         }
@@ -68,16 +72,29 @@ class MyDrawer extends Component {
         onClose={this.onClose}
         visible={true}
       >
-        {children}
-        <Drawer
-          title={propsChild.title}
-          width={propsChild.width}
-          closable={true}
-          onClose={this.onChildrenDrawerClose}
-          visible={this.state.childrenDrawer}
-        >
-          {propsChild.children}
-        </Drawer>
+        {_.isFunction(children) ? children(this.showChildrenDrawer) : children}
+        {childs.map(item => {
+          const propsChild = {
+            width: "40%",
+            title: "title",
+            entry: "",
+            ...item
+          };
+          return (
+            <Drawer
+              key={propsChild.title}
+              title={propsChild.title}
+              width={propsChild.width}
+              closable={true}
+              onClose={this.onChildrenDrawerClose}
+              visible={this.state.childrenDrawer === propsChild.title}
+            >
+              {_.isFunction(propsChild.children)
+                ? propsChild.children(this.state.childrenDrawerData)
+                : propsChild.children}
+            </Drawer>
+          );
+        })}
       </Drawer>
     );
   }

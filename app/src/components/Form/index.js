@@ -4,6 +4,7 @@ import _ from "lodash";
 import * as styles from "./index.module.scss";
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 @Form.create({})
 class MyForm extends Component {
@@ -45,8 +46,13 @@ class MyForm extends Component {
           );
         }
         break;
-      case "input": {
-        FormComponent = <Input {...props} />;
+      case "input":
+        {
+          FormComponent = <Input {...props} />;
+        }
+        break;
+      case "textarea": {
+        FormComponent = <TextArea {...props} />;
       }
     }
     return FormComponent;

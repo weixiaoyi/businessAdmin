@@ -107,6 +107,23 @@ exports.addProductUrl = async ({ args, win }) => {
   }
 };
 
+exports.addProductRemark = async ({ args, win }) => {
+  let {
+    data: { productId, remark }
+  } = args;
+
+  const db = await getOnlineProductDb(onlineProductUrlDb);
+  const results = await db
+    .get("products")
+    .find({ productId })
+    .assign({ remark })
+    .write()
+    .catch(() => null);
+  win.webContents.send("online.add_ProductRemark", {
+    data: results
+  });
+};
+
 exports.deleteVersion = async ({ args, win }) => {
   const {
     data: { snapType, productId, createTime }
