@@ -12,8 +12,10 @@ export default class OnlineStore extends ModelExtend {
     autorun(() => {
       localSave.set("refresh_online", this.refresh);
       localSave.set("updateVersionRecords_online", this.updateVersionRecords);
+      localSave.set("collapseGrid_online", this.collapseGrid);
     });
   }
+
   @observable products = [];
   @observable images = [];
   @observable versions = {};
@@ -21,6 +23,7 @@ export default class OnlineStore extends ModelExtend {
   @observable productUrls = [];
   @observable selectProductId = "";
   @observable refresh = localSave.get("refresh_online") || false;
+  @observable collapseGrid = localSave.get("collapseGrid_online") || 1;
   @observable updateVersionRecords =
     localSave.get("updateVersionRecords_online") || [];
 
@@ -288,5 +291,9 @@ export default class OnlineStore extends ModelExtend {
   autoRefresh = () => {
     this.commit("refresh", !this.refresh);
     window.location.reload();
+  };
+
+  changeCollapseGrid = ({ columns }) => {
+    this.commit("collapseGrid", columns);
   };
 }

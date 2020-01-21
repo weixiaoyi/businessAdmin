@@ -3,6 +3,11 @@
   border: 2px solid $green;
   color: $green;
 }
+.headerutils {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .productItem {
   :global {
     .ant-card-body {
@@ -84,6 +89,54 @@
             content: " | ";
           }
         }
+      }
+    }
+  }
+}
+
+.collapseImages {
+  :global {
+    .ant-collapse-item {
+      width: 100% !important;
+    }
+  }
+}
+.collapse {
+  display: flex;
+  flex-wrap: wrap;
+
+  &.collapseGrid-1 {
+    :global {
+      .ant-collapse-item {
+        width: 100%;
+      }
+    }
+  }
+  &.collapseGrid-2 {
+    :global {
+      .ant-collapse-item {
+        width: 50%;
+      }
+    }
+  }
+  &.collapseGrid-3 {
+    :global {
+      .ant-collapse-item {
+        width: 33.3333%;
+      }
+    }
+  }
+  &.collapseGrid-4 {
+    :global {
+      .ant-collapse-item {
+        width: 25%;
+      }
+    }
+  }
+  &.collapseGrid-5 {
+    :global {
+      .ant-collapse-item {
+        width: 20%;
       }
     }
   }

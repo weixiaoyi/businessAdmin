@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Collapse, Button, Icon, Tooltip, Table, Popconfirm } from "antd";
+import {
+  Collapse,
+  Button,
+  Icon,
+  Tooltip,
+  Table,
+  Popconfirm,
+  InputNumber
+} from "antd";
 import classNames from "classnames";
 
 import {
@@ -154,6 +162,15 @@ class Online extends Component {
     });
   };
 
+  changeCollapseGrid = v => {
+    this.dispatch({
+      type: "changeCollapseGrid",
+      payload: {
+        columns: v
+      }
+    });
+  };
+
   render() {
     const { filter } = this.state;
     const {
@@ -164,7 +181,8 @@ class Online extends Component {
         normalizedProductUrls,
         selectProductId,
         refresh,
-        normalizedUpdateVersionRecords
+        normalizedUpdateVersionRecords,
+        collapseGrid
       },
       globalStore: {
         modal: { name }
@@ -197,32 +215,47 @@ class Online extends Component {
             </div>
           </div>
           <DragFix name="online" title="商品监控">
-            <Switch className={styles.search}>
-              <Form
-                reset={() =>
-                  this.setState({
-                    filter: ""
-                  })
-                }
-                submit={values => {
-                  this.setState({
-                    filter: values.search
-                  });
-                }}
-                configs={{
-                  components: [
-                    {
-                      field: "search",
-                      type: "input",
-                      label: "搜索",
-                      placeholder: "输入productId或title"
-                    }
-                  ]
-                }}
+            <div className={styles.headerutils}>
+              <Switch className={styles.search}>
+                <Form
+                  reset={() =>
+                    this.setState({
+                      filter: ""
+                    })
+                  }
+                  submit={values => {
+                    this.setState({
+                      filter: values.search
+                    });
+                  }}
+                  configs={{
+                    components: [
+                      {
+                        field: "search",
+                        type: "input",
+                        label: "搜索",
+                        placeholder: "输入productId或title"
+                      }
+                    ]
+                  }}
+                />
+              </Switch>
+              <InputNumber
+                value={Number(collapseGrid)}
+                size={"small"}
+                min={1}
+                max={5}
+                step={1}
+                onChange={this.changeCollapseGrid}
               />
-            </Switch>
+            </div>
 
-            <Collapse>
+            <Collapse
+              className={classNames(
+                styles.collapse,
+                styles[`collapseGrid-${collapseGrid}`]
+              )}
+            >
               {normalizedProductUrls
                 .filter(item =>
                   filter
@@ -354,7 +387,11 @@ class Online extends Component {
                     >
                       {findConfigs.renderDetail &&
                         findConfigs.renderDetail(item)}
-                      <Collapse defaultActiveKey="1" style={{ marginTop: 10 }}>
+                      <Collapse
+                        defaultActiveKey="1"
+                        style={{ marginTop: 10 }}
+                        className={styles.collapseImages}
+                      >
                         {productImages.length > 0 && (
                           <Panel header="本地图片" key="1">
                             <ul className={styles.imagesList}>
