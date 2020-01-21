@@ -30,6 +30,9 @@ export default {
       text: "淘宝",
       value: "淘宝",
       icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/taobao.png",
+      renderDetail: item => {
+        return item.remark && <div>备注：{item.remark}</div>;
+      },
       renderInfo: (item, showVersion = false) => {
         let infos = [
           { name: "售价", value: "sellPrice" },
@@ -49,6 +52,9 @@ export default {
       text: "京东",
       value: "京东",
       icon: "https://1000fuye.oss-cn-beijing.aliyuncs.com/jingdong.png",
+      renderDetail: item => {
+        return item.remark && <div>备注：{item.remark}</div>;
+      },
       renderInfo: (item, showVersion = false) => {
         let infos = [
           { name: "售价", value: "sellPrice" },
@@ -107,7 +113,12 @@ export default {
         return renderInfos(infos, item, showVersion);
       },
       renderDetail: item => {
-        return <Clipboard text={item.desc} short={false} />;
+        return (
+          <span>
+            {item.remark && <div>{item.remark}</div>}
+            <Clipboard text={item.desc} short={false} />
+          </span>
+        );
       }
     }
   ]

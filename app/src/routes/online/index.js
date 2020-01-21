@@ -393,7 +393,9 @@ class Online extends Component {
                                 </div>
                               ))}
                             </div>
-                            {item.remark && <div>备注：{item.remark}</div>}
+                            {item.remark && (
+                              <div>备注：{item.remark.slice(0, 10)}...</div>
+                            )}
                           </div>
                           <div className={styles.swiperContainer}>
                             {((item.previews && item.previews.length > 0) ||
