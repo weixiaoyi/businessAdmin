@@ -566,8 +566,13 @@ class Online extends Component {
                         components: [
                           {
                             field: "remark",
+                            initialValue: childrenDrawerData.remark,
                             type: "textarea",
-                            label: `${childrenDrawerData.title}`,
+                            label: `${
+                              childrenDrawerData.title
+                                ? childrenDrawerData.title
+                                : childrenDrawerData.productId
+                            }`,
                             rules: [
                               {
                                 required: true,

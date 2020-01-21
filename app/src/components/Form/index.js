@@ -64,17 +64,20 @@ class MyForm extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form layout={layout} onSubmit={this.handleSubmit} className="login-form">
-        {configs.components.map(item => (
-          <Form.Item key={item.field} label={item.label}>
-            {getFieldDecorator(item.field, {
-              rules: item.rules
-            })(
-              this.renderComponent(item, {
-                placeholder: item.placeholder
-              })
-            )}
-          </Form.Item>
-        ))}
+        {configs.components.map(item => {
+          const { field, label, ...rest } = item;
+          return (
+            <Form.Item key={field} label={label}>
+              {getFieldDecorator(field, {
+                ...rest
+              })(
+                this.renderComponent(item, {
+                  ...rest
+                })
+              )}
+            </Form.Item>
+          );
+        })}
         <Form.Item key="submit">
           <Button type="primary" htmlType="submit">
             确认
