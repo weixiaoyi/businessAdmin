@@ -2,6 +2,12 @@
 .copy {
   display: flex;
   align-items: center;
+  &.ellipesRows {
+    .short,
+    .normal {
+      @include ellipseRows(3);
+    }
+  }
   .short {
     @include ellipse();
   }

@@ -25,13 +25,24 @@ class Clipboard extends Component {
 
   render() {
     const { id } = this.state;
-    const { text, className, width = 100, style, short = true } = this.props;
+    const {
+      text,
+      className,
+      width = 100,
+      style,
+      short = true,
+      rows
+    } = this.props;
     return text ? (
       <span
         onClick={e => e.stopPropagation()}
         id={id}
         data-clipboard-text={text}
-        className={classNames(styles.copy, className)}
+        className={classNames(
+          styles.copy,
+          className,
+          rows ? styles.ellipesRows : null
+        )}
         style={style}
       >
         {short ? (

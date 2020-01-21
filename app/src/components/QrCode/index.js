@@ -23,7 +23,10 @@ class QrCode extends Component {
   render() {
     const { dataUrl } = this.state;
     return (
-      <Tooltip placement="topLeft" title={dataUrl ? <img src={dataUrl} /> : ""}>
+      <Tooltip
+        placement="topLeft"
+        title={dataUrl ? <img src={dataUrl} width={150} /> : ""}
+      >
         <Icon type="qrcode" />
       </Tooltip>
     );

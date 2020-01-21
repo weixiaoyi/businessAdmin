@@ -254,22 +254,14 @@ class Online extends Component {
                             <div className={styles.header}>
                               <img width={40} src={findConfigs.icon} />
                               <strong style={{ maxWidth: 500 }}>
-                                <Clipboard short={false} text={item.title} />
+                                <Clipboard
+                                  short={false}
+                                  text={item.title}
+                                  rows
+                                />
                               </strong>
                               {item.errMsg && <span>({item.errMsg})</span>}
-                              <Button
-                                disabled={!productImages.length > 0}
-                                style={{ marginLeft: 20 }}
-                                onClick={e => {
-                                  this.openProductIdPath(id);
-                                  e.stopPropagation();
-                                }}
-                              >
-                                {id}
-                                {!productImages.length > 0 && (
-                                  <span>(暂无)</span>
-                                )}
-                              </Button>
+
                               <Clipboard
                                 text={item.url}
                                 style={{ marginLeft: 20 }}
@@ -281,16 +273,15 @@ class Online extends Component {
                             {findConfigs.renderInfo &&
                               findConfigs.renderInfo(item)}
                             <div className={styles.versionManage}>
-                              <span style={{ marginRight: 10 }}>版本管理</span>
                               {[
                                 {
-                                  name: "自动",
+                                  name: "自动版本管理",
                                   value: versions.autoSnaps
                                     ? versions.autoSnaps[id]
                                     : []
                                 },
                                 {
-                                  name: "手动",
+                                  name: "手动版本管理",
                                   value: versions.snaps
                                     ? versions.snaps[id]
                                     : [],
@@ -312,7 +303,7 @@ class Online extends Component {
                                 }
                               ].map(i => (
                                 <div key={i.name}>
-                                  <span>
+                                  <span className={styles.name}>
                                     ({i.name} {i.icon}):
                                   </span>
                                   <ul>
@@ -333,7 +324,7 @@ class Online extends Component {
                               ))}
                             </div>
                           </div>
-                          <div>
+                          <div className={styles.swiperContainer}>
                             {((item.previews && item.previews.length > 0) ||
                               (item.images && item.images.length > 0)) && (
                               <Swiper
@@ -344,6 +335,18 @@ class Online extends Component {
                                 ).map(item => ({ src: item }))}
                               />
                             )}
+                            <Button
+                              size="small"
+                              disabled={!productImages.length > 0}
+                              style={{ marginLeft: 20 }}
+                              onClick={e => {
+                                this.openProductIdPath(id);
+                                e.stopPropagation();
+                              }}
+                            >
+                              {id}
+                              {!productImages.length > 0 && <span>(暂无)</span>}
+                            </Button>
                           </div>
                         </div>
                       }
