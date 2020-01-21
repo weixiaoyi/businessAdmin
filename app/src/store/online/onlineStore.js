@@ -59,6 +59,20 @@ export default class OnlineStore extends ModelExtend {
       });
 
     window.ipc &&
+      window.ipc.on("online.delete-Version", (e, args) => {
+        const { data } = args;
+        if (data && data.length) {
+          notification.success({
+            message: "版本删除成功",
+            description: `版本删除成功`
+          });
+        }
+        this.dispatch({
+          type: "ipc-get-versionDb"
+        });
+      });
+
+    window.ipc &&
       window.ipc.on("online.remove_productUrl", (e, args) => {
         const { data } = args;
         if (data) {
@@ -280,6 +294,19 @@ export default class OnlineStore extends ModelExtend {
         data: {
           type: "online.snap-version",
           product
+        }
+      });
+  };
+
+  "ipc-delete-Version" = ({ snapType, productId, createTime }) => {
+    window.ipc &&
+      window.ipc.send("ipc", {
+        from: "app.wins.main.render",
+        data: {
+          type: "online.delete-Version",
+          snapType,
+          productId,
+          createTime
         }
       });
   };

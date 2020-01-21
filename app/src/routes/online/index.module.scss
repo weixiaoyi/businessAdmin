@@ -85,9 +85,6 @@
         }
         li + li {
           margin-left: 5px;
-          &:before {
-            content: " | ";
-          }
         }
       }
     }
@@ -104,6 +101,14 @@
 .collapse {
   display: flex;
   flex-wrap: wrap;
+  :global {
+    .ant-collapse-arrow {
+      left: 4px !important;
+    }
+    .ant-collapse-header {
+      padding-left: 20px !important;
+    }
+  }
 
   &.collapseGrid-1 {
     :global {

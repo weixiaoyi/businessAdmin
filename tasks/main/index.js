@@ -38,6 +38,8 @@ exports.messageTasks = async (args, app) => {
     await online.getProductUrls({ args, win, app });
   } else if (type === "online.remove-productUrl") {
     await online.removeProductUrl({ args, win, app });
+  } else if (type === "online.delete-Version") {
+    await online.deleteVersion({ args, win, app });
   }
 
   if (type === "scrapy.ipc-get-appPath") {

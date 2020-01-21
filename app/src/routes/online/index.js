@@ -6,7 +6,8 @@ import {
   Tooltip,
   Table,
   Popconfirm,
-  InputNumber
+  InputNumber,
+  Tag
 } from "antd";
 import classNames from "classnames";
 
@@ -171,6 +172,17 @@ class Online extends Component {
     });
   };
 
+  deleteVersion = (snapType, productId, createTime) => {
+    this.dispatch({
+      type: "ipc-delete-Version",
+      payload: {
+        snapType,
+        productId,
+        createTime
+      }
+    });
+  };
+
   render() {
     const { filter } = this.state;
     const {
@@ -311,10 +323,12 @@ class Online extends Component {
                                   name: "自动版本管理",
                                   value: versions.autoSnaps
                                     ? versions.autoSnaps[id]
-                                    : []
+                                    : [],
+                                  type: "autoSnaps"
                                 },
                                 {
                                   name: "手动版本管理",
+                                  type: "snaps",
                                   value: versions.snaps
                                     ? versions.snaps[id]
                                     : [],
@@ -348,7 +362,19 @@ class Online extends Component {
                                             findConfigs.renderInfo(one, true)
                                           }
                                         >
-                                          {formatMonthTime(one.createTime)}
+                                          <Tag
+                                            closable
+                                            onClose={e => {
+                                              e.stopPropagation();
+                                              this.deleteVersion(
+                                                i.type,
+                                                one.productId,
+                                                one.createTime
+                                              );
+                                            }}
+                                          >
+                                            {formatMonthTime(one.createTime)}
+                                          </Tag>
                                         </Tooltip>
                                       </li>
                                     ))}

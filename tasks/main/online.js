@@ -107,6 +107,21 @@ exports.addProductUrl = async ({ args, win }) => {
   }
 };
 
+exports.deleteVersion = async ({ args, win }) => {
+  const {
+    data: { snapType, productId, createTime }
+  } = args;
+  const onlineDb = await getOnlineVersionDb(onlineVersionDb);
+  const result = await onlineDb
+    .get(`versions.${snapType}.${productId}`)
+    .remove({ createTime })
+    .write()
+    .catch(() => null);
+  win.webContents.send("online.delete-Version", {
+    data: result
+  });
+};
+
 exports.getVersionDb = async ({ args, win }) => {
   const onlineDb = await getOnlineVersionDb(onlineVersionDb);
   const results = onlineDb.get("versions").value();
